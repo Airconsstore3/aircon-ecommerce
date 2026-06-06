@@ -1,0 +1,68 @@
+import "photoswipe/style.css";
+import { mockProducts } from "@/lib/mock-data";
+import { ProductDetailClient } from "./ProductDetailClient";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface AirconProduct {
+  id: string;
+  name: string;
+  slug: string;
+  brand: string | null;
+  btu_size: string | null;
+  type: string;
+  price_zar: number;
+  sale_price_zar: number | null;
+  images: string[];
+  is_enquiry_only: boolean;
+  is_featured: boolean;
+  description?: string;
+  specs?: Record<string, string>;
+  stock: {
+    stock_count: number;
+    is_sold_out: boolean;
+    low_stock_threshold: number;
+  };
+}
+
+// ─── Main Component ───────────────────────────────────────────────────────────
+
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const product = mockProducts.find((p) => p.slug === slug);
+
+  if (!product) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="text-center">
+          <p className="text-muted-foreground mb-2">Product not found.</p>
+          <p className="text-xs text-muted-foreground">Looking for slug: {slug}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Adapt Product to AirconProduct with stock info
+  const airconProduct: AirconProduct = {
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    brand: product.brand,
+    btu_size: product.btu_size || null,
+    type: product.type,
+    price_zar: product.price_zar,
+    sale_price_zar: product.sale_price_zar || null,
+    images: product.images,
+    is_enquiry_only: product.is_enquiry_only,
+    is_featured: product.is_featured,
+    description: product.description,
+    specs: product.specs,
+    stock: {
+      stock_count: 10, // Mock stock count
+      is_sold_out: false, // Mock - no sold out
+      low_stock_threshold: 3,
+    },
+  };
+
+  return <ProductDetailClient product={airconProduct} />;
+}

@@ -1,0 +1,260 @@
+@import "tailwindcss";
+
+:root {
+  --background: #F0F9FF;
+  --foreground: #0A2540;
+  --primary: #1C99D6;
+  --primary-foreground: #ffffff;
+  --secondary: #D7F0FC;
+  --secondary-foreground: #0A2540;
+  --muted: #E6F5FD;
+  --muted-foreground: #335B74;
+  --accent: #F0F9FF;
+  --accent-foreground: #0A2540;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #B8E3F7;
+  --input: #B8E3F7;
+  --ring: #1C99D6;
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius: var(--radius);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Inter, system-ui, sans-serif;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.logo-text {
+  font-family: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+}
+
+/* Navbar color overrides */
+header .bg-primary {
+  background: #0A2540 !important;
+}
+
+header .text-primary-foreground {
+  color: #ffffff !important;
+}
+
+header .bg-amber-500 {
+  background: #1C99D6 !important;
+}
+
+header .bg-accent {
+  background: #F0F9FF !important;
+}
+
+/* Secondary nav text color */
+header .bg-accent a,
+header .bg-accent button {
+  color: #0A2540 !important;
+}
+
+/* Mega menu dropdown text color */
+[data-radix-navigation-menu-viewport] a,
+[data-radix-navigation-menu-viewport] button {
+  color: #0A2540 !important;
+}
+
+[data-radix-navigation-menu-viewport] h2 {
+  color: #0A2540 !important;
+}
+
+.aircon-angled-button-wrap {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+}
+
+.aircon-angled-button-wrap::before {
+  content: "";
+  position: absolute;
+  width: calc(100% + 0.45em);
+  height: 50%;
+  left: -0.25em;
+  top: -0.25em;
+  border: 1px solid #2599d4;
+  border-bottom: 0;
+}
+
+.aircon-angled-button-wrap::after {
+  content: "";
+  position: absolute;
+  width: calc(100% + 0.45em);
+  height: 50%;
+  left: -0.25em;
+  bottom: -0.25em;
+  border: 1px solid #2599d4;
+  border-top: 0;
+  z-index: 0;
+}
+
+.aircon-angled-button {
+  color: #ffffff;
+  cursor: pointer;
+  font-family: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05rem;
+  text-transform: uppercase;
+  border: 1px solid #2599d4;
+  padding: 0.75rem 2.25rem;
+  background-color: #2599d4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 531.28 200'%3E%3Cpolygon fill='%230A2540' points='415.81 200 0 200 115.47 0 531.28 0 415.81 200' /%3E%3C/svg%3E");
+  background-size: 200%;
+  background-position: 200%;
+  background-repeat: no-repeat;
+  transition: background-position 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+.aircon-angled-button:hover {
+  border-color: #0A2540;
+  color: #ffffff;
+  background-position: 40%;
+}
+
+.aircon-angled-button::before {
+  content: "";
+  position: absolute;
+  background-color: #2599d4;
+  width: 0.18rem;
+  height: 0.18rem;
+  top: -1px;
+  left: -1px;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.aircon-angled-button::after {
+  content: "";
+  position: absolute;
+  background-color: #0A2540;
+  width: 0.28rem;
+  height: 0.28rem;
+  bottom: -1px;
+  right: -1px;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.aircon-angled-button:hover::before,
+.aircon-angled-button:hover::after {
+  background-color: #ffffff;
+}
+
+.aircon-angled-nav-wrap {
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+}
+
+.aircon-angled-nav-wrap::before {
+  content: "";
+  position: absolute;
+  width: calc(100% + 0.35em);
+  height: 50%;
+  left: -0.18em;
+  top: -0.18em;
+  border: 1px solid #2599d4;
+  border-bottom: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.aircon-angled-nav-wrap::after {
+  content: "";
+  position: absolute;
+  width: calc(100% + 0.35em);
+  height: 50%;
+  left: -0.18em;
+  bottom: -0.18em;
+  border: 1px solid #2599d4;
+  border-top: 0;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+  z-index: 0;
+}
+
+.aircon-angled-nav-wrap:hover::before,
+.aircon-angled-nav-wrap:hover::after {
+  opacity: 1;
+}
+
+.aircon-angled-nav {
+  color: #0A2540;
+  cursor: pointer;
+  font-family: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.625rem;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 531.28 200'%3E%3Cpolygon fill='%232599d4' points='415.81 200 0 200 115.47 0 531.28 0 415.81 200' /%3E%3C/svg%3E");
+  background-size: 200%;
+  background-position: 200%;
+  background-repeat: no-repeat;
+  transition: background-position 0.3s ease-in-out, border 0.3s ease-in-out, color 0.3s ease-in-out;
+  position: relative;
+  z-index: 1;
+}
+
+.aircon-angled-nav:hover {
+  border-color: #2599d4;
+  color: #ffffff;
+  background-position: 40%;
+}
+
+.aircon-angled-nav::before {
+  content: "";
+  position: absolute;
+  background-color: #2599d4;
+  width: 0.15rem;
+  height: 0.15rem;
+  top: -1px;
+  left: -1px;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.aircon-angled-nav::after {
+  content: "";
+  position: absolute;
+  background-color: #0A2540;
+  width: 0.2rem;
+  height: 0.2rem;
+  bottom: -1px;
+  right: -1px;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.aircon-angled-nav:hover::before,
+.aircon-angled-nav:hover::after {
+  background-color: #ffffff;
+}
