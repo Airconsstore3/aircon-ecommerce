@@ -8,8 +8,8 @@ export interface Product {
   description: string;
   category_id: string;
   type: 'residential_unit' | 'commercial_unit' | 'installation_kit' | 'maintenance_package' | 'service' | 'bundle' | 'warranty_plan' | 'repair_service';
-  brand: string;
-  btu_size?: string;
+  brand: string | null;
+  btu_size?: string | null;
   images: string[];
   price_zar: number;
   sale_price_zar?: number;
@@ -51,7 +51,7 @@ export interface Promotion {
   starts_at?: string;
   expires_at?: string;
   is_active: boolean;
-  max_uses?: number;
+  max_uses?: number | null;
   current_uses: number;
   created_at: string;
   updated_at: string;
@@ -64,7 +64,7 @@ export interface Order {
   total_zar: number;
   scheduled_date?: string;
   scheduled_time_slot?: string;
-  completion_notes?: string;
+  completion_notes?: string | null;
   created_at: string;
   updated_at: string;
 }

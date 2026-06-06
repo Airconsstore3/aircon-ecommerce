@@ -3,8 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2 } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useMemo, useEffect, Suspense } from "react";
 import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
 import { mockProducts, mockPromotions, Product } from "@/lib/mock-data";
@@ -16,6 +16,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+
+export const dynamic = 'force-dynamic';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -43,10 +45,20 @@ function convertToAirconProduct(product: Product): AirconProduct {
 
 // ─── Products Page Component ───────────────────────────────────────────────────
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [columns, setColumns] = useState<2 | 3 | 4>(4);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
 
   // Get active promotion
   const activePromotion = useMemo(() => {
@@ -135,7 +147,7 @@ export default function ProductsPage() {
   const updateSort = (value: string) => {
     const current = new URLSearchParams(searchParams.toString());
     current.set("sort", value);
-    window.history.pushState(null, "", `?${current.toString()}`);
+    router.push(`?${current.toString()}`);
   };
 
   return (
@@ -270,7 +282,7 @@ export default function ProductsPage() {
                 <Button
                   variant="outline"
                   className="mt-4"
-                  onClick={() => window.history.pushState(null, "", "?")}
+                  onClick={() => router.push("?")}
                 >
                   Clear all filters
                 </Button>
@@ -280,5 +292,13 @@ export default function ProductsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }

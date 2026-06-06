@@ -18,9 +18,9 @@ type ProductCategories1Props = Partial<ProductCategories> & { className?: string
 const PRODUCT_CATEGORIES: ProductCategories | null = null;
 
 const ProductCategories1 = ({
-  title = PRODUCT_CATEGORIES.title,
-  summary = PRODUCT_CATEGORIES.summary,
-  image = PRODUCT_CATEGORIES.image,
+  title,
+  summary,
+  image = { src: "", alt: "" },
   className,
 }: ProductCategories1Props) => {
   return (
