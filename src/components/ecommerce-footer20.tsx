@@ -290,7 +290,7 @@ const EcommerceFooter20 = ({
                   )}
                 </a>
                 <div className="space-y-1">
-                  <h3 className="font-bold">{footerData?.title}</h3>
+                  <h3 className="font-normal">{footerData?.title}</h3>
                   <p className="leading-relaxed text-balance">
                     {footerData?.description}
                   </p>

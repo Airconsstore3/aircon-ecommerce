@@ -81,7 +81,7 @@ const LogoCarousel = ({ className }: LogoCarouselProps) => {
         <span className="mb-3 font-[var(--font-google-sans-flex)] text-xs font-semibold uppercase tracking-[0.25em] text-[#1C99D6]">
           Trusted Brands
         </span>
-        <h4 className="font-[var(--font-google-sans-flex)] text-2xl font-bold tracking-tight text-black md:text-3xl">
+        <h4 className="font-[var(--font-google-sans-flex)] text-2xl font-normal tracking-tight text-black md:text-3xl">
           We sell trusted brand aircons near you
         </h4>
       </div>

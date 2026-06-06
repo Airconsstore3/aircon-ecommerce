@@ -2,13 +2,13 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-[#FAFAF9]">
       <div className="container max-w-3xl mx-auto px-4 sm:px-6 pt-[220px] pb-16 md:pt-[180px]">
-        <h1 className="text-4xl font-bold text-[#1E3A5F] mb-8">
+        <h1 className="text-4xl font-normal text-[#1E3A5F] mb-8">
           Privacy Policy
         </h1>
 
         <div className="prose prose-lg max-w-none">
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               1. Introduction
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               2. Information We Collect
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               3. Why We Collect Your Information
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -52,7 +52,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               4. How We Protect Your Information
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -67,7 +67,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               5. Your Rights
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               6. Third-Party Services
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -104,7 +104,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               7. Contact Us
             </h2>
             <p className="text-muted-foreground leading-relaxed">
@@ -121,7 +121,7 @@ export default function PrivacyPage() {
           </section>
 
           <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-[#1E3A5F] mb-4">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">
               8. Changes to This Policy
             </h2>
             <p className="text-muted-foreground leading-relaxed">

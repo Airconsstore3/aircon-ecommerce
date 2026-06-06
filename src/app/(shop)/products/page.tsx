@@ -188,7 +188,7 @@ function ProductsPageContent() {
             {/* Header with Sort and Filter Button */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-2xl font-bold text-[#1E3A5F]">Products</h1>
+                <h1 className="text-2xl font-normal text-[#1E3A5F]">Products</h1>
                 <p className="text-sm text-muted-foreground">
                   Showing {filteredProducts.length} products
                 </p>

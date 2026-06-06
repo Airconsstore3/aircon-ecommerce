@@ -36,7 +36,7 @@ export default function RepairsPage() {
         <div className="container max-w-2xl mx-auto">
           <Card className="rounded-xl shadow-sm p-8 border-0 text-center">
             <CheckCircle className="size-16 text-emerald-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-[#1E3A5F] mb-2">
+            <h1 className="text-2xl font-normal text-[#1E3A5F] mb-2">
               Repair Request Submitted
             </h1>
             <p className="text-muted-foreground mb-4">
@@ -68,7 +68,7 @@ export default function RepairsPage() {
       <div className="container max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">
+          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
             Book a Repair or Callout
           </h1>
           <p className="text-muted-foreground">

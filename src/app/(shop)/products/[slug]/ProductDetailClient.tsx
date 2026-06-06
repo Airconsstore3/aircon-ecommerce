@@ -174,7 +174,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 {product.brand}
               </p>
             )}
-            <h1 className="text-3xl font-bold text-[#1E3A5F] leading-tight lg:text-4xl">
+            <h1 className="text-3xl font-normal text-[#1E3A5F] leading-tight lg:text-4xl">
               {product.name}
             </h1>
 
@@ -247,7 +247,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             {/* Specs table */}
             {product.specs && Object.keys(product.specs).length > 0 && (
               <div>
-                <h2 className="text-base font-semibold text-[#1E3A5F] mb-3">
+                <h2 className="text-base font-normal text-[#1E3A5F] mb-3">
                   Specifications
                 </h2>
                 <dl className="divide-y border rounded-lg overflow-hidden">
@@ -317,7 +317,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
             {/* Installation Add-ons */}
             <div className="flex flex-col gap-3 pt-2">
-              <h3 className="text-sm font-semibold text-[#1E3A5F]">Complete your installation</h3>
+              <h3 className="text-sm font-normal text-[#1E3A5F]">Complete your installation</h3>
 
               {[
                 { id: "install", name: "Standard Installation", price: 1800, desc: "Professional installation by licensed technicians" },
@@ -421,7 +421,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         {/* WARRANTY UPSELL */}
         {showWarrantyUpsell && (
           <div className="mt-16 border-t pt-12">
-            <h2 className="text-2xl font-bold text-[#1E3A5F] mb-2">
+            <h2 className="text-2xl font-normal text-[#1E3A5F] mb-2">
               Protect your investment
             </h2>
             <p className="text-muted-foreground mb-8">
@@ -443,7 +443,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                         Most Popular
                       </Badge>
                     )}
-                    <h3 className="font-semibold text-[#1E3A5F]">{plan}</h3>
+                    <h3 className="font-normal text-[#1E3A5F]">{plan}</h3>
                     <ul className="text-sm text-muted-foreground space-y-1">
                       <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /> Parts &amp; labour covered</li>
                       <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /> Compressor failure</li>

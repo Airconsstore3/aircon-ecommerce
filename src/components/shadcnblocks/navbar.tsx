@@ -443,7 +443,7 @@ const SecondaryMenuMobile = ({ menu, home }: SecondaryMenuMobileProps) => {
           <div className="p-6">
             {menu.map(({ sections, label, href }, index) => (
               <div key={index}>
-                <h2 className="border-b py-4 text-lg leading-normal font-bold">
+                <h2 className="border-b py-4 text-lg leading-normal font-normal">
                   {href ? <a href={href}>{label}</a> : <span>{label}</span>}
                 </h2>
                 {sections && (
@@ -523,7 +523,7 @@ const DesktopMenuDropdownItem = ({
         >
           <div>
             <div className={cn("w-60", sharedClasses)}>
-              <h2 className="px-6 text-sm font-bold">
+              <h2 className="px-6 text-sm font-normal">
                 <a href={href}>{label}</a>
               </h2>
               <ol>
@@ -553,7 +553,7 @@ const DesktopMenuDropdownItem = ({
           {activeSectionData && (
             <div>
               <div className={cn("w-50 bg-accent", sharedClasses)}>
-                <h2 className="px-6 text-sm font-bold">
+                <h2 className="px-6 text-sm font-normal">
                   {activeSectionData.label}
                 </h2>
                 <ol>

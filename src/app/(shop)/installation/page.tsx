@@ -21,7 +21,7 @@ export default function InstallationPage() {
       <section className="bg-[#1E3A5F] text-white py-20 md:py-32">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-normal mb-4">
               Professional Aircon Installation
             </h1>
             <p className="text-lg md:text-xl text-gray-200 mb-8">
@@ -152,7 +152,7 @@ export default function InstallationPage() {
       {/* How it works */}
       <section className="py-16 bg-white">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             How it works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -160,7 +160,7 @@ export default function InstallationPage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 1
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Submit your enquiry
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -171,7 +171,7 @@ export default function InstallationPage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 2
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Free site survey
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -182,7 +182,7 @@ export default function InstallationPage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Fixed quote
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -193,7 +193,7 @@ export default function InstallationPage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 4
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 We install
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -207,7 +207,7 @@ export default function InstallationPage() {
       {/* What is included */}
       <section className="py-16 bg-[#FAFAF9]">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             What is included in every install
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -296,12 +296,12 @@ export default function InstallationPage() {
       {/* Pricing factors */}
       <section className="py-16 bg-white">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             What affects the installation price?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <Card className="rounded-xl shadow-sm border-0 p-6">
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Pipe run distance
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -309,7 +309,7 @@ export default function InstallationPage() {
               </p>
             </Card>
             <Card className="rounded-xl shadow-sm border-0 p-6">
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Wall or ceiling type
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -317,7 +317,7 @@ export default function InstallationPage() {
               </p>
             </Card>
             <Card className="rounded-xl shadow-sm border-0 p-6">
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Number of storeys
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -325,7 +325,7 @@ export default function InstallationPage() {
               </p>
             </Card>
             <Card className="rounded-xl shadow-sm border-0 p-6">
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Access difficulty
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -363,7 +363,7 @@ export default function InstallationPage() {
       {/* Bottom CTA */}
       <section className="py-16 bg-[#1E3A5F]">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl font-normal text-white mb-4">
             Ready to book your installation?
           </h2>
           <p className="text-gray-200 mb-8">

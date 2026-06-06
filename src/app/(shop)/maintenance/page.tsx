@@ -81,7 +81,7 @@ export default function MaintenancePage() {
       <section className="bg-[#1E3A5F] text-white pt-[220px] pb-20 md:pt-[180px] md:pb-32">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
           <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-4xl md:text-5xl font-normal mb-4">
               Aircon Maintenance Plans
             </h1>
             <p className="text-lg md:text-xl text-gray-200 mb-8">
@@ -100,7 +100,7 @@ export default function MaintenancePage() {
       {/* What's Included */}
       <section className="py-16 bg-[#FAFAF9]">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             Every service visit includes
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -123,7 +123,7 @@ export default function MaintenancePage() {
       {/* Plans */}
       <section id="plans" className="py-16 bg-white">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             Choose your plan
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -142,7 +142,7 @@ export default function MaintenancePage() {
                   </Badge>
                 )}
                 <div className="pt-4">
-                  <h3 className="text-xl font-bold text-[#1E3A5F] mb-2">
+                  <h3 className="text-xl font-normal text-[#1E3A5F] mb-2">
                     {plan.name}
                   </h3>
                   <div className="mb-4">
@@ -181,7 +181,7 @@ export default function MaintenancePage() {
       {/* How it works */}
       <section className="py-16 bg-[#FAFAF9]">
         <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             How it works
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -189,7 +189,7 @@ export default function MaintenancePage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 1
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Choose your plan
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -200,7 +200,7 @@ export default function MaintenancePage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 2
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 We schedule your first visit
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -211,7 +211,7 @@ export default function MaintenancePage() {
               <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
-              <h3 className="font-semibold text-[#1E3A5F] mb-2">
+              <h3 className="font-normal text-[#1E3A5F] mb-2">
                 Sit back and relax
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -225,7 +225,7 @@ export default function MaintenancePage() {
       {/* FAQ */}
       <section className="py-16 bg-white">
         <div className="container max-w-3xl mx-auto px-4 sm:px-6">
-          <h2 className="text-3xl font-bold text-[#1E3A5F] mb-8 text-center">
+          <h2 className="text-3xl font-normal text-[#1E3A5F] mb-8 text-center">
             Frequently Asked Questions
           </h2>
           <Accordion type="single" collapsible className="w-full">
@@ -268,7 +268,7 @@ export default function MaintenancePage() {
       {/* Bottom CTA */}
       <section className="py-16 bg-[#1E3A5F]">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl font-normal text-white mb-4">
             Ready to protect your aircon?
           </h2>
           <p className="text-gray-200 mb-8">

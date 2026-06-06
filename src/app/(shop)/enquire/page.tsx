@@ -186,7 +186,7 @@ export default function EnquiryPage({ className }: EnquiryPageProps) {
       <div className="w-full px-4 sm:px-20">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">Get a Quote</h1>
+          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">Get a Quote</h1>
           <p className="text-muted-foreground">Need help? Call us on <span className="font-semibold text-[#D85A30]">082 123 4567</span></p>
         </div>
         
@@ -226,7 +226,7 @@ const Cart = ({ cartData, form }: CartProps) => {
   return (
     <div className="space-y-6 rounded-lg border-border bg-background p-7 shadow-lg">
       <div>
-        <h2 className="text-xl leading-relaxed font-semibold">Your Quote Summary</h2>
+        <h2 className="text-xl leading-relaxed font-normal">Your Quote Summary</h2>
         <p className="text-sm font-medium text-muted-foreground">
           You have {formItems.length} item{formItems.length !== 1 ? "s" : ""} in your quote.
         </p>
@@ -311,7 +311,7 @@ const CartItem = ({ image, name, link, details, price }: CartItemProps) => {
       </div>
       <div className="flex flex-1 gap-4 max-sm:flex-col sm:items-center">
         <div className="flex-1">
-          <h2 className="font-medium">{name}</h2>
+          <h2 className="font-normal">{name}</h2>
           <ProductDetails details={details} />
         </div>
         <Price className="text-sm font-semibold">
@@ -1001,7 +1001,7 @@ const SuccessState = ({ referenceNumber, email }: { referenceNumber: string; ema
           <CheckCircle2 className="size-8 text-green-600" />
         </div>
         <div className="space-y-2">
-          <h2 className="text-2xl font-bold text-[#1E3A5F]">Quote Request Received!</h2>
+          <h2 className="text-2xl font-normal text-[#1E3A5F]">Quote Request Received!</h2>
           <Badge className="bg-[#1E3A5F] text-white">Reference: {referenceNumber}</Badge>
         </div>
         <p className="text-muted-foreground max-w-md">

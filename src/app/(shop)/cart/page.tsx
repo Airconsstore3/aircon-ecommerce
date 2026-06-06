@@ -45,7 +45,7 @@ export default function CartPage() {
         <div className="container max-w-2xl mx-auto">
           <div className="text-center py-16">
             <ShoppingBag className="size-24 text-muted-foreground mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-[#1E3A5F] mb-2">
+            <h1 className="text-2xl font-normal text-[#1E3A5F] mb-2">
               Your cart is empty
             </h1>
             <p className="text-muted-foreground mb-8">
@@ -68,7 +68,7 @@ export default function CartPage() {
       <div className="container max-w-2xl mx-auto">
         {/* Page Heading */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">
+          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
             Your Quote Cart
           </h1>
           <div className="flex items-center gap-2">

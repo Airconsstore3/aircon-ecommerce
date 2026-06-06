@@ -299,7 +299,7 @@ const ProductList9 = ({ className }: ProductList9Props) => {
       <section className={cn("overflow-hidden py-32", className)}>
       <div className="w-full px-4 sm:px-20">
         <div className="mb-8 flex flex-col gap-3">
-          <h2 className="text-[28px] md:text-[48px] leading-[1.1] font-bold text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)]">
+          <h2 className="text-[28px] md:text-[48px] leading-[1.1] font-normal text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)]">
             Featured units
           </h2>
           <p className="text-sm text-[#94A3B8]">
@@ -428,7 +428,7 @@ const ProductCard = ({
         {/* Product Name and Features */}
         <div className="relative min-h-[72px]">
           <p className="font-bold text-[#1C99D6] text-xs uppercase tracking-wider mb-1">{brand}</p>
-          <h2 className="text-[18px] font-bold leading-[24px] text-black font-[var(--font-google-sans-flex)] line-clamp-2">
+          <h2 className="text-[18px] font-normal leading-[24px] text-black font-[var(--font-google-sans-flex)] line-clamp-2">
             <a href={link} className="hover:underline">
               {name}
             </a>

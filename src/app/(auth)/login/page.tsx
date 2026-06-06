@@ -32,7 +32,7 @@ export default function LoginPage() {
           <CardContent>
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h1 className="text-2xl font-semibold text-[#1E3A5F]">
+                <h1 className="text-2xl font-normal text-[#1E3A5F]">
                   Welcome back
                 </h1>
                 <p className="text-sm text-muted-foreground">

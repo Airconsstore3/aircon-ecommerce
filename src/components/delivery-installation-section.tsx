@@ -52,7 +52,7 @@ export const DeliveryInstallationSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-20 px-4 sm:px-20">
       <div className="w-full max-w-[1440px] mx-auto flex flex-col gap-4">
-        <h2 className="text-[13px] font-medium uppercase tracking-tight text-black m-0 font-[var(--font-google-sans-flex)]">
+        <h2 className="text-[13px] font-normal uppercase tracking-tight text-black m-0 font-[var(--font-google-sans-flex)]">
           <span>Services</span>
         </h2>
 

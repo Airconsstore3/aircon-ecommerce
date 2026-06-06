@@ -74,7 +74,7 @@ const Incentives1 = ({
                     </div>
                   </div>
                   <div className="flex-1 space-y-1">
-                    <h3 className="text-base font-semibold">{title}</h3>
+                    <h3 className="text-base font-normal">{title}</h3>
                     <p className="text-sm">{text}</p>
                   </div>
                 </div>

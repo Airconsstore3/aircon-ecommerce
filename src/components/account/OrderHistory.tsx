@@ -145,7 +145,7 @@ const OrderHistory = ({
             <p className="text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase">
               Account
             </p>
-            <h1 className="mt-2 text-3xl font-bold text-[#1E3A5F] md:text-4xl">
+            <h1 className="mt-2 text-3xl font-normal text-[#1E3A5F] md:text-4xl">
               Order History
             </h1>
           </div>
@@ -179,7 +179,7 @@ const OrderHistory = ({
                         ) : (
                           <Truck className="size-4 text-muted-foreground shrink-0" />
                         )}
-                        <h2 className="text-base sm:text-lg font-medium tracking-wide">
+                        <h2 className="text-base sm:text-lg font-normal tracking-wide">
                           {order.orderNumber}
                         </h2>
                       </div>
@@ -316,7 +316,7 @@ const OrderHistory = ({
                         <Badge variant="secondary" className="mb-2 text-[10px] uppercase">
                           {item.itemType}
                         </Badge>
-                        <h3 className="mt-1 text-sm font-medium">
+                        <h3 className="mt-1 text-sm font-normal">
                           {item.name}
                         </h3>
                         <div className="mt-2 text-xs font-medium text-foreground">

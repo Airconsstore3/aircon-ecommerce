@@ -76,7 +76,7 @@ export function CartDrawer() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-1">
-                      <h4 className="font-medium text-[#1E3A5F] text-sm truncate">
+                      <h4 className="font-normal text-[#1E3A5F] text-sm truncate">
                         {item.name}
                       </h4>
                       <button

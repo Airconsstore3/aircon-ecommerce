@@ -50,7 +50,7 @@ export default function WarrantiesPage() {
       <div className="container max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">
+          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
             My Warranties
           </h1>
           <p className="text-muted-foreground">
@@ -73,7 +73,7 @@ export default function WarrantiesPage() {
                   <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                     <div className="flex-1 space-y-3">
                       <div>
-                        <h3 className="text-lg font-semibold text-[#1E3A5F]">
+                        <h3 className="text-lg font-normal text-[#1E3A5F]">
                           {warranty.product}
                         </h3>
                         <Badge

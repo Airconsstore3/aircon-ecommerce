@@ -92,7 +92,7 @@ const Help2 = ({
       <div className="w-full px-4 sm:px-20">
         <div className="mx-auto max-w-3xl">
           <div className="mb-10 text-center">
-            <h2 className="mb-4 text-4xl font-medium tracking-tight md:text-5xl font-[var(--font-google-sans-flex)]">
+            <h2 className="mb-4 text-4xl font-normal tracking-tight md:text-5xl font-[var(--font-google-sans-flex)]">
               {title}
             </h2>
             <p className="text-muted-foreground font-[var(--font-google-sans-flex)]">{description}</p>
@@ -130,7 +130,7 @@ const Help2 = ({
 
           <div className="rounded-xl bg-muted/50 p-8">
             <div className="mb-6 text-center">
-              <h2 className="mb-2 text-xl font-semibold">{contactTitle}</h2>
+              <h2 className="mb-2 text-xl font-normal">{contactTitle}</h2>
               <p className="text-sm text-muted-foreground">
                 {contactDescription}
               </p>

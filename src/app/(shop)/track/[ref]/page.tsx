@@ -68,7 +68,7 @@ export default function TrackPage({ params }: { params: { ref: string } }) {
       <div className="container max-w-3xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">
+          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
             Track Order
           </h1>
           <p className="text-muted-foreground">
@@ -140,7 +140,7 @@ export default function TrackPage({ params }: { params: { ref: string } }) {
                   </div>
                   <div className="flex-1 pb-6">
                     <div className="flex items-start justify-between mb-1">
-                      <h3 className="font-semibold text-[#1E3A5F]">
+                      <h3 className="font-normal text-[#1E3A5F]">
                         {getStatusLabel(track.status)}
                       </h3>
                       <span className="text-xs text-muted-foreground">

@@ -242,7 +242,7 @@ const HeroSection = ({
                       )}
                     >
                       <div className="flex flex-1 flex-col gap-4 md:group-even:items-end md:group-even:justify-end">
-                        <h1 className="font-[var(--font-google-sans-flex)] text-5xl font-bold tracking-tight leading-tight text-white md:text-6xl md:group-even:text-right lg:text-7xl">
+                        <h1 className="font-[var(--font-google-sans-flex)] text-5xl font-normal tracking-tight leading-tight text-white md:text-6xl md:group-even:text-right lg:text-7xl">
                           {title}
                         </h1>
                         <p className="max-w-130 font-[var(--font-google-sans-flex)] text-base md:text-lg font-normal leading-relaxed text-white/90 md:group-even:text-right">

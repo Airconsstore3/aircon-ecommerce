@@ -362,7 +362,7 @@ const ListCarousel = ({ productsList }: ListCarouselProps) => {
     >
       <div className="flex items-center justify-between pb-6">
         <div className="flex flex-wrap items-end gap-2">
-          <h2 className="text-[28px] md:text-[48px] leading-[1.1] font-bold text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)]">
+          <h2 className="text-[28px] md:text-[48px] leading-[1.1] font-normal text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)]">
             Promo Sales
           </h2>
           <span className="inline-flex items-center rounded-full bg-[#1C99D6] px-3 py-1 text-xs font-bold text-white font-[var(--font-google-sans-flex)]">

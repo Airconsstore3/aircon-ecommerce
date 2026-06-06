@@ -108,7 +108,7 @@ const SolutionCard = ({
 
       {/* Content Container */}
       <div className="flex flex-col flex-1 pt-8 md:pt-[30px] md:pl-[42px] pb-[75px] relative">
-        <h3 className="text-[20px] md:text-[28px] leading-[1.1] md:leading-[31px] font-medium mb-[15px] text-black font-[var(--font-google-sans-flex)]">
+        <h3 className="text-[20px] md:text-[28px] leading-[1.1] md:leading-[31px] font-normal mb-[15px] text-black font-[var(--font-google-sans-flex)]">
           {item.title}
         </h3>
         <div className="text-[13px] md:text-[14px] leading-[18px] md:leading-[20px] font-medium text-black/80 space-y-4 font-[var(--font-google-sans-flex)]">

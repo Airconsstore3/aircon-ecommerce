@@ -172,7 +172,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
       {/* Category Hero */}
       <div className="bg-[#1E3A5F] text-white py-12 px-4 sm:px-20">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">{category.name}</h1>
+          <h1 className="text-3xl md:text-4xl font-normal mb-2">{category.name}</h1>
           <p className="text-gray-200">{category.description}</p>
         </div>
       </div>
@@ -205,7 +205,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
             {/* Header with Sort and Filter Button */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <div>
-                <h1 className="text-2xl font-bold text-[#1E3A5F]">{category.name}</h1>
+                <h1 className="text-2xl font-normal text-[#1E3A5F]">{category.name}</h1>
                 <p className="text-sm text-muted-foreground">
                   Showing {filteredProducts.length} products
                 </p>

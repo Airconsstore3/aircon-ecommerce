@@ -85,7 +85,7 @@ const ProductCategories5 = ({
               </div>
               <div className="absolute inset-0 bg-black/60 z-10"></div>
               <div className="relative z-20">
-                <h3 className="mb-1 text-3xl leading-tight font-semibold text-white sm:text-4xl font-[var(--font-google-sans-flex)]">
+                <h3 className="mb-1 text-3xl leading-tight font-normal text-white sm:text-4xl font-[var(--font-google-sans-flex)]">
                   {category1.title}
                 </h3>
                 <p className="text-xl leading-tight text-white sm:text-2xl font-[var(--font-google-sans-flex)]">
@@ -121,7 +121,7 @@ const ProductCategories5 = ({
               <div className="absolute inset-0 bg-black/60 z-10"></div>
               <div className="relative z-20 flex size-full flex-col items-center justify-end gap-3 pb-6.5">
                 <div>
-                  <h2 className="mb-1 text-center text-3xl leading-tight font-semibold text-white sm:text-4xl font-[var(--font-google-sans-flex)]">
+                  <h2 className="mb-1 text-center text-3xl leading-tight font-normal text-white sm:text-4xl font-[var(--font-google-sans-flex)]">
                     {category2.title}
                   </h2>
                   <p className="text-center text-xl leading-tight text-white sm:text-2xl font-[var(--font-google-sans-flex)]">

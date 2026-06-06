@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 <div className="text-center space-y-2">
-                  <h1 className="text-2xl font-semibold text-[#1E3A5F]">
+                  <h1 className="text-2xl font-normal text-[#1E3A5F]">
                     Reset your password
                   </h1>
                   <p className="text-sm text-muted-foreground">
@@ -87,7 +87,7 @@ export default function ForgotPasswordPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <h1 className="text-2xl font-semibold text-[#1E3A5F]">
+                  <h1 className="text-2xl font-normal text-[#1E3A5F]">
                     Check your email
                   </h1>
                   <p className="text-sm text-muted-foreground">

@@ -25,7 +25,7 @@ export default function ProfilePage() {
       <div className="container max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">
+          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
             My Profile
           </h1>
           <p className="text-muted-foreground">
@@ -134,7 +134,7 @@ export default function ProfilePage() {
 
         {/* Account Actions Card */}
         <div className="bg-white rounded-xl shadow-sm p-6 border-0">
-          <h2 className="text-lg font-semibold text-[#1E3A5F] mb-4">
+          <h2 className="text-lg font-normal text-[#1E3A5F] mb-4">
             Account Actions
           </h2>
           <div className="space-y-3">

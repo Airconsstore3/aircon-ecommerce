@@ -152,7 +152,7 @@ const FilterSidebar = ({ className, isMobile = false, isOpen, onClose }: FilterS
     <div className={cn("space-y-6", className)}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Filters</h2>
+        <h2 className="text-lg font-normal">Filters</h2>
         <Button
           variant="ghost"
           size="sm"
@@ -168,7 +168,7 @@ const FilterSidebar = ({ className, isMobile = false, isOpen, onClose }: FilterS
       {/* Filter Groups */}
       {FILTER_GROUPS.map((group) => (
         <div key={group.id} className="space-y-3">
-          <h3 className="font-medium text-sm">{group.title}</h3>
+          <h3 className="font-normal text-sm">{group.title}</h3>
           <div className="space-y-2">
             {group.options.map((option) => {
               const isChecked = getFilterValues(group.id).includes(option.value);
@@ -203,7 +203,7 @@ const FilterSidebar = ({ className, isMobile = false, isOpen, onClose }: FilterS
 
       {/* Price Range */}
       <div className="space-y-3">
-        <h3 className="font-medium text-sm">Price Range</h3>
+        <h3 className="font-normal text-sm">Price Range</h3>
         <Slider
           min={0}
           max={50000}

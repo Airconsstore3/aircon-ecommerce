@@ -30,7 +30,7 @@ const ProductCategories3 = ({
       <div className="w-full px-4 sm:px-20">
         <div className="relative flex min-h-75 items-center justify-center overflow-hidden rounded-xl before:absolute before:inset-0 before:z-20 before:size-full before:bg-black/30">
           <div className="relative z-30 flex size-full flex-col gap-3 px-6 py-8 md:px-10 lg:px-20">
-            <h1 className="text-center text-4xl font-medium text-white sm:text-5xl">
+            <h1 className="text-center text-4xl font-normal text-white sm:text-5xl">
               {title}
             </h1>
             <p className="text-center text-lg text-white">{summary}</p>

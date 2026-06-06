@@ -29,7 +29,7 @@ const ProductCategories1 = ({
         <div className="grid grid-cols-1 overflow-hidden rounded-xl bg-muted max-md:grid-rows-[repeat(2,minmax(13.75rem,1fr))] md:min-h-91.5 md:grid-cols-2">
           <div className="flex h-full place-content-center place-items-center px-20 py-8">
             <div className="flex flex-col gap-3">
-              <h1 className="animate-in text-center text-4xl leading-relaxed font-medium duration-600 ease-in slide-in-from-bottom-50 fade-in">
+              <h1 className="animate-in text-center text-4xl leading-relaxed font-normal duration-600 ease-in slide-in-from-bottom-50 fade-in">
                 {title}
               </h1>
               <p className="animate-in text-center text-lg leading-normal text-balance duration-600 ease-in slide-in-from-bottom-50 fade-in">

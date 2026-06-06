@@ -65,7 +65,7 @@ const ProductCategories4 = ({
           </div>
           <div className="flex flex-1 items-start">
             <div className="space-y-4">
-              <h1 className="text-2xl leading-tight font-medium text-white sm:text-3xl md:text-4xl lg:text-5xl">
+              <h1 className="text-2xl leading-tight font-normal text-white sm:text-3xl md:text-4xl lg:text-5xl">
                 {title}
               </h1>
               <p className="max-w-100 text-balance text-white/80">

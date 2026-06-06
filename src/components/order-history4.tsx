@@ -191,7 +191,7 @@ const OrderHistory4 = ({
                 {/* Order Header */}
                 <div className="mb-8 flex flex-col gap-4 border-b pb-6 md:flex-row md:items-center md:justify-between">
                   <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
-                    <h2 className="text-lg font-medium tracking-wide">
+                    <h2 className="text-lg font-normal tracking-wide">
                       {order.orderNumber}
                     </h2>
                     <span className="text-sm text-muted-foreground">
@@ -313,7 +313,7 @@ const OrderHistory4 = ({
                         <p className="text-[10px] font-medium tracking-[0.15em] text-muted-foreground uppercase">
                           {item.designer}
                         </p>
-                        <h3 className="mt-1 text-sm font-medium">
+                        <h3 className="mt-1 text-sm font-normal">
                           {item.name}
                         </h3>
                         <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
