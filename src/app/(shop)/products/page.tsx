@@ -57,7 +57,7 @@ function ProductsPageContent() {
   }, []);
 
   if (!isMounted) {
-    return null;
+    return <div className="min-h-screen bg-white">Loading...</div>;
   }
 
   // Get active promotion
