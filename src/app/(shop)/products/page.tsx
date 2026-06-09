@@ -76,7 +76,7 @@ function ProductsPageContent() {
     const categories = searchParams.getAll("category");
     if (categories.length > 0) {
       filtered = filtered.filter((p) =>
-        categories.includes(p.type.toLowerCase())
+        categories.includes(p.type)
       );
     }
 

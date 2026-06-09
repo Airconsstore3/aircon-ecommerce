@@ -38,11 +38,13 @@ const FILTER_GROUPS: FilterGroup[] = [
     id: "category",
     title: "Category",
     options: [
-      { value: "split", label: "Split System", count: 45 },
-      { value: "cassette", label: "Cassette", count: 12 },
-      { value: "floor", label: "Floor Standing", count: 8 },
-      { value: "ceiling", label: "Ceiling Suspended", count: 6 },
-      { value: "multi", label: "Multi-Split", count: 15 },
+      { value: "residential_unit", label: "Residential Units", count: 45 },
+      { value: "commercial_unit", label: "Commercial Units", count: 12 },
+      { value: "installation_kit", label: "Installation Kits", count: 8 },
+      { value: "maintenance_package", label: "Maintenance Packages", count: 6 },
+      { value: "service", label: "Services", count: 15 },
+      { value: "bundle", label: "Bundles", count: 10 },
+      { value: "warranty_plan", label: "Warranty Plans", count: 8 },
     ],
   },
   {
@@ -60,31 +62,10 @@ const FILTER_GROUPS: FilterGroup[] = [
     id: "brand",
     title: "Brand",
     options: [
-      { value: "daikin", label: "Daikin", count: 22 },
-      { value: "mitsubishi", label: "Mitsubishi", count: 18 },
       { value: "samsung", label: "Samsung", count: 15 },
       { value: "lg", label: "LG", count: 12 },
-      { value: "gree", label: "Gree", count: 10 },
-    ],
-  },
-  {
-    id: "type",
-    title: "Type",
-    options: [
-      { value: "inverter", label: "Inverter", count: 38 },
-      { value: "non-inverter", label: "Non-Inverter", count: 15 },
-      { value: "dc", label: "DC Inverter", count: 20 },
-    ],
-  },
-  {
-    id: "features",
-    title: "Features",
-    options: [
-      { value: "wifi", label: "WiFi Control", count: 25 },
-      { value: "quiet", label: "Quiet Mode", count: 30 },
-      { value: "dehumidify", label: "Dehumidification", count: 28 },
-      { value: "heating", label: "Heating & Cooling", count: 35 },
-      { value: "sleep", label: "Sleep Mode", count: 20 },
+      { value: "daikin", label: "Daikin", count: 22 },
+      { value: "midea", label: "Midea", count: 10 },
     ],
   },
 ];
