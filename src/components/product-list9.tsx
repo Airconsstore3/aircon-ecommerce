@@ -420,7 +420,7 @@ const ProductCard = ({
             <img
               src={images[0].src}
               alt={name}
-              className="w-full h-full object-contain mix-blend-multiply"
+              className="w-full h-full object-contain"
             />
           </div>
         </div>
