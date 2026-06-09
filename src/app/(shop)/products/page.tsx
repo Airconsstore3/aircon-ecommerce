@@ -52,14 +52,6 @@ function ProductsPageContent() {
   const [columns, setColumns] = useState<2 | 3 | 4>(4);
   const [isMounted, setIsMounted] = useState(false);
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return <div className="min-h-screen bg-white">Loading...</div>;
-  }
-
   // Get active promotion
   const activePromotion = useMemo(() => {
     const now = new Date();
@@ -142,6 +134,14 @@ function ProductsPageContent() {
 
     return filtered;
   }, [airconProducts, searchParams]);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return <div className="min-h-screen bg-white">Loading...</div>;
+  }
 
   // Update sort
   const updateSort = (value: string) => {
