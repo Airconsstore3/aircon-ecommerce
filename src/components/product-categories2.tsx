@@ -101,8 +101,8 @@ const SolutionCard = ({
       {/* Image Container */}
       <div className="relative w-full md:w-[366.2px] aspect-square flex items-center justify-center shrink-0">
         <div className="relative w-full h-[300px] flex items-center justify-center overflow-hidden">
-          <img src={item.image1} alt={`${item.title} outline`} className={cn("absolute inset-0 w-full h-full object-contain mix-blend-multiply transition-all duration-400 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-none", isHovered ? "opacity-0" : "opacity-100")} />
-          <img src={item.image2} alt={`${item.title} detailed`} className={cn("absolute inset-0 w-full h-full object-contain mix-blend-multiply transition-all duration-400 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-none", isHovered ? "opacity-100" : "opacity-0")} />
+          <img src={item.image1} alt={`${item.title} outline`} className={cn("absolute inset-0 w-full h-full object-contain transition-all duration-400 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-none", isHovered ? "opacity-0" : "opacity-100")} />
+          <img src={item.image2} alt={`${item.title} detailed`} className={cn("absolute inset-0 w-full h-full object-contain transition-all duration-400 ease-[cubic-bezier(0.83,0,0.17,1)] pointer-events-none", isHovered ? "opacity-100" : "opacity-0")} />
         </div>
       </div>
 
