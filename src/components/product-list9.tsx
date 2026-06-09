@@ -143,11 +143,11 @@ const PRODUCTS_LIST: ProductList = [
         variants: [],
         images: [
           {
-            src: "/Hero Images/Featured In section/AR80 Wall-mount AC with WindFree™ and AI technology.png",
+            src: "/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png",
             alt: "Samsung 9000BTU WindFree Inverter",
           },
           {
-            src: "/Hero Images/Featured In section/AR80 Wall-mount AC with WindFree™ and AI technology.png",
+            src: "/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png",
             alt: "Samsung 9000BTU WindFree Inverter",
           },
         ],
