@@ -147,9 +147,8 @@ export const mockProducts: Product[] = [
     brand: 'Samsung',
     btu_size: '9000BTU',
     images: [
-      '/images/products/samsung-9000btu-1.jpg',
-      '/images/products/samsung-9000btu-2.jpg',
-      '/images/products/samsung-9000btu-3.jpg',
+      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
     ],
     price_zar: 8999,
     sale_price_zar: 7999,
@@ -187,8 +186,8 @@ export const mockProducts: Product[] = [
     brand: 'LG',
     btu_size: '12000BTU',
     images: [
-      '/images/products/lg-12000btu-1.jpg',
-      '/images/products/lg-12000btu-2.jpg',
+      '/Hero Images/Featured In section/WindFree™ 4-Way Cassette.png',
+      '/Hero Images/Featured In section/WindFree™ 4-Way Cassette.png',
     ],
     price_zar: 11999,
     is_published: true,
@@ -224,8 +223,8 @@ export const mockProducts: Product[] = [
     brand: 'Daikin',
     btu_size: '24000BTU',
     images: [
-      '/images/products/daikin-ducted-1.jpg',
-      '/images/products/daikin-ducted-2.jpg',
+      '/Hero Images/Featured In section/Daikin Emura.png',
+      '/Hero Images/Featured In section/Daikin Emura.png',
     ],
     price_zar: 0, // No price for enquiry-only
     is_published: true,
@@ -259,7 +258,7 @@ export const mockProducts: Product[] = [
     brand: null,
     btu_size: null,
     images: [
-      '/images/products/installation-service.jpg',
+      '/Hero Images/Featured In section/MAIN  C ARD/MAIN 2.png',
     ],
     price_zar: 2499,
     is_published: true,
@@ -286,7 +285,7 @@ export const mockProducts: Product[] = [
     brand: null,
     btu_size: null,
     images: [
-      '/images/products/maintenance-plan.jpg',
+      '/Hero Images/Featured In section/MAIN  C ARD/MAIN 2.png',
     ],
     price_zar: 899,
     is_published: true,
@@ -315,8 +314,8 @@ export const mockProducts: Product[] = [
     brand: null,
     btu_size: null,
     images: [
-      '/images/products/pipe-kit-3m.jpg',
-      '/images/products/pipe-kit-3m-detail.jpg',
+      '/Hero Images/Featured In section/Midea 6,000 BTU DOE Smart Portable Air Conditioner,.png',
+      '/Hero Images/Featured In section/Midea 6,000 BTU DOE Smart Portable Air Conditioner,.png',
     ],
     price_zar: 699,
     is_published: true,
@@ -345,7 +344,7 @@ export const mockProducts: Product[] = [
     brand: null,
     btu_size: null,
     images: [
-      '/images/products/warranty-plan.jpg',
+      '/Hero Images/Featured In section/MAIN  C ARD/MAIN 2.png',
     ],
     price_zar: 1299,
     is_published: true,
@@ -374,7 +373,7 @@ export const mockProducts: Product[] = [
     brand: 'Samsung',
     btu_size: '9000BTU',
     images: [
-      '/images/products/samsung-bundle.jpg',
+      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
     ],
     price_zar: 10499,
     sale_price_zar: 9999,
