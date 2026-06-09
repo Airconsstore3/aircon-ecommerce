@@ -94,7 +94,7 @@ const SolutionCard = ({
     ease: [0.22, 1, 0.36, 1],
     delay: Number(item.index) * 0.1
   }} className={cn("relative flex flex-col md:flex-row w-full p-8 md:p-[30px] transition-colors duration-200 group", !isFirstRow && "md:border-t-[0.8px] border-[#0A2540]/30")} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
-      <span className="absolute top-[20px] left-[20px] text-[12px] font-bold text-[#1C99D6] z-10 font-[var(--font-google-sans-flex)]">
+      <span className="absolute top-[20px] left-[20px] text-[12px] font-normal text-[#1C99D6] z-10 font-[var(--font-google-sans-flex)]">
         {item.index}
       </span>
       
@@ -111,7 +111,7 @@ const SolutionCard = ({
         <h3 className="text-[20px] md:text-[28px] leading-[1.1] md:leading-[31px] font-normal mb-[15px] text-black font-[var(--font-google-sans-flex)]">
           {item.title}
         </h3>
-        <div className="text-[13px] md:text-[14px] leading-[18px] md:leading-[20px] font-medium text-black/80 space-y-4 font-[var(--font-google-sans-flex)]">
+        <div className="text-[13px] md:text-[14px] leading-[18px] md:leading-[20px] font-normal text-black/80 space-y-4 font-[var(--font-google-sans-flex)]">
           <p className="hidden md:block">{item.description}</p>
           <p className="md:hidden">{item.mobileDescription || item.description}</p>
         </div>
@@ -127,7 +127,7 @@ const SolutionCard = ({
               </div>
             </li>
             <li>
-              <a href={item.link} onClick={e => e.preventDefault()} className="text-[14px] leading-[20px] font-medium text-black inline-block relative border-b border-dashed border-black hover:border-[#1C99D6] hover:text-[#1C99D6] transition-all duration-200 font-[var(--font-google-sans-flex)]">
+              <a href={item.link} onClick={e => e.preventDefault()} className="text-[14px] leading-[20px] font-normal text-black inline-block relative border-b border-dashed border-black hover:border-[#1C99D6] hover:text-[#1C99D6] transition-all duration-200 font-[var(--font-google-sans-flex)]">
                 View Products
               </a>
             </li>
@@ -152,7 +152,7 @@ export const AirconCategories = () => {
           duration: 0.5,
           delay: 0.5
         }} className="mb-4">
-            <span className="text-[14px] leading-[20px] font-medium text-[#1C99D6] uppercase tracking-wider font-[var(--font-google-sans-flex)]">
+            <span className="text-[14px] leading-[20px] font-normal text-[#1C99D6] uppercase tracking-wider font-[var(--font-google-sans-flex)]">
               Categories
             </span>
           </motion.div>
@@ -168,7 +168,7 @@ export const AirconCategories = () => {
         }} transition={{
           duration: 1,
           ease: [0.22, 1, 0.36, 1]
-        }} className="text-[28px] md:text-[48px] leading-[1.1] font-bold text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)] md:whitespace-nowrap">
+        }} className="text-[28px] md:text-[48px] leading-[1.1] font-normal text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)] md:whitespace-nowrap">
             Aircon Product Categories
           </motion.h2>
         </div>
