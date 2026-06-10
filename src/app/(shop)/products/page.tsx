@@ -158,7 +158,7 @@ function ProductsPageContent() {
     <div className="min-h-screen bg-white">
       {/* Promo Banner */}
       {activePromotion && (
-        <div className="bg-[#D85A30] text-white py-3 px-4 text-center">
+        <div className="bg-[#1C99D6] text-white py-3 px-4 text-center">
           <p className="text-sm font-medium">
             {activePromotion.name}
             {activePromotion.code && (
@@ -228,7 +228,7 @@ function ProductsPageContent() {
                     variant={columns === 2 ? "default" : "ghost"}
                     className={cn(
                       "rounded-full",
-                      columns === 2 ? "bg-[#D85A30] hover:bg-[#c44e28] text-white" : ""
+                      columns === 2 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
                     )}
                     onClick={() => setColumns(2)}
                   >
@@ -239,7 +239,7 @@ function ProductsPageContent() {
                     variant={columns === 3 ? "default" : "ghost"}
                     className={cn(
                       "rounded-full",
-                      columns === 3 ? "bg-[#D85A30] hover:bg-[#c44e28] text-white" : ""
+                      columns === 3 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
                     )}
                     onClick={() => setColumns(3)}
                   >
@@ -250,7 +250,7 @@ function ProductsPageContent() {
                     variant={columns === 4 ? "default" : "ghost"}
                     className={cn(
                       "rounded-full",
-                      columns === 4 ? "bg-[#D85A30] hover:bg-[#c44e28] text-white" : ""
+                      columns === 4 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
                     )}
                     onClick={() => setColumns(4)}
                   >

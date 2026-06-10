@@ -52,7 +52,7 @@ export default function CartPage() {
               Start adding products to request a quote
             </p>
             <Button
-              className="bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+              className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
               asChild
             >
               <Link href="/products">Browse Products</Link>
@@ -199,7 +199,7 @@ export default function CartPage() {
             {promoApplied && (
               <div className="flex justify-between text-sm">
                 <span className="text-muted-foreground">Discount</span>
-                <span className="font-medium text-[#D85A30]">
+                <span className="font-medium text-[#1C99D6]">
                   -{formatPrice(discount)}
                 </span>
               </div>
@@ -240,7 +240,7 @@ export default function CartPage() {
         {/* CTA Buttons */}
         <div className="space-y-3">
           <Button
-            className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+            className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             asChild
           >
             <Link href="/enquire">Request Quote</Link>

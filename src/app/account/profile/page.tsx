@@ -125,7 +125,7 @@ export default function ProfilePage() {
 
             <Button
               type="submit"
-              className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+              className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             >
               Save Changes
             </Button>

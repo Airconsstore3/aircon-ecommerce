@@ -160,7 +160,7 @@ async function sendConfirmationEmail(email: string, referenceNumber: string, dat
             <p><strong>Reference Number:</strong> ${referenceNumber}</p>
             <p>We will contact you within 2 hours via WhatsApp and email to discuss your requirements.</p>
             <hr style="margin: 20px 0;">
-            <h3 style="color: #D85A30;">Enquiry Details</h3>
+            <h3 style="color: #1C99D6;">Enquiry Details</h3>
             <p><strong>Property Type:</strong> ${data.propertyType}</p>
             ${data.productSlug ? `<p><strong>Product:</strong> ${data.productSlug}</p>` : ''}
             ${data.installationRequired !== undefined ? `<p><strong>Installation Required:</strong> ${data.installationRequired ? 'Yes' : 'No'}</p>` : ''}

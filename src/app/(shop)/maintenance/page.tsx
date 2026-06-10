@@ -89,7 +89,7 @@ export default function MaintenancePage() {
             </p>
             <Button
               onClick={scrollToPlans}
-              className="bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+              className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             >
               Get Started
             </Button>
@@ -106,8 +106,8 @@ export default function MaintenancePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             {includedItems.map((item, index) => (
               <div key={index} className="flex items-start gap-3">
-                <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                  <item.icon className="size-5 text-[#D85A30]" />
+                <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                  <item.icon className="size-5 text-[#1C99D6]" />
                 </div>
                 <div>
                   <p className="font-medium text-[#1E3A5F] text-sm">
@@ -132,12 +132,12 @@ export default function MaintenancePage() {
                 key={plan.id}
                 className={`relative rounded-xl shadow-sm p-6 border-2 ${
                   plan.popular
-                    ? "border-[#D85A30] bg-white"
+                    ? "border-[#1C99D6] bg-white"
                     : "border-border bg-white"
                 }`}
               >
                 {plan.popular && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#D85A30] text-white">
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#1C99D6] text-white">
                     Most Popular
                   </Badge>
                 )}
@@ -166,7 +166,7 @@ export default function MaintenancePage() {
                     ))}
                   </ul>
                   <Button
-                    className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+                    className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                     asChild
                   >
                     <Link href="/enquire">Get Started</Link>
@@ -186,7 +186,7 @@ export default function MaintenancePage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 1
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -197,7 +197,7 @@ export default function MaintenancePage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 2
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -208,7 +208,7 @@ export default function MaintenancePage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -276,7 +276,7 @@ export default function MaintenancePage() {
           </p>
           <Button
             onClick={scrollToPlans}
-            className="bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+            className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
           >
             Choose a Plan
           </Button>

@@ -13,7 +13,7 @@ export default function AboutPage() {
             <h1 className="text-4xl md:text-5xl font-normal mb-4">
               Cape Town's Trusted Aircon Specialists
             </h1>
-            <div className="w-24 h-1 bg-[#D85A30] mb-6"></div>
+            <div className="w-24 h-1 bg-[#1C99D6] mb-6"></div>
             <p className="text-lg md:text-xl text-gray-200">
               Supplying, installing and maintaining aircon systems across Cape Town since 2015
             </p>
@@ -52,22 +52,22 @@ export default function AboutPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <Shield className="size-8 text-[#D85A30] mb-4" />
+              <Shield className="size-8 text-[#1C99D6] mb-4" />
               <h3 className="font-normal text-[#1E3A5F] mb-2">Licensed & Certified</h3>
               <p className="text-sm text-muted-foreground">Our technicians are fully licensed and certified</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <Clock className="size-8 text-[#D85A30] mb-4" />
+              <Clock className="size-8 text-[#1C99D6] mb-4" />
               <h3 className="font-normal text-[#1E3A5F] mb-2">Same-Day Quotes</h3>
               <p className="text-sm text-muted-foreground">Get quick quotes within 24 hours</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <Award className="size-8 text-[#D85A30] mb-4" />
+              <Award className="size-8 text-[#1C99D6] mb-4" />
               <h3 className="font-normal text-[#1E3A5F] mb-2">Full Warranty</h3>
               <p className="text-sm text-muted-foreground">Complete parts & labour warranty on all work</p>
             </div>
             <div className="bg-white rounded-xl p-6 shadow-sm">
-              <MapPin className="size-8 text-[#D85A30] mb-4" />
+              <MapPin className="size-8 text-[#1C99D6] mb-4" />
               <h3 className="font-normal text-[#1E3A5F] mb-2">Cape Town Based</h3>
               <p className="text-sm text-muted-foreground">Locally owned and operated</p>
             </div>
@@ -83,42 +83,42 @@ export default function AboutPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="flex items-start gap-4">
-              <CheckCircle className="size-6 text-[#D85A30] shrink-0 mt-1" />
+              <CheckCircle className="size-6 text-[#1C99D6] shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-[#1E3A5F]">Residential Aircon</h3>
                 <p className="text-sm text-muted-foreground">Supply & installation for homes</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <CheckCircle className="size-6 text-[#D85A30] shrink-0 mt-1" />
+              <CheckCircle className="size-6 text-[#1C99D6] shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-[#1E3A5F]">Commercial Systems</h3>
                 <p className="text-sm text-muted-foreground">Office and business solutions</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <CheckCircle className="size-6 text-[#D85A30] shrink-0 mt-1" />
+              <CheckCircle className="size-6 text-[#1C99D6] shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-[#1E3A5F]">Maintenance Plans</h3>
                 <p className="text-sm text-muted-foreground">Annual service subscriptions</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <CheckCircle className="size-6 text-[#D85A30] shrink-0 mt-1" />
+              <CheckCircle className="size-6 text-[#1C99D6] shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-[#1E3A5F]">Repair Services</h3>
                 <p className="text-sm text-muted-foreground">Fast callout and repairs</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <CheckCircle className="size-6 text-[#D85A30] shrink-0 mt-1" />
+              <CheckCircle className="size-6 text-[#1C99D6] shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-[#1E3A5F]">Extended Warranty</h3>
                 <p className="text-sm text-muted-foreground">Protection plans for peace of mind</p>
               </div>
             </div>
             <div className="flex items-start gap-4">
-              <CheckCircle className="size-6 text-[#D85A30] shrink-0 mt-1" />
+              <CheckCircle className="size-6 text-[#1C99D6] shrink-0 mt-1" />
               <div>
                 <h3 className="font-semibold text-[#1E3A5F]">Gas Refills</h3>
                 <p className="text-sm text-muted-foreground">Professional gas top-ups</p>
@@ -172,7 +172,7 @@ export default function AboutPage() {
                 Email Us
               </Button>
               <Button
-                className="bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+                className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                 asChild
               >
                 <Link href="/enquire">Get a Free Quote</Link>

@@ -159,7 +159,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* SALE badge — top right */}
           {hasSale && (
             <Badge
-              className="absolute end-3 top-3 z-30 rounded-full bg-[#D85A30] text-white text-xs font-semibold"
+              className="absolute end-3 top-3 z-30 rounded-full bg-[#1C99D6] text-white text-xs font-semibold"
             >
               SALE
             </Badge>
@@ -195,7 +195,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
             <p className="text-sm font-medium text-[#1E3A5F]">Price on request</p>
           ) : hasSale ? (
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-[#D85A30]">
+              <span className="text-sm font-semibold text-[#1C99D6]">
                 {formatZAR(product.sale_price_zar!)}
               </span>
               <span className="text-xs text-muted-foreground line-through">
@@ -203,7 +203,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
               </span>
             </div>
           ) : (
-            <p className="text-sm font-semibold text-[#D85A30]">
+            <p className="text-sm font-semibold text-[#1C99D6]">
               {formatZAR(product.price_zar)}
             </p>
           )}
@@ -247,7 +247,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
             ) : (
               <Button
                 asChild
-                className="w-full rounded-full bg-[#D85A30] hover:bg-[#c44e28] text-white text-sm"
+                className="w-full rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white text-sm"
               >
                 <Link href={`/products/${product.slug}`}>Get Quote</Link>
               </Button>
@@ -375,7 +375,7 @@ const DealCard = ({ deal }: DealCardProps) => {
 
           {/* Price block */}
           <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-[#D85A30]">
+            <span className="text-lg font-bold text-[#1C99D6]">
               {formatZAR(deal.sale_price_zar)}
             </span>
             <span className="text-sm text-muted-foreground line-through">
@@ -402,7 +402,7 @@ const DealCard = ({ deal }: DealCardProps) => {
           <div className="flex gap-2 pt-1">
             <Button
               asChild
-              className="flex-1 rounded-full bg-[#D85A30] hover:bg-[#c44e28] text-white text-sm"
+              className="flex-1 rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white text-sm"
             >
               <Link href={`/enquire?deal=${deal.id}`}>Buy Now</Link>
             </Button>

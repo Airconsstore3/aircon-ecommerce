@@ -81,7 +81,7 @@ export default function RepairsPage() {
           <Card className="rounded-xl shadow-sm border-0">
             <CardHeader className="pb-4">
               <div className="flex items-center gap-2 mb-2">
-                <Zap className="size-5 text-[#D85A30]" />
+                <Zap className="size-5 text-[#1C99D6]" />
                 <CardTitle className="text-lg">Emergency Callout</CardTitle>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -233,7 +233,7 @@ export default function RepairsPage() {
 
             <div className="space-y-2">
               <Label htmlFor="photo">Photo Upload (Optional)</Label>
-              <div className="border-2 border-dashed border-input rounded-lg p-6 text-center hover:border-[#D85A30] transition-colors cursor-pointer">
+              <div className="border-2 border-dashed border-input rounded-lg p-6 text-center hover:border-[#1C99D6] transition-colors cursor-pointer">
                 <Upload className="size-8 text-muted-foreground mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">
                   Click to upload or drag and drop
@@ -252,7 +252,7 @@ export default function RepairsPage() {
 
             <Button
               type="submit"
-              className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+              className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             >
               Submit Repair Request
             </Button>

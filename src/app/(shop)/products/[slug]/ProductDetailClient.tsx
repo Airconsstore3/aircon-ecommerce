@@ -202,16 +202,16 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 </div>
               ) : hasSale ? (
                 <div className="flex items-center gap-3">
-                  <span className="text-3xl font-bold text-[#D85A30]">
+                  <span className="text-3xl font-bold text-[#1C99D6]">
                     {formatZAR(product.sale_price_zar!)}
                   </span>
                   <span className="text-xl text-muted-foreground line-through">
                     {formatZAR(product.price_zar)}
                   </span>
-                  <Badge className="bg-[#D85A30] text-white">SALE</Badge>
+                  <Badge className="bg-[#1C99D6] text-white">SALE</Badge>
                 </div>
               ) : (
-                <span className="text-3xl font-bold text-[#D85A30]">
+                <span className="text-3xl font-bold text-[#1C99D6]">
                   {formatZAR(product.price_zar)}
                 </span>
               )}
@@ -291,7 +291,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <Button
                   asChild
                   size="lg"
-                  className="w-full rounded-full bg-[#D85A30] hover:bg-[#c44e28] text-white"
+                  className="w-full rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white"
                 >
                   <Link href="/enquire">Get Quote</Link>
                 </Button>
@@ -329,7 +329,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   className={cn(
                     "flex items-start gap-3 p-3 rounded-lg border-l-4 cursor-pointer transition-colors",
                     checkedAddons.includes(addon.id)
-                      ? "border-[#D85A30] bg-[#D85A30]/5"
+                      ? "border-[#1C99D6] bg-[#1C99D6]/5"
                       : "border-transparent hover:bg-gray-50"
                   )}
                 >
@@ -348,7 +348,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-medium text-[#1E3A5F]">{addon.name}</span>
-                      <span className="text-sm font-semibold text-[#D85A30]">R {addon.price.toLocaleString()}</span>
+                      <span className="text-sm font-semibold text-[#1C99D6]">R {addon.price.toLocaleString()}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-0.5">{addon.desc}</p>
                   </div>
@@ -378,7 +378,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   key={item}
                   className="flex items-center gap-2 text-xs text-muted-foreground"
                 >
-                  <Shield className="h-3.5 w-3.5 text-[#D85A30] flex-shrink-0" />
+                  <Shield className="h-3.5 w-3.5 text-[#1C99D6] flex-shrink-0" />
                   {item}
                 </div>
               ))}
@@ -435,11 +435,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     key={plan}
                     className={cn(
                       "border rounded-xl p-5 flex flex-col gap-3",
-                      i === 1 && "border-[#D85A30] shadow-md"
+                      i === 1 && "border-[#1C99D6] shadow-md"
                     )}
                   >
                     {i === 1 && (
-                      <Badge className="self-start bg-[#D85A30] text-white text-xs">
+                      <Badge className="self-start bg-[#1C99D6] text-white text-xs">
                         Most Popular
                       </Badge>
                     )}
@@ -449,13 +449,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                       <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /> Compressor failure</li>
                       <li className="flex gap-2"><CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" /> PCB &amp; refrigerant leaks</li>
                     </ul>
-                    <p className="text-lg font-bold text-[#D85A30]">
+                    <p className="text-lg font-bold text-[#1C99D6]">
                       {formatZAR([800, 1500, 2200][i])}
                     </p>
                     <Button
                       asChild
                       variant="outline"
-                      className="w-full rounded-full border-[#D85A30] text-[#D85A30] hover:bg-[#D85A30] hover:text-white"
+                      className="w-full rounded-full border-[#1C99D6] text-[#1C99D6] hover:bg-[#1C99D6] hover:text-white"
                     >
                       <Link href="/enquire">Add to Quote</Link>
                     </Button>
@@ -520,7 +520,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <p className="text-sm font-medium text-[#1E3A5F]">Price on request</p>
             ) : hasSale ? (
               <div>
-                <span className="text-lg font-bold text-[#D85A30]">
+                <span className="text-lg font-bold text-[#1C99D6]">
                   {formatZAR(product.sale_price_zar!)}
                 </span>
                 <span className="text-xs text-muted-foreground line-through ml-2">
@@ -528,14 +528,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 </span>
               </div>
             ) : (
-              <span className="text-lg font-bold text-[#D85A30]">
+              <span className="text-lg font-bold text-[#1C99D6]">
                 {formatZAR(product.price_zar)}
               </span>
             )}
           </div>
           <Button
             asChild
-            className="rounded-full bg-[#D85A30] hover:bg-[#c44e28] text-white px-6"
+            className="rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white px-6"
           >
             <Link href="/enquire">
               {product.is_enquiry_only ? "Request Quote" : "Get Quote"}
@@ -604,7 +604,7 @@ const ProductImages = ({ images, galleryID }: ProductImagesProps) => {
                 onClick={() => api?.scrollTo(index)}
                 data-state={index + 1 === current ? "active" : "inactive"}
                 type="button"
-                className="relative block size-16 overflow-hidden rounded-lg border-2 border-transparent data-[state=active]:border-[#D85A30] transition-colors duration-200"
+                className="relative block size-16 overflow-hidden rounded-lg border-2 border-transparent data-[state=active]:border-[#1C99D6] transition-colors duration-200"
               >
                 <img
                   src={img.thumbnail}
@@ -673,7 +673,7 @@ const ProductImages = ({ images, galleryID }: ProductImagesProps) => {
                 width: `calc(100% / ${images.length})`,
                 transform: `translateX(calc(100% * ${current - 1}))`,
               }}
-              className="absolute h-full bg-[#D85A30] transition-transform duration-300"
+              className="absolute h-full bg-[#1C99D6] transition-transform duration-300"
             />
           </div>
         </div>

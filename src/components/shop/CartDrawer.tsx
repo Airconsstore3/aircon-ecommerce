@@ -34,7 +34,7 @@ export function CartDrawer() {
         <Button variant="ghost" size="icon" className="relative">
           <ShoppingBag className="size-5" />
           {itemCount > 0 && (
-            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-[#D85A30]">
+            <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-[#1C99D6]">
               {itemCount}
             </Badge>
           )}
@@ -47,7 +47,7 @@ export function CartDrawer() {
             <Link
               href="/cart"
               onClick={() => setOpen(false)}
-              className="text-sm text-[#D85A30] hover:underline"
+              className="text-sm text-[#1C99D6] hover:underline"
             >
               View Cart
             </Link>
@@ -122,7 +122,7 @@ export function CartDrawer() {
               <span className="font-semibold text-[#1E3A5F]">{formatPrice(total)}</span>
             </div>
             <Button
-              className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+              className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
               asChild
             >
               <Link href="/enquire" onClick={() => setOpen(false)}>

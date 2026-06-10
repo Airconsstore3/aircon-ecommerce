@@ -16,7 +16,7 @@ export default function TrackPage({ params }: { params: { ref: string } }) {
       case "completed":
         return <CheckCircle className="size-5 text-emerald-500" />;
       case "in_progress":
-        return <Wrench className="size-5 text-[#D85A30]" />;
+        return <Wrench className="size-5 text-[#1C99D6]" />;
       case "scheduled":
         return <Calendar className="size-5 text-blue-500" />;
       case "paid":
@@ -88,7 +88,7 @@ export default function TrackPage({ params }: { params: { ref: string } }) {
                 className={
                   order.status === "completed"
                     ? "bg-emerald-500 hover:bg-emerald-600"
-                    : "bg-[#D85A30] hover:bg-[#c44e28] text-white"
+                    : "bg-[#1C99D6] hover:bg-[#1680b0] text-white"
                 }
               >
                 {getStatusLabel(order.status)}

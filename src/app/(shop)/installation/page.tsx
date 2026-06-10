@@ -29,7 +29,7 @@ export default function InstallationPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button
-                className="bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+                className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                 asChild
               >
                 <Link href="/enquire">Get a Free Quote</Link>
@@ -54,8 +54,8 @@ export default function InstallationPage() {
             <Card className="rounded-xl shadow-sm border-0">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-[#D85A30]/10 p-3 rounded-lg">
-                    <Home className="size-6 text-[#D85A30]" />
+                  <div className="bg-[#1C99D6]/10 p-3 rounded-lg">
+                    <Home className="size-6 text-[#1C99D6]" />
                   </div>
                   <CardTitle className="text-xl text-[#1E3A5F]">
                     Residential
@@ -90,7 +90,7 @@ export default function InstallationPage() {
                   </span>
                 </div>
                 <Button
-                  className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+                  className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                   asChild
                 >
                   <Link href="/enquire">Get Quote</Link>
@@ -102,8 +102,8 @@ export default function InstallationPage() {
             <Card className="rounded-xl shadow-sm border-0">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
-                  <div className="bg-[#D85A30]/10 p-3 rounded-lg">
-                    <Building2 className="size-6 text-[#D85A30]" />
+                  <div className="bg-[#1C99D6]/10 p-3 rounded-lg">
+                    <Building2 className="size-6 text-[#1C99D6]" />
                   </div>
                   <CardTitle className="text-xl text-[#1E3A5F]">
                     Commercial
@@ -138,7 +138,7 @@ export default function InstallationPage() {
                   </span>
                 </div>
                 <Button
-                  className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+                  className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                   asChild
                 >
                   <Link href="/enquire">Request Survey</Link>
@@ -157,7 +157,7 @@ export default function InstallationPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 1
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -168,7 +168,7 @@ export default function InstallationPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 2
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -179,7 +179,7 @@ export default function InstallationPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 3
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -190,7 +190,7 @@ export default function InstallationPage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="bg-[#D85A30] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
+              <div className="bg-[#1C99D6] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-xl font-bold">
                 4
               </div>
               <h3 className="font-normal text-[#1E3A5F] mb-2">
@@ -212,8 +212,8 @@ export default function InstallationPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div className="flex items-start gap-3">
-              <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                <Wrench className="size-5 text-[#D85A30]" />
+              <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                <Wrench className="size-5 text-[#1C99D6]" />
               </div>
               <div>
                 <p className="font-medium text-[#1E3A5F] text-sm">
@@ -225,8 +225,8 @@ export default function InstallationPage() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                <Package className="size-5 text-[#D85A30]" />
+              <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                <Package className="size-5 text-[#1C99D6]" />
               </div>
               <div>
                 <p className="font-medium text-[#1E3A5F] text-sm">
@@ -238,8 +238,8 @@ export default function InstallationPage() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                <Zap className="size-5 text-[#D85A30]" />
+              <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                <Zap className="size-5 text-[#1C99D6]" />
               </div>
               <div>
                 <p className="font-medium text-[#1E3A5F] text-sm">
@@ -251,8 +251,8 @@ export default function InstallationPage() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                <Droplets className="size-5 text-[#D85A30]" />
+              <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                <Droplets className="size-5 text-[#1C99D6]" />
               </div>
               <div>
                 <p className="font-medium text-[#1E3A5F] text-sm">
@@ -264,8 +264,8 @@ export default function InstallationPage() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                <CheckCircle className="size-5 text-[#D85A30]" />
+              <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                <CheckCircle className="size-5 text-[#1C99D6]" />
               </div>
               <div>
                 <p className="font-medium text-[#1E3A5F] text-sm">
@@ -277,8 +277,8 @@ export default function InstallationPage() {
               </div>
             </div>
             <div className="flex items-start gap-3">
-              <div className="bg-[#D85A30]/10 p-2 rounded-lg">
-                <Shield className="size-5 text-[#D85A30]" />
+              <div className="bg-[#1C99D6]/10 p-2 rounded-lg">
+                <Shield className="size-5 text-[#1C99D6]" />
               </div>
               <div>
                 <p className="font-medium text-[#1E3A5F] text-sm">
@@ -370,7 +370,7 @@ export default function InstallationPage() {
             Free site survey — no obligation quote within 24 hours
           </p>
           <Button
-            className="bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-lg"
+            className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             asChild
           >
             <Link href="/enquire">Book Now</Link>
