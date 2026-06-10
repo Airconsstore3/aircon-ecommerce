@@ -158,7 +158,7 @@ function ProductsPageContent() {
     <div className="min-h-screen bg-white">
       {/* Hero Section for Sale Page */}
       {searchParams.get('sale') === 'true' && (
-        <div className="relative h-[400px] mt-[64px] flex items-center overflow-hidden">
+        <div className="relative h-[400px] flex items-center overflow-hidden">
           {/* Background image */}
           <img
             src="/Hero Images/hero summer winter.webp"
