@@ -5,7 +5,7 @@ import { DealCard } from "@/components/shop/ProductCard";
 import { mockDeals } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Sparkles } from "lucide-react";
+import { Mail } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -25,9 +25,6 @@ function DealsPageContent() {
     return deal.deal_type === activeFilter;
   });
 
-  // Get hero deal
-  const heroDeal = mockDeals.find(deal => deal.is_hero);
-
   // Handle email subscription
   const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,28 +39,32 @@ function DealsPageContent() {
   return (
     <div className="min-h-screen bg-white">
       
-      {/* Hero Promo Banner */}
-      {heroDeal && (
-        <div className="bg-gradient-to-r from-[#1C99D6] to-[#1E3A5F] text-white py-[32px] px-[16px]">
-          <div className="max-w-[1280px] mx-auto">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-[16px]">
-              <div className="flex items-center gap-[12px]">
-                <Sparkles className="w-[32px] h-[32px]" />
-                <div>
-                  <h1 className="text-[24px] font-bold leading-tight">Winter Special</h1>
-                  <p className="text-[14px] opacity-90 leading-snug">{heroDeal.name} - Limited Time Offer</p>
-                </div>
-              </div>
-              <Button
-                asChild
-                className="bg-white text-[#1C99D6] hover:bg-gray-100 rounded-full font-semibold px-[24px] py-[12px]"
-              >
-                <a href={`/enquire?deal=${heroDeal.id}`}>Get This Deal</a>
-              </Button>
-            </div>
+      {/* Hero Section */}
+      <div className="bg-[#FAFAF9] py-[80px] px-[16px]">
+        <div className="max-w-[1280px] mx-auto text-center">
+          <h1 className="text-[48px] md:text-[64px] font-bold text-[#1E3A5F] uppercase tracking-[2px] leading-tight mb-[24px]">
+            Latest Deals
+          </h1>
+          <p className="text-[16px] md:text-[18px] text-[#94A3B8] max-w-[600px] mx-auto leading-relaxed mb-[32px]">
+            Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px]">
+            <Button
+              asChild
+              className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
+            >
+              <a href="#deals-grid">Shop Now</a>
+            </Button>
+            <Button
+              variant="outline"
+              asChild
+              className="border-[#1C99D6] text-[#1C99D6] hover:bg-[#1C99D6] hover:text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
+            >
+              <a href="/enquire">Get a Quote</a>
+            </Button>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Main Content */}
       <div className="max-w-[1280px] mx-auto px-[16px] sm:px-[24px] lg:px-[32px] py-[32px]">
@@ -94,6 +95,7 @@ function DealsPageContent() {
         </div>
 
         {/* Deals Grid */}
+        <div id="deals-grid">
         {filteredDeals.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[24px]">
             {filteredDeals.map((deal) => (
@@ -112,6 +114,7 @@ function DealsPageContent() {
             </Button>
           </div>
         )}
+        </div>
 
         {/* Email Capture for Deal Alerts */}
         <div className="mt-[64px] bg-gray-50 rounded-[16px] p-[32px] border">

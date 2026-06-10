@@ -156,6 +156,35 @@ function ProductsPageContent() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Hero Section for Sale Page */}
+      {searchParams.get('sale') === 'true' && (
+        <div className="bg-white py-[80px] px-[16px] sm:px-[24px] lg:px-[32px]">
+          <div className="max-w-[1280px] mx-auto">
+            <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-[#1E3A5F] mb-[24px]">
+              Latest Deals
+            </h1>
+            <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-[#475569] max-w-[600px] mb-[32px]">
+              Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
+            </p>
+            <div className="flex flex-col sm:flex-row items-start gap-[16px]">
+              <Button
+                asChild
+                className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
+              >
+                <a href="#products-grid">Shop Now</a>
+              </Button>
+              <Button
+                variant="outline"
+                asChild
+                className="border-[#1C99D6] text-[#1C99D6] hover:bg-[#1C99D6] hover:text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
+              >
+                <a href="/enquire">Get a Quote</a>
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Promo Banner */}
       {activePromotion && (
         <div className="bg-[#1C99D6] text-white py-3 px-4 text-center">
@@ -278,6 +307,7 @@ function ProductsPageContent() {
             </div>
 
             {/* Product Grid */}
+            <div id="products-grid">
             {filteredProducts.length > 0 ? (
               <AirconProductList products={filteredProducts} columns={columns} />
             ) : (
@@ -292,6 +322,7 @@ function ProductsPageContent() {
                 </Button>
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
