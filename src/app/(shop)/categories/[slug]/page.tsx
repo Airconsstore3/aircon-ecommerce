@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2 } from "lucide-react";
+import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2, ChevronRight } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useState, useMemo, use } from "react";
 import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
@@ -190,14 +190,6 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
         </div>
       )}
 
-      {/* Category Hero */}
-      <div className="bg-[#1E3A5F] text-white py-12 px-4 sm:px-20">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl md:text-4xl font-normal mb-2">{category.name}</h1>
-          <p className="text-gray-200">{category.description}</p>
-        </div>
-      </div>
-
       {/* Breadcrumb */}
       <div className="w-full px-4 sm:px-20 py-4 border-b">
         <nav className="flex items-center text-sm text-muted-foreground">
@@ -313,7 +305,31 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
             {/* Product Grid */}
             {filteredProducts.length > 0 ? (
-              <AirconProductList products={filteredProducts} columns={columns} />
+              <>
+                <AirconProductList products={filteredProducts} columns={columns} />
+                {/* Pagination */}
+                <div className="flex items-center justify-center gap-2 mt-8">
+                  <Button variant="outline" size="icon" disabled className="rounded-full">
+                    <ChevronRight className="w-4 h-4 rotate-180" />
+                  </Button>
+                  <Button variant="default" size="icon" className="rounded-full bg-[#1C99D6] hover:bg-[#1680b0]">
+                    1
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    2
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    3
+                  </Button>
+                  <span className="text-muted-foreground">...</span>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    10
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </>
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">No products found in this category.</p>

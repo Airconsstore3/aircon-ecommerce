@@ -5,7 +5,7 @@ import { DealCard } from "@/components/shop/ProductCard";
 import { mockDeals } from "@/lib/mock-data";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail } from "lucide-react";
+import { Mail, ChevronRight } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -111,11 +111,35 @@ function DealsPageContent() {
         {/* Deals Grid */}
         <div id="deals-grid">
         {filteredDeals.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[24px]">
-            {filteredDeals.map((deal) => (
-              <DealCard key={deal.id} deal={deal} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[24px]">
+              {filteredDeals.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+              ))}
+            </div>
+            {/* Pagination */}
+            <div className="flex items-center justify-center gap-2 mt-8">
+              <Button variant="outline" size="icon" disabled className="rounded-full">
+                <ChevronRight className="w-4 h-4 rotate-180" />
+              </Button>
+              <Button variant="default" size="icon" className="rounded-full bg-[#1C99D6] hover:bg-[#1680b0]">
+                1
+              </Button>
+              <Button variant="outline" size="icon" className="rounded-full">
+                2
+              </Button>
+              <Button variant="outline" size="icon" className="rounded-full">
+                3
+              </Button>
+              <span className="text-muted-foreground">...</span>
+              <Button variant="outline" size="icon" className="rounded-full">
+                10
+              </Button>
+              <Button variant="outline" size="icon" className="rounded-full">
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
         ) : (
           <div className="text-center py-[48px]">
             <p className="text-[14px] text-muted-foreground">No deals available for this category.</p>
