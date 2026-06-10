@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2 } from "lucide-react";
+import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2, ChevronRight } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect, Suspense } from "react";
 import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
@@ -212,12 +212,12 @@ function ProductsPageContent() {
       )}
 
       {/* Breadcrumb */}
-      <div className="w-full px-4 sm:px-20 pt-[220px] pb-4 md:pt-[180px] border-b">
+      <div className="w-full px-4 sm:px-20 pt-[220px] pb-[120px] mb-8 md:pt-[180px] border-b">
         <nav className="flex items-center text-sm text-muted-foreground">
-          <a href="/" className="hover:text-foreground">
+          <a href="/" className="hover:text-foreground flex items-center gap-1">
             Home
           </a>
-          <span className="mx-2">/</span>
+          <ChevronRight className="w-4 h-4" />
           <span className="text-foreground font-medium">Products</span>
         </nav>
       </div>
@@ -323,7 +323,31 @@ function ProductsPageContent() {
             {/* Product Grid */}
             <div id="products-grid">
             {filteredProducts.length > 0 ? (
-              <AirconProductList products={filteredProducts} columns={columns} />
+              <>
+                <AirconProductList products={filteredProducts} columns={columns} />
+                {/* Pagination */}
+                <div className="flex items-center justify-center gap-2 mt-8">
+                  <Button variant="outline" size="icon" disabled className="rounded-full">
+                    <ChevronRight className="w-4 h-4 rotate-180" />
+                  </Button>
+                  <Button variant="default" size="icon" className="rounded-full bg-[#1C99D6] hover:bg-[#1680b0]">
+                    1
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    2
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    3
+                  </Button>
+                  <span className="text-muted-foreground">...</span>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    10
+                  </Button>
+                  <Button variant="outline" size="icon" className="rounded-full">
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </>
             ) : (
               <div className="text-center py-12">
                 <p className="text-muted-foreground">No products found matching your filters.</p>
