@@ -367,13 +367,6 @@ const ProductCard = ({
               />
             ))}
           </div>
-          <div className="absolute inset-x-0 bottom-0 z-10 overflow-hidden max-md:hidden">
-            <div className="flex justify-end gap-4 p-4">
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <Heart />
-              </Button>
-            </div>
-          </div>
         </div>
         <div className="px-2 py-4">
           {category && (

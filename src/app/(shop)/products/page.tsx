@@ -158,7 +158,7 @@ function ProductsPageContent() {
     <div className="min-h-screen bg-white">
       {/* Hero Section for Sale Page */}
       {searchParams.get('sale') === 'true' && (
-        <div className="relative h-[400px] mt-[96px] flex items-center overflow-hidden">
+        <div className="relative h-[400px] mt-[64px] flex items-center overflow-hidden">
           {/* Background image */}
           <img
             src="/Hero Images/hero summer winter.webp"
@@ -175,20 +175,25 @@ function ProductsPageContent() {
             <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
               Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
             </p>
-            <div className="flex flex-col sm:flex-row items-start gap-[16px]">
-              <Button
-                asChild
-                className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
-              >
-                <a href="#products-grid">Shop Now</a>
-              </Button>
-              <Button
-                variant="outline"
-                asChild
-                className="border-white text-white hover:bg-white hover:text-[#1C99D6] rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
-              >
-                <a href="/enquire">Get a Quote</a>
-              </Button>
+            <div className="flex flex-col sm:flex-row items-start gap-[24px]">
+              <div className="aircon-angled-button-wrap">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+                >
+                  <a href="#products-grid">Shop Now</a>
+                </Button>
+              </div>
+              <div className="aircon-angled-button-wrap">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+                >
+                  <a href="/enquire">Get a Quote</a>
+                </Button>
+              </div>
             </div>
           </div>
         </div>

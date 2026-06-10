@@ -51,6 +51,8 @@ type Variant = {
   images: [Image, Image];
 };
 interface Product {
+  id: string;
+  slug: string;
   name: string;
   category: {
     label: string;
@@ -64,6 +66,8 @@ interface Product {
   brand?: string;
   btu_size?: string;
   btu_options?: string[];
+  type?: string;
+  is_enquiry_only?: boolean;
 }
 
 interface PromoData {
@@ -122,6 +126,8 @@ const PRODUCTS_LIST: ProductList = [
     },
     products: [
       {
+        id: "prod-samsung-9000",
+        slug: "samsung-9000btu-windfree",
         name: "Samsung 9000BTU WindFree Inverter",
         price: {
           regular: 8999,
@@ -133,6 +139,8 @@ const PRODUCTS_LIST: ProductList = [
           link: "/categories/residential",
         },
         link: "/products/samsung-9000btu-windfree",
+        type: "aircon",
+        is_enquiry_only: false,
         brand: "Samsung",
         btu_size: "9000BTU",
         btu_options: ["9,000 BTU/h", "12,000 BTU/h", "18,000 BTU/h"],
@@ -155,6 +163,8 @@ const PRODUCTS_LIST: ProductList = [
         ],
       },
       {
+        id: "prod-lg-12000",
+        slug: "lg-12000btu-dual-inverter",
         name: "LG 12000BTU Dual Inverter",
         price: {
           regular: 9499,
@@ -165,6 +175,8 @@ const PRODUCTS_LIST: ProductList = [
           link: "/categories/residential",
         },
         link: "/products/lg-12000btu-dual-inverter",
+        type: "aircon",
+        is_enquiry_only: false,
         brand: "LG",
         btu_size: "12000BTU",
         btu_options: ["12,000 BTU/h", "18,000 BTU/h"],
@@ -182,6 +194,8 @@ const PRODUCTS_LIST: ProductList = [
         ],
       },
       {
+        id: "prod-daikin-9000",
+        slug: "daikin-9000btu-smile",
         name: "Daikin 9000BTU Smile Series",
         price: {
           regular: 8999,
@@ -192,6 +206,8 @@ const PRODUCTS_LIST: ProductList = [
           link: "/categories/residential",
         },
         link: "/products/daikin-9000btu-smile",
+        type: "aircon",
+        is_enquiry_only: false,
         brand: "Daikin",
         btu_size: "9000BTU",
         btu_options: ["9,000 BTU/h", "12,000 BTU/h"],
@@ -209,6 +225,8 @@ const PRODUCTS_LIST: ProductList = [
         ],
       },
       {
+        id: "prod-midea-18000",
+        slug: "midea-18000btu-inverter",
         name: "Midea 18000BTU Inverter Split",
         price: {
           regular: 11999,
@@ -219,6 +237,8 @@ const PRODUCTS_LIST: ProductList = [
           link: "/categories/residential",
         },
         link: "/products/midea-18000btu-inverter",
+        type: "aircon",
+        is_enquiry_only: false,
         brand: "Midea",
         btu_size: "18000BTU",
         btu_options: ["18,000 BTU/h", "24,000 BTU/h"],
@@ -378,6 +398,8 @@ const PromoCard = ({ title, cta, kicker }: PromoCardProps) => {
 };
 
 const ProductCard = ({
+  id,
+  slug,
   link,
   images,
   name,
@@ -388,7 +410,10 @@ const ProductCard = ({
   brand,
   btu_size,
   btu_options,
+  type = "aircon",
+  is_enquiry_only = false,
 }: ProductCardProps) => {
+  const { addItem } = useCart();
   const { regular, sale, currency } = price;
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedBtu, setSelectedBtu] = useState<string>(btu_options?.[0] || "");
@@ -485,17 +510,31 @@ const ProductCard = ({
         <div className="mt-auto pt-[11px] flex flex-col gap-2">
           <button
             type="button"
+            onClick={() =>
+              addItem({
+                id,
+                name,
+                slug,
+                price_zar: regular,
+                sale_price_zar: sale,
+                images: images.map((img) => img.src),
+                type,
+                is_enquiry_only,
+              })
+            }
             className="w-full h-10 border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-sm font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-2 font-[var(--font-google-sans-flex)]"
           >
             <ShoppingCart className="w-4 h-4" />
             Add to cart
           </button>
-          <button
-            type="button"
-            className="w-full h-10 border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-sm font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center font-[var(--font-google-sans-flex)]"
-          >
-            View product
-          </button>
+          <Link href={`/products/${slug}`}>
+            <button
+              type="button"
+              className="w-full h-10 border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-sm font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center font-[var(--font-google-sans-flex)]"
+            >
+              View product
+            </button>
+          </Link>
         </div>
       </CardContent>
     </Card>

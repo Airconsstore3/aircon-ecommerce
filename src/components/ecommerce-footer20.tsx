@@ -168,7 +168,7 @@ const FOOTER_LINKS: FooterLinksSection[] = [
       },
       {
         text: "Track Order",
-        link: "/track",
+        link: "/account/orders",
       },
     ],
   },
@@ -211,7 +211,7 @@ const SUBMENU = [
   },
   {
     text: "Track Order",
-    link: "/track",
+    link: "/account/orders",
   },
   {
     text: "Contact Us",
@@ -345,7 +345,8 @@ const NewsletterSection = ({ title }: NewsletterFormProps) => {
   });
 
   const onSubmit = (data: newsletterFormType) => {
-    console.log(data);
+    alert("Thanks for subscribing! You'll receive updates at " + data.email);
+    form.reset();
   };
 
   return (

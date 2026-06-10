@@ -5,6 +5,7 @@ import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useCart } from "@/components/shop/CartProvider";
 import z from "zod";
 
 import { Price, PriceValue } from "@/components/price";
@@ -55,6 +56,8 @@ type Option = {
 };
 
 interface Product {
+  id: string;
+  slug: string;
   name: string;
   collection: {
     label: string;
@@ -74,6 +77,8 @@ interface Product {
   };
   stockStatusCode: StockStatusCode;
   rating?: number;
+  type?: string;
+  is_enquiry_only?: boolean;
 }
 
 type ProductCard = Product;
@@ -109,11 +114,15 @@ type ProductList = Array<Product>;
 
 const PRODUCTS_LIST: ProductList = [
   {
+    id: "prod-alliance-black-mirror",
+    slug: "alliance-black-mirror",
     collection: {
       label: "Alliance",
       link: "/categories/residential",
     },
     name: "Alliance Black Mirror",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "alliance_black_mirror",
     link: "/products/alliance-black-mirror",
     image: {
@@ -130,11 +139,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.5,
   },
   {
+    id: "prod-alliance-multi-split",
+    slug: "alliance-multi-split",
     collection: {
       label: "Alliance",
       link: "/categories/residential",
     },
     name: "Alliance Multi Split",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "alliance_multi_split",
     link: "/products/alliance-multi-split",
     image: {
@@ -151,11 +164,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.8,
   },
   {
+    id: "prod-daikin-perfera",
+    slug: "daikin-perfera-wall",
     collection: {
       label: "Daikin",
       link: "/categories/residential",
     },
     name: "Daikin Perfera Wall",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "daikin_perfera",
     link: "/products/daikin-perfera-wall",
     image: {
@@ -172,11 +189,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.7,
   },
   {
+    id: "prod-jet-air-red",
+    slug: "jet-air-red",
     collection: {
       label: "Jet Air",
       link: "/categories/residential",
     },
     name: "Jet Air Red",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "jet_air_red",
     link: "/products/jet-air-red",
     image: {
@@ -193,11 +214,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.3,
   },
   {
+    id: "prod-jet-air-black-mirror",
+    slug: "jet-air-black-mirror",
     collection: {
       label: "Jet Air",
       link: "/categories/residential",
     },
     name: "Jet Air Black Mirror",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "jet_air_black_mirror",
     link: "/products/jet-air-black-mirror",
     image: {
@@ -214,11 +239,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.6,
   },
   {
+    id: "prod-lg-dual-inverter",
+    slug: "lg-dual-inverter",
     collection: {
       label: "LG",
       link: "/categories/residential",
     },
     name: "LG Dual Inverter",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "lg_dual_inverter",
     link: "/products/lg-dual-inverter",
     image: {
@@ -235,11 +264,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.9,
   },
   {
+    id: "prod-samsung-dvm-s2",
+    slug: "samsung-dvm-s2",
     collection: {
       label: "Samsung",
       link: "/categories/residential",
     },
     name: "Samsung DVM S2+",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "samsung_dvm_s2",
     link: "/products/samsung-dvm-s2",
     image: {
@@ -256,11 +289,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.4,
   },
   {
+    id: "prod-samsung-slimduct",
+    slug: "samsung-slimduct-r32",
     collection: {
       label: "Samsung",
       link: "/categories/residential",
     },
     name: "Samsung SlimDuct R32",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "samsung_slimduct",
     link: "/products/samsung-slimduct-r32",
     image: {
@@ -277,11 +314,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.2,
   },
   {
+    id: "prod-samsung-ar3000",
+    slug: "samsung-ar3000",
     collection: {
       label: "Samsung",
       link: "/categories/residential",
     },
     name: "Samsung AR3000",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "samsung_ar3000",
     link: "/products/samsung-ar3000",
     image: {
@@ -298,11 +339,15 @@ const PRODUCTS_LIST: ProductList = [
     rating: 4.1,
   },
   {
+    id: "prod-samsung-ar70",
+    slug: "samsung-ar70",
     collection: {
       label: "Samsung",
       link: "/categories/residential",
     },
     name: "Samsung AR70",
+    type: "aircon",
+    is_enquiry_only: false,
     variantId: "samsung_ar70",
     link: "/products/samsung-ar70",
     image: {
@@ -404,6 +449,8 @@ const formSchema = z.object({
 });
 
 const ProductCard = ({
+  id,
+  slug,
   name,
   image,
   stockStatusCode,
@@ -414,7 +461,10 @@ const ProductCard = ({
   variants,
   variantId,
   rating,
+  type = "aircon",
+  is_enquiry_only = false,
 }: ProductCardProps) => {
+  const { addItem } = useCart();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -446,16 +496,26 @@ const ProductCard = ({
             )}
           </Link>
           <div className="absolute left-[16px] right-[16px] bottom-[48px] flex justify-center">
-            <Link href={link}>
-              <button
-                type="button"
-                style={{ width: 'var(--button-width, 200px)' }}
-                className="h-[40px] border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-[14px] font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-[8px] font-[var(--font-google-sans-flex)]"
-              >
-                <ShoppingCart className="w-[16px] h-[16px]" />
-                Buy Now
-              </button>
-            </Link>
+            <button
+              type="button"
+              onClick={() =>
+                addItem({
+                  id,
+                  name,
+                  slug,
+                  price_zar: regular,
+                  sale_price_zar: sale,
+                  images: [image.src],
+                  type,
+                  is_enquiry_only,
+                })
+              }
+              style={{ width: 'var(--button-width, 200px)' }}
+              className="h-[40px] border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-[14px] font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-[8px] font-[var(--font-google-sans-flex)]"
+            >
+              <ShoppingCart className="w-[16px] h-[16px]" />
+              Buy Now
+            </button>
           </div>
         </AspectRatio>
       </CardHeader>
