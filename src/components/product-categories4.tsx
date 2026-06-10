@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 type BreadcrumbLink = {
@@ -29,10 +30,11 @@ interface ProductCategories4Props extends ProductCategory {
 const BreadcrumbLinks = [
   {
     label: "Home",
+    link: "/",
   },
   {
     label: "Handbags",
-    link: "#",
+    link: "/categories/residential",
   },
 ];
 
@@ -94,12 +96,16 @@ const ProductsCategoryBreadcrumb = ({ links }: { links: BreadcrumbLink[] }) => {
                     {label}
                   </BreadcrumbPage>
                 ) : (
-                  <BreadcrumbLink
-                    href={link}
-                    className="cursor-pointer text-white/70 hover:text-white"
-                  >
-                    {label}
-                  </BreadcrumbLink>
+                  link ? (
+                    <Link
+                      href={link}
+                      className="cursor-pointer text-white/70 hover:text-white"
+                    >
+                      {label}
+                    </Link>
+                  ) : (
+                    <span className="text-white/70">{label}</span>
+                  )
                 )}
               </BreadcrumbItem>
               {!isLast && (

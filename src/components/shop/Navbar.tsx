@@ -55,7 +55,7 @@ export function Navbar() {
       <div className="flex h-[var(--primary-nav-height)] items-center gap-3 bg-black px-6 py-4 text-white">
         {/* Logo */}
         <Link href="/" className="shrink-0 p-2">
-          <span className="text-2xl font-bold text-white logo-text">Aircons Store</span>
+          <span className="text-2xl font-bold text-white logo-text font-[var(--font-poppins)]">Aircons Store</span>
         </Link>
 
         <div className="ml-auto flex items-center gap-3">

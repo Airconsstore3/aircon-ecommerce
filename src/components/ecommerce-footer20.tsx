@@ -115,15 +115,15 @@ const SOCIAL_ICONS = {
 const SOCIAL_MEDIA_LINKS = [
   {
     icon: SOCIAL_ICONS.facebook,
-    link: "#",
+    link: "https://facebook.com/airconsstore",
   },
   {
     icon: SOCIAL_ICONS.x,
-    link: "#",
+    link: "https://twitter.com/airconsstore",
   },
   {
     icon: SOCIAL_ICONS.instagram,
-    link: "#",
+    link: "https://instagram.com/airconsstore",
   },
 ];
 
@@ -273,7 +273,7 @@ const EcommerceFooter20 = ({
                 <NewsletterSection {...newsletter} />
               </div>
               <div className="space-y-6">
-                <a href="#" className="block">
+                <a href="/" className="block">
                   {footerData?.homeLink?.logo?.light && (
                     <img
                       className="h-12 w-auto dark:hidden"

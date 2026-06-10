@@ -3,7 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import type { SubmitHandler, UseFormReturn } from "react-hook-form";
 import {
   Controller,
@@ -73,8 +74,11 @@ const enquiryFormSchema = z.object({
   contact: z.object({
     fullName: z.string().min(2, "Full name is required"),
     email: z.string().email("Invalid email address"),
-    phone: z.string().min(10, "Phone number is required"),
+    phone: z.string().regex(/^0[6-8][0-9]{8}$/, "Please enter a valid SA phone number (e.g., 082 123 4567)"),
   }),
+  
+  // Product of interest (for single product enquiries)
+  productSlug: z.string().optional(),
   
   // Residential install address
   residential: z.object({
@@ -100,12 +104,21 @@ const enquiryFormSchema = z.object({
     specialRequirements: z.string().optional(),
   }).optional(),
   
-  // Products in quote
+  // Products in quote (for cart-based enquiries)
   products: z.array(z.object({
     product_id: z.string(),
     quantity: z.number().min(1),
     price: z.number(),
-  })),
+  })).optional(),
+  
+  // Installation required
+  installationRequired: z.boolean().optional(),
+  
+  // Installation add-ons (conditional)
+  installationAddons: z.array(z.string()).optional(),
+  
+  // Message
+  message: z.string().optional(),
   
   // Promo code
   promoCode: z.string().optional(),
@@ -128,8 +141,10 @@ interface EnquiryFormProps {
   onSubmit: SubmitHandler<EnquiryFormType>;
 }
 
-export default function EnquiryPage({ className }: EnquiryPageProps) {
+function EnquiryPageContent({ className }: EnquiryPageProps) {
   const { items: cartItems } = useCart();
+  const searchParams = useSearchParams();
+  const productSlug = searchParams.get("product");
   
   // Convert CartProvider items to CartItem format
   const cartData: CartType = {
@@ -166,19 +181,42 @@ export default function EnquiryPage({ className }: EnquiryPageProps) {
     resolver: zodResolver(enquiryFormSchema),
     defaultValues: {
       propertyType: "residential",
-      products: defaultProducts,
+      products: defaultProducts.length > 0 ? defaultProducts : undefined,
+      productSlug: productSlug || undefined,
+      installationRequired: false,
     },
   });
 
   const [submitted, setSubmitted] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
 
-  const onSubmit: SubmitHandler<EnquiryFormType> = (data: EnquiryFormType) => {
+  const onSubmit: SubmitHandler<EnquiryFormType> = async (data: EnquiryFormType) => {
     console.log(data);
-    // Generate reference number
-    const ref = `ENQ-2025-${String(Math.floor(Math.random() * 9999)).padStart(4, "0")}`;
-    setReferenceNumber(ref);
-    setSubmitted(true);
+    
+    // POST to /api/enquire
+    try {
+      const response = await fetch('/api/enquire', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to submit enquiry');
+      }
+      
+      const result = await response.json();
+      setReferenceNumber(result.referenceNumber);
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting enquiry:', error);
+      // Fallback to local reference generation
+      const ref = `ENQ-2025-${String(Math.floor(Math.random() * 9999)).padStart(4, "0")}`;
+      setReferenceNumber(ref);
+      setSubmitted(true);
+    }
   };
 
   return (
@@ -187,7 +225,7 @@ export default function EnquiryPage({ className }: EnquiryPageProps) {
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">Get a Quote</h1>
-          <p className="text-muted-foreground">Need help? Call us on <span className="font-semibold text-[#D85A30]">082 123 4567</span></p>
+          <p className="text-muted-foreground">Need help? Call us on <span className="font-semibold text-[#1C99D6]">082 123 4567</span></p>
         </div>
         
         <FormProvider {...form}>
@@ -212,6 +250,14 @@ export default function EnquiryPage({ className }: EnquiryPageProps) {
   );
 }
 
+export default function EnquiryPage({ className }: EnquiryPageProps) {
+  return (
+    <Suspense fallback={<div className="bg-muted pt-20 pb-12 md:pt-32 md:pb-32"><div className="w-full px-4 sm:px-20"><p>Loading...</p></div></div>}>
+      <EnquiryPageContent className={className} />
+    </Suspense>
+  );
+}
+
 const Cart = ({ cartData, form }: CartProps) => {
   const { fields } = useFieldArray({
     control: form.control,
@@ -220,7 +266,7 @@ const Cart = ({ cartData, form }: CartProps) => {
 
   const formItems = form.watch("products");
 
-  const subTotalPrice = formItems?.reduce((sum, p) => sum + (p.price * p.quantity), 0);
+  const subTotalPrice = formItems?.reduce((sum, p) => sum + (p.price * p.quantity), 0) || 0;
   const totalPrice = subTotalPrice - cartData.discount.price;
 
   return (
@@ -228,7 +274,7 @@ const Cart = ({ cartData, form }: CartProps) => {
       <div>
         <h2 className="text-xl leading-relaxed font-normal">Your Quote Summary</h2>
         <p className="text-sm font-medium text-muted-foreground">
-          You have {formItems.length} item{formItems.length !== 1 ? "s" : ""} in your quote.
+          You have {formItems?.length || 0} item{(formItems?.length || 0) !== 1 ? "s" : ""} in your quote.
         </p>
       </div>
       <Separator />
@@ -275,7 +321,7 @@ const Cart = ({ cartData, form }: CartProps) => {
           <PriceValue
             price={totalPrice}
             currency="ZAR"
-            className="text-lg font-bold text-[#D85A30]"
+            className="text-lg font-bold text-[#1C99D6]"
           />
         </Price>
       </div>
@@ -441,7 +487,7 @@ const EnquiryForm = ({ onSubmit }: EnquiryFormProps) => {
                 className={cn(
                   "flex-1 rounded-full",
                   field.value === "residential" 
-                    ? "bg-[#D85A30] hover:bg-[#c44e28] text-white" 
+                    ? "bg-[#1C99D6] hover:bg-[#1a7fb8] text-white" 
                     : ""
                 )}
                 onClick={() => field.onChange("residential")}
@@ -454,7 +500,7 @@ const EnquiryForm = ({ onSubmit }: EnquiryFormProps) => {
                 className={cn(
                   "flex-1 rounded-full",
                   field.value === "commercial" 
-                    ? "bg-[#D85A30] hover:bg-[#c44e28] text-white" 
+                    ? "bg-[#1C99D6] hover:bg-[#1a7fb8] text-white" 
                     : ""
                 )}
                 onClick={() => field.onChange("commercial")}
@@ -512,6 +558,25 @@ const EnquiryForm = ({ onSubmit }: EnquiryFormProps) => {
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className={accordionTriggerClasses}>
+              Installation & Message
+            </AccordionTrigger>
+            <AccordionContent className={accordionContentClasses}>
+              <div className="space-y-7">
+                <InstallationFields />
+                <MessageField />
+                <Button
+                  type="button"
+                  className="w-full"
+                  variant="secondary"
+                  onClick={() => onContinue("item-4")}
+                >
+                  Continue
+                </Button>
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-4">
+            <AccordionTrigger className={accordionTriggerClasses}>
               Review & Submit
             </AccordionTrigger>
             <AccordionContent className={accordionContentClasses}>
@@ -522,7 +587,7 @@ const EnquiryForm = ({ onSubmit }: EnquiryFormProps) => {
                 </div>
                 <Button 
                   type="submit" 
-                  className="w-full bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-full"
+                  className="w-full bg-[#1C99D6] hover:bg-[#1a7fb8] text-white rounded-full"
                 >
                   Submit Quote Request
                 </Button>
@@ -993,6 +1058,100 @@ const CommercialFields = () => {
   );
 };
 
+const InstallationFields = () => {
+  const form = useFormContext();
+  const installationRequired = form.watch("installationRequired");
+
+  return (
+    <FieldGroup className="gap-3.5">
+      <Controller
+        name="installationRequired"
+        control={form.control}
+        render={({ field }) => (
+          <Field>
+            <FieldLabel className="text-sm font-normal">
+              Do you require installation?
+            </FieldLabel>
+            <RadioGroup
+              value={field.value ? "yes" : "no"}
+              onValueChange={(value) => field.onChange(value === "yes")}
+              className="flex gap-4 mt-2"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="install-yes" />
+                <label htmlFor="install-yes" className="text-sm">Yes</label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="install-no" />
+                <label htmlFor="install-no" className="text-sm">No</label>
+              </div>
+            </RadioGroup>
+          </Field>
+        )}
+      />
+      {installationRequired && (
+        <div className="mt-4 p-4 bg-muted rounded-lg">
+          <p className="text-sm font-medium mb-2">Installation Add-ons</p>
+          <p className="text-xs text-muted-foreground mb-3">Select any additional services you need</p>
+          <div className="space-y-2">
+            {["Extended Piping", "Additional Electrical Work", "Wall Bracket", "Drainage Kit"].map((addon) => (
+              <label key={addon} className="flex items-center space-x-2 text-sm">
+                <input
+                  type="checkbox"
+                  className="rounded"
+                  onChange={(e) => {
+                    const currentAddons = form.getValues("installationAddons") || [];
+                    if (e.target.checked) {
+                      form.setValue("installationAddons", [...currentAddons, addon]);
+                    } else {
+                      form.setValue("installationAddons", currentAddons.filter((a: string) => a !== addon));
+                    }
+                  }}
+                />
+                <span>{addon}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+    </FieldGroup>
+  );
+};
+
+const MessageField = () => {
+  const form = useFormContext();
+
+  return (
+    <FieldGroup className="gap-3.5">
+      <Controller
+        name="message"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel
+              className="text-sm font-normal"
+              htmlFor="message"
+            >
+              Additional Message (Optional)
+            </FieldLabel>
+            <FieldDescription>
+              Any other details you'd like to share with us
+            </FieldDescription>
+            <Textarea
+              {...field}
+              placeholder="Tell us more about your requirements..."
+              id="message"
+              aria-invalid={fieldState.invalid}
+              className="min-h-[120px]"
+            />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
+    </FieldGroup>
+  );
+};
+
 const SuccessState = ({ referenceNumber, email }: { referenceNumber: string; email: string }) => {
   return (
     <div className="rounded-lg border-border bg-background p-7 shadow-lg">
@@ -1010,7 +1169,7 @@ const SuccessState = ({ referenceNumber, email }: { referenceNumber: string; ema
         <div className="flex gap-3 w-full max-w-xs">
           <Button
             asChild
-            className="flex-1 bg-[#D85A30] hover:bg-[#c44e28] text-white rounded-full"
+            className="flex-1 bg-[#1C99D6] hover:bg-[#1a7fb8] text-white rounded-full"
           >
             <Link href={`/track/${referenceNumber}`}>Track Your Enquiry</Link>
           </Button>

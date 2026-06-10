@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
 // Types
@@ -25,7 +26,7 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
   mobileDescription: 'Find the perfect aircon for your home. We stock split systems, ducted units, heat pumps and inverter models.',
   image1: '/Hero Images/Product category pictures/Residsentil aircon 1.png',
   image2: '/Hero Images/Product category pictures/Residential aircon 2.png',
-  link: '#'
+  link: '/categories/residential'
 }, {
   id: '2',
   index: '02',
@@ -34,7 +35,7 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
   mobileDescription: 'Equip your business with powerful cooling systems. We supply units for offices, shops, warehouses and restaurants.',
   image1: '/Hero Images/Product category pictures/Commercial aircon 1.png',
   image2: '/Hero Images/Product category pictures/Commercial Aircon 2.png',
-  link: '#'
+  link: '/categories/commercial'
 }, {
   id: '3',
   index: '03',
@@ -43,7 +44,7 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
   mobileDescription: 'Cool any room without permanent installation. Our portable aircons are ideal for apartments and home offices.',
   image1: '/Hero Images/Product category pictures/Portable aircon 1.png',
   image2: '/Hero Images/Product category pictures/Portable aircon 2.png',
-  link: '#'
+  link: '/categories/portable'
 }, {
   id: '4',
   index: '04',
@@ -52,7 +53,7 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
   mobileDescription: 'Get your aircon installed by professionals. Add installation to your purchase or book it separately.',
   image1: '/Hero Images/Product category pictures/Installation packages 1.png',
   image2: '/Hero Images/Product category pictures/Installation packages 2.png',
-  link: '#'
+  link: '/categories/kits'
 }, {
   id: '5',
   index: '05',
@@ -61,7 +62,7 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
   mobileDescription: 'Protect your aircon with extended warranty cover. We offer bronze, silver, gold and platinum plans.',
   image1: '/Hero Images/Product category pictures/extended warrant 1.png',
   image2: '/Hero Images/Product category pictures/extended waranty 2.png',
-  link: '#'
+  link: '/categories/warranty'
 }, {
   id: '6',
   index: '06',
@@ -70,7 +71,7 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
   mobileDescription: 'Keep your aircon running smoothly with regular servicing. We provide annual service plans and quarterly check-ups.',
   image1: '/Hero Images/Product category pictures/maintaninance packages 1.png',
   image2: '/Hero Images/Product category pictures/maintaninance packages 2.png',
-  link: '#'
+  link: '/maintenance'
 }];
 
 const SolutionCard = ({
@@ -120,16 +121,18 @@ const SolutionCard = ({
         <div className="absolute bottom-[15px] left-0 md:left-[42px] right-0">
           <ul className="flex items-center space-x-10 list-none p-0 m-0">
             <li>
-              <div className="aircon-angled-button-wrap">
-                <button className="aircon-angled-button">
-                  Enquire
-                </button>
-              </div>
+              <Link href="/enquire">
+                <div className="aircon-angled-button-wrap">
+                  <button className="aircon-angled-button">
+                    Enquire
+                  </button>
+                </div>
+              </Link>
             </li>
             <li>
-              <a href={item.link} onClick={e => e.preventDefault()} className="text-[14px] leading-[20px] font-normal text-black inline-block relative border-b border-dashed border-black hover:border-[#1C99D6] hover:text-[#1C99D6] transition-all duration-200 font-[var(--font-google-sans-flex)]">
+              <Link href={item.link} className="text-[14px] leading-[20px] font-normal text-black inline-block relative border-b border-dashed border-black hover:border-[#1C99D6] hover:text-[#1C99D6] transition-all duration-200 font-[var(--font-google-sans-flex)]">
                 View Products
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

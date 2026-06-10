@@ -79,13 +79,13 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
     },
     cta: {
       label: "Shop Now",
-      href: "#",
+      href: "/products",
     },
     product: {
       name: "Wall mount AC AR80 Bespoke AI WindFree™",
       category: {
         label: "Samsung",
-        link: "#",
+        link: "/categories/residential",
       },
       badges: ["Best Seller", "New"],
       reviews: {
@@ -108,7 +108,7 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
             "(min-width: 1920px) 1920px, (min-width: 1280px) 1280px, 100vw",
         },
       ],
-      link: "#",
+      link: "/products/samsung-9000btu-windfree",
       price: {
         regular: 18599.0,
         currency: "ZAR",
@@ -125,13 +125,13 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
     },
     cta: {
       label: "Shop Now",
-      href: "#",
+      href: "/products",
     },
     product: {
       name: "Order your aircon whether for business or residential, we've got you covered.",
       category: {
         label: "We Sell Most All Brands",
-        link: "#",
+        link: "/products",
       },
       badges: ["Free Delivery", "Cape Town"],
       reviews: {
@@ -148,7 +148,7 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
           alt: "Ducted inverter aircon system for commercial spaces",
         },
       ],
-      link: "#",
+      link: "/products",
     },
   },
   {
@@ -161,7 +161,7 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
     },
     cta: {
       label: "Shop Now",
-      href: "#",
+      href: "/products",
     },
     product: {
       name: "Whatever you need, we've got you covered.",
@@ -184,7 +184,7 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
           alt: "Mid-wall split inverter aircon for residential spaces",
         },
       ],
-      link: "#",
+      link: "/products",
     },
   },
 ];

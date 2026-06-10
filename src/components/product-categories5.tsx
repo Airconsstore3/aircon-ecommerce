@@ -1,6 +1,7 @@
 import { ShoppingBag } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 type ImageMedia = {
@@ -38,7 +39,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
   {
     title: "Buy aircon today",
     text: "And get free installation kit",
-    link: "#",
+    link: "/categories/kits",
     media: {
       type: "image",
       src: "/Hero Images/Featured In section/Instaqllation packages promo/installation  package small.png",
@@ -49,10 +50,10 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
     title: "Installation Package",
     text: "Add installation and maintenance to your order for a great discount",
     cta: {
-      link: "#",
+      link: "/installation",
       text: "Get your discount",
     },
-    link: "#",
+    link: "/installation",
     media: {
       type: "image",
       src: "/Hero Images/Featured In section/Instaqllation packages promo/installation  package big.png",
@@ -99,7 +100,7 @@ const ProductCategories5 = ({
                     variant="ghost"
                     className="aircon-angled-button h-auto rounded-none hover:bg-transparent text-white"
                   >
-                    <a href={category1.link}>Buy Now</a>
+                    <Link href={category1.link}>Buy Now</Link>
                   </Button>
                 </div>
               </div>
@@ -135,16 +136,16 @@ const ProductCategories5 = ({
                       variant="ghost"
                       className="aircon-angled-button h-auto rounded-none hover:bg-transparent text-white font-[var(--font-google-sans-flex)]"
                     >
-                      <a href={category2.cta.link}>{category2.cta.text}</a>
+                      <Link href={category2.cta.link}>{category2.cta.text}</Link>
                     </Button>
                   </div>
                 )}
               </div>
               <div className="absolute end-4 bottom-4 z-20">
                 <Button size="icon" className="size-11 rounded-full" asChild>
-                  <a href={category2.link}>
+                  <Link href={category2.link}>
                     <ShoppingBag />
-                  </a>
+                  </Link>
                 </Button>
               </div>
             </div>

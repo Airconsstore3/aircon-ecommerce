@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { ShoppingCart } from "lucide-react";
+import Link from "next/link";
 import z from "zod";
 
 import { Price, PriceValue } from "@/components/price";
@@ -110,11 +111,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Alliance",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Alliance Black Mirror",
     variantId: "alliance_black_mirror",
-    link: "#",
+    link: "/products/alliance-black-mirror",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/Alliance black mirror.png",
       alt: "Alliance Black Mirror Air Conditioner",
@@ -131,11 +132,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Alliance",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Alliance Multi Split",
     variantId: "alliance_multi_split",
-    link: "#",
+    link: "/products/alliance-multi-split",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/Allince multi split.png",
       alt: "Alliance Multi Split Air Conditioner",
@@ -152,11 +153,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Daikin",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Daikin Perfera Wall",
     variantId: "daikin_perfera",
-    link: "#",
+    link: "/products/daikin-perfera-wall",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/Daikin Perfera wall.png",
       alt: "Daikin Perfera Wall Air Conditioner",
@@ -173,11 +174,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Jet Air",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Jet Air Red",
     variantId: "jet_air_red",
-    link: "#",
+    link: "/products/jet-air-red",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/Jet Air Red.png",
       alt: "Jet Air Red Air Conditioner",
@@ -194,11 +195,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Jet Air",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Jet Air Black Mirror",
     variantId: "jet_air_black_mirror",
-    link: "#",
+    link: "/products/jet-air-black-mirror",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/Jet air Black mirror.png",
       alt: "Jet Air Black Mirror Air Conditioner",
@@ -215,11 +216,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "LG",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "LG Dual Inverter",
     variantId: "lg_dual_inverter",
-    link: "#",
+    link: "/products/lg-dual-inverter",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/LG Dual Inverter.png",
       alt: "LG Dual Inverter Air Conditioner",
@@ -236,11 +237,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Samsung",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Samsung DVM S2+",
     variantId: "samsung_dvm_s2",
-    link: "#",
+    link: "/products/samsung-dvm-s2",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/Samsung DVM S2+.png",
       alt: "Samsung DVM S2+ Air Conditioner",
@@ -257,11 +258,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Samsung",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Samsung SlimDuct R32",
     variantId: "samsung_slimduct",
-    link: "#",
+    link: "/products/samsung-slimduct-r32",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/samsung SlimDuct_r32icon.png",
       alt: "Samsung SlimDuct R32 Air Conditioner",
@@ -278,11 +279,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Samsung",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Samsung AR3000",
     variantId: "samsung_ar3000",
-    link: "#",
+    link: "/products/samsung-ar3000",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/samsung ar3000.png",
       alt: "Samsung AR3000 Air Conditioner",
@@ -299,11 +300,11 @@ const PRODUCTS_LIST: ProductList = [
   {
     collection: {
       label: "Samsung",
-      link: "#",
+      link: "/categories/residential",
     },
     name: "Samsung AR70",
     variantId: "samsung_ar70",
-    link: "#",
+    link: "/products/samsung-ar70",
     image: {
       src: "/Hero Images/Featured In section/Promo sales aircons/samsung ar70.png",
       alt: "Samsung AR70 Air Conditioner",
@@ -435,7 +436,7 @@ const ProductCard = ({
     <Card className="group gap-2 rounded-none border border-solid border-[#0A2540]/30 bg-transparent p-0 shadow-none">
       <CardHeader className="gap-0 p-0">
         <AspectRatio ratio={0.76984127} className="overflow-hidden">
-          <a href={link} className="block size-full">
+          <Link href={link} className="block size-full">
             {currentVariantImage && (
               <img
                 src={currentVariantImage?.src}
@@ -443,15 +444,17 @@ const ProductCard = ({
                 className="block size-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
               />
             )}
-          </a>
+          </Link>
           <div className="absolute left-4 right-4 bottom-12 flex justify-center">
-            <button
-              type="button"
-              className="w-3/4 h-10 border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-sm font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-2 font-[var(--font-google-sans-flex)]"
-            >
-              <ShoppingCart className="w-4 h-4" />
-              Buy Now
-            </button>
+            <Link href={link}>
+              <button
+                type="button"
+                className="w-3/4 h-10 border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-sm font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-2 font-[var(--font-google-sans-flex)]"
+              >
+                <ShoppingCart className="w-4 h-4" />
+                Buy Now
+              </button>
+            </Link>
           </div>
         </AspectRatio>
       </CardHeader>
@@ -464,9 +467,9 @@ const ProductCard = ({
         <div
           className={`pt-0.5 ${!price?.sale && "mt-5"}`}
         >
-          <a className="text-sm font-bold" href={collection.link}>
+          <Link href={collection.link} className="text-sm font-bold">
             {collection.label}
-          </a>
+          </Link>
           <div className="flex flex-wrap items-center gap-2 xl:flex-nowrap">
             <CardTitle className="text-sm font-normal">{name}</CardTitle>
             <div className="transition-opacity duration-400 group-hover:opacity-100 xl:opacity-0">

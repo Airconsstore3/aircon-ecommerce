@@ -115,7 +115,7 @@ const PRODUCTS_LIST: ProductList = [
       kicker: "Offer",
       cta: {
         label: "See What’s New",
-        link: "#",
+        link: "/products?sale=true",
       },
     },
     products: [
@@ -128,7 +128,7 @@ const PRODUCTS_LIST: ProductList = [
         },
         category: {
           label: "Residential",
-          link: "#",
+          link: "/categories/residential",
         },
         link: "/products/samsung-9000btu-windfree",
         brand: "Samsung",
@@ -160,7 +160,7 @@ const PRODUCTS_LIST: ProductList = [
         },
         category: {
           label: "Residential",
-          link: "#",
+          link: "/categories/residential",
         },
         link: "/products/lg-12000btu-dual-inverter",
         brand: "LG",
@@ -187,7 +187,7 @@ const PRODUCTS_LIST: ProductList = [
         },
         category: {
           label: "Residential",
-          link: "#",
+          link: "/categories/residential",
         },
         link: "/products/daikin-9000btu-smile",
         brand: "Daikin",
@@ -214,7 +214,7 @@ const PRODUCTS_LIST: ProductList = [
         },
         category: {
           label: "Residential",
-          link: "#",
+          link: "/categories/residential",
         },
         link: "/products/midea-18000btu-inverter",
         brand: "Midea",
@@ -341,7 +341,7 @@ const ProductList9 = ({ className }: ProductList9Props) => {
               variant="ghost"
               className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
             >
-              <a href="#">Latest Deals</a>
+              <a href="/products?sale=true">Latest Deals</a>
             </Button>
           </div>
         </div>

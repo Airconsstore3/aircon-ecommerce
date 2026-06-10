@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface FAQ {
@@ -136,18 +137,24 @@ const Help2 = ({
               </p>
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
-              <Button variant="outline" className="w-full bg-background">
-                <MessageSquare className="mr-2 size-4" />
-                Live Chat
-              </Button>
-              <Button variant="outline" className="w-full bg-background">
-                <Mail className="mr-2 size-4" />
-                Email Us
-              </Button>
-              <Button variant="outline" className="w-full bg-background">
-                <Phone className="mr-2 size-4" />
-                Call Us
-              </Button>
+              <Link href="/enquire" className="w-full">
+                <Button variant="outline" className="w-full bg-background">
+                  <MessageSquare className="mr-2 size-4" />
+                  Live Chat
+                </Button>
+              </Link>
+              <Link href="mailto:info@airconsstore.co.za" className="w-full">
+                <Button variant="outline" className="w-full bg-background">
+                  <Mail className="mr-2 size-4" />
+                  Email Us
+                </Button>
+              </Link>
+              <Link href="tel:+27000000000" className="w-full">
+                <Button variant="outline" className="w-full bg-background">
+                  <Phone className="mr-2 size-4" />
+                  Call Us
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

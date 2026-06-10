@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/components/shop/CartProvider";
 import { NavbarWrapper } from "@/components/shop/NavbarWrapper";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const poppins = Poppins({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-poppins",
+  display: "swap",
+});
 
 const googleSansFlex = localFont({
   src: "../../Google_Sans_Flex/GoogleSansFlex-VariableFont_GRAD,ROND,opsz,slnt,wdth,wght.ttf",
@@ -25,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} ${googleSansFlex.variable}`}>
+      <body className={`${inter.className} ${googleSansFlex.variable} ${poppins.variable}`}>
         <CartProvider>
           <NavbarWrapper />
           <main className="min-h-screen pt-[var(--secondary-nav-height)] md:pt-[5.25rem]">{children}</main>
