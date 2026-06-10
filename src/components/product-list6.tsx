@@ -371,8 +371,8 @@ const ListCarousel = ({ productsList }: ListCarouselProps) => {
           </span>
         </div>
         <div className="hidden items-center gap-2 xl:flex">
-          <CarouselPrevious className="static translate-0 rounded-full bg-[#1C99D6] text-white hover:bg-[#1C99D6]/80 h-10 w-10 border-0" />
-          <CarouselNext className="static translate-0 rounded-full bg-[#1C99D6] text-white hover:bg-[#1C99D6]/80 h-10 w-10 border-0" />
+          <CarouselPrevious className="static translate-0 rounded-full bg-[#1C99D6] text-white hover:bg-[#1C99D6]/80 h-[40px] w-[40px] border-0" />
+          <CarouselNext className="static translate-0 rounded-full bg-[#1C99D6] text-white hover:bg-[#1C99D6]/80 h-[40px] w-[40px] border-0" />
         </div>
       </div>
       <CarouselContent>
