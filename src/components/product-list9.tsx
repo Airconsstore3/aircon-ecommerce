@@ -1,7 +1,9 @@
 "use client";
 
 import { ShoppingBag, ShoppingCart } from "lucide-react";
+import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCart } from "@/components/shop/CartProvider";
 
 import { Price, PriceValue } from "@/components/price";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
