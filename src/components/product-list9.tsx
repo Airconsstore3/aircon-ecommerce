@@ -114,7 +114,7 @@ const PRODUCTS_LIST: ProductList = [
       title: "Fresh. Trendy. Now.",
       kicker: "Offer",
       cta: {
-        label: "See What’s New",
+        label: "See What's New",
         link: "/products?sale=true",
       },
     },

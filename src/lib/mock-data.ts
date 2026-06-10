@@ -7,15 +7,17 @@ export interface Product {
   slug: string;
   description: string;
   category_id: string;
-  type: 'residential_unit' | 'commercial_unit' | 'installation_kit' | 'maintenance_package' | 'service' | 'bundle' | 'warranty_plan' | 'repair_service';
+  type: 'aircon' | 'kit' | 'accessory';
   brand: string | null;
-  btu_size?: string | null;
+  btu_range: number | null; // Numeric BTU value for aircons, null for kits/accessories
   images: string[];
   price_zar: number;
-  sale_price_zar?: number;
+  sale_price_zar: number | null;
   is_published: boolean;
   is_enquiry_only: boolean;
   is_featured: boolean;
+  is_sale: boolean; // Has sale price
+  is_deal: boolean; // Featured as a deal
   sort_order: number;
   specs: Record<string, string>;
   documents: string[];
@@ -143,9 +145,9 @@ export const mockProducts: Product[] = [
     slug: 'samsung-9000btu-inverter-split-wall',
     description: 'Energy-efficient inverter split wall air conditioner perfect for small to medium rooms. Features whisper-quiet operation and smart Wi-Fi control.',
     category_id: 'cat-1',
-    type: 'residential_unit',
+    type: 'aircon',
     brand: 'Samsung',
-    btu_size: '9000BTU',
+    btu_range: 9000,
     images: [
       '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
       '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
@@ -155,6 +157,8 @@ export const mockProducts: Product[] = [
     is_published: true,
     is_enquiry_only: false,
     is_featured: true,
+    is_sale: true,
+    is_deal: true,
     sort_order: 1,
     specs: {
       eer: '3.5',
@@ -182,17 +186,20 @@ export const mockProducts: Product[] = [
     slug: 'lg-12000btu-inverter-split-wall',
     description: 'Powerful 12000BTU inverter air conditioner for medium to large rooms. Advanced air purification and dual inverter compressor technology.',
     category_id: 'cat-1',
-    type: 'residential_unit',
+    type: 'aircon',
     brand: 'LG',
-    btu_size: '12000BTU',
+    btu_range: 12000,
     images: [
       '/Hero Images/Featured In section/WindFree™ 4-Way Cassette.png',
       '/Hero Images/Featured In section/WindFree™ 4-Way Cassette.png',
     ],
     price_zar: 11999,
+    sale_price_zar: null,
     is_published: true,
     is_enquiry_only: false,
     is_featured: true,
+    is_sale: false,
+    is_deal: false,
     sort_order: 2,
     specs: {
       eer: '3.8',
@@ -212,24 +219,27 @@ export const mockProducts: Product[] = [
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
-  // 3. Commercial Unit - Daikin Ducted (enquiry only)
+  // 3. Commercial Unit - Daikin 24000BTU (enquiry only)
   {
     id: 'prod-3',
     name: 'Daikin 24000BTU Commercial Ducted System',
     slug: 'daikin-24000btu-commercial-ducted',
     description: 'High-capacity ducted air conditioning system for commercial spaces. Requires professional site survey for accurate quotation.',
     category_id: 'cat-2',
-    type: 'commercial_unit',
+    type: 'aircon',
     brand: 'Daikin',
-    btu_size: '24000BTU',
+    btu_range: 24000,
     images: [
       '/Hero Images/Featured In section/Daikin Emura.png',
       '/Hero Images/Featured In section/Daikin Emura.png',
     ],
-    price_zar: 0, // No price for enquiry-only
+    price_zar: 0,
+    sale_price_zar: null,
     is_published: true,
-    is_enquiry_only: true, // Commercial units are enquiry-only
+    is_enquiry_only: true,
     is_featured: false,
+    is_sale: false,
+    is_deal: false,
     sort_order: 3,
     specs: {
       eer: '4.2',
@@ -254,16 +264,19 @@ export const mockProducts: Product[] = [
     slug: 'standard-residential-installation',
     description: 'Professional installation for single split wall unit. Includes standard pipe run up to 3m, electrical connection, and testing.',
     category_id: 'cat-3',
-    type: 'service',
+    type: 'accessory',
     brand: null,
-    btu_size: null,
+    btu_range: null,
     images: [
       '/Hero Images/Featured In section/MAIN  C ARD/MAIN 2.png',
     ],
     price_zar: 2499,
+    sale_price_zar: null,
     is_published: true,
-    is_enquiry_only: true, // Services require enquiry
+    is_enquiry_only: true,
     is_featured: false,
+    is_sale: false,
+    is_deal: false,
     sort_order: 4,
     specs: {
       property_type: 'Residential',
@@ -281,16 +294,19 @@ export const mockProducts: Product[] = [
     slug: 'annual-maintenance-plan',
     description: 'Comprehensive annual maintenance service including filter cleaning, refrigerant check, and performance report. One visit per year.',
     category_id: 'cat-4',
-    type: 'maintenance_package',
+    type: 'accessory',
     brand: null,
-    btu_size: null,
+    btu_range: null,
     images: [
       '/Hero Images/Featured In section/MAIN  C ARD/MAIN 2.png',
     ],
     price_zar: 899,
+    sale_price_zar: null,
     is_published: true,
     is_enquiry_only: false,
     is_featured: false,
+    is_sale: false,
+    is_deal: false,
     sort_order: 5,
     specs: {
       visits_per_year: '1',
@@ -310,17 +326,20 @@ export const mockProducts: Product[] = [
     slug: 'copper-pipe-kit-3m',
     description: 'Complete 3m copper pipe kit with all fittings included. High-quality copper for optimal heat transfer and durability.',
     category_id: 'cat-3',
-    type: 'installation_kit',
+    type: 'kit',
     brand: null,
-    btu_size: null,
+    btu_range: null,
     images: [
       '/Hero Images/Featured In section/Midea 6,000 BTU DOE Smart Portable Air Conditioner,.png',
       '/Hero Images/Featured In section/Midea 6,000 BTU DOE Smart Portable Air Conditioner,.png',
     ],
     price_zar: 699,
+    sale_price_zar: null,
     is_published: true,
     is_enquiry_only: false,
     is_featured: false,
+    is_sale: false,
+    is_deal: false,
     sort_order: 6,
     specs: {
       length: '3 meters',
@@ -340,16 +359,19 @@ export const mockProducts: Product[] = [
     slug: '1-year-extended-warranty',
     description: 'Extended warranty coverage for parts and labour. Covers compressor failure, PCB failure, and refrigerant leaks. Must be purchased within 30 days of unit purchase.',
     category_id: 'cat-4',
-    type: 'warranty_plan',
+    type: 'accessory',
     brand: null,
-    btu_size: null,
+    btu_range: null,
     images: [
       '/Hero Images/Featured In section/MAIN  C ARD/MAIN 2.png',
     ],
     price_zar: 1299,
+    sale_price_zar: null,
     is_published: true,
     is_enquiry_only: false,
     is_featured: false,
+    is_sale: false,
+    is_deal: false,
     sort_order: 7,
     specs: {
       duration: '1 year',
@@ -369,17 +391,19 @@ export const mockProducts: Product[] = [
     slug: 'samsung-9000btu-complete-package',
     description: 'Complete package including Samsung 9000BTU inverter unit + standard installation. Save R500 compared to buying separately.',
     category_id: 'cat-3',
-    type: 'bundle',
+    type: 'kit',
     brand: 'Samsung',
-    btu_size: '9000BTU',
+    btu_range: null,
     images: [
       '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
     ],
     price_zar: 10499,
     sale_price_zar: 9999,
     is_published: true,
-    is_enquiry_only: true, // Bundles require enquiry for scheduling
+    is_enquiry_only: true,
     is_featured: true,
+    is_sale: true,
+    is_deal: true,
     sort_order: 8,
     specs: {
       includes: 'Samsung 9000BTU unit, standard installation, 3m pipe kit',

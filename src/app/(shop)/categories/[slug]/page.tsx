@@ -8,6 +8,7 @@ import { useState, useMemo, use } from "react";
 import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
 import { mockProducts, mockPromotions, Product } from "@/lib/mock-data";
+import { filterProducts } from "@/lib/filterProducts";
 import {
   Select,
   SelectContent,
@@ -44,7 +45,7 @@ function convertToAirconProduct(product: Product): AirconProduct {
     name: product.name,
     slug: product.slug,
     brand: product.brand,
-    btu_size: product.btu_size || null,
+    btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,
@@ -84,9 +85,8 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   // Convert and filter products by category
   const airconProducts = useMemo(() => {
-    return mockProducts
-      .filter((p) => p.type.toLowerCase() === categorySlug)
-      .map(convertToAirconProduct);
+    const filtered = filterProducts(mockProducts, 'category', categorySlug);
+    return filtered.map(convertToAirconProduct);
   }, [categorySlug]);
 
   // Apply additional filters from URL params

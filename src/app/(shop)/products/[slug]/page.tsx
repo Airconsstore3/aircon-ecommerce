@@ -48,7 +48,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     name: product.name,
     slug: product.slug,
     brand: product.brand,
-    btu_size: product.btu_size || null,
+    btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,

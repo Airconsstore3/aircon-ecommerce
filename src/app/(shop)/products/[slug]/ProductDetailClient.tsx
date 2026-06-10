@@ -470,7 +470,6 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         {(() => {
           const related = mockProducts
             .filter((p) =>
-              (p.type === "residential_unit" || p.type === "commercial_unit") &&
               p.type === product.type &&
               p.id !== product.id
             )
@@ -483,7 +482,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             name: p.name,
             slug: p.slug,
             brand: p.brand,
-            btu_size: p.btu_size || null,
+            btu_size: p.btu_range ? `${p.btu_range}BTU` : null,
             type: p.type,
             price_zar: p.price_zar,
             sale_price_zar: p.sale_price_zar || null,
