@@ -1,12 +1,13 @@
 "use client";
 
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Clock, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useState, useEffect } from "react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -33,6 +34,24 @@ interface AirconProductCardProps {
   product: AirconProduct;
 }
 
+// Deal-specific types
+interface DealCardProps {
+  deal: {
+    id: string;
+    name: string;
+    slug: string;
+    description: string;
+    original_price_zar: number;
+    sale_price_zar: number;
+    ends_at: string;
+    deal_type: 'residential' | 'commercial' | 'bundle' | 'clearance';
+    stock_remaining: number;
+    is_hero: boolean;
+    images: string[];
+    includes?: string[];
+  };
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatZAR(amount: number): string {
@@ -43,6 +62,37 @@ function getStockStatus(product: AirconProduct) {
   if (product.stock.is_sold_out) return "sold_out";
   if (product.stock.stock_count <= product.stock.low_stock_threshold) return "low_stock";
   return "in_stock";
+}
+
+// Countdown timer helper
+function useCountdown(endDate: string) {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const difference = new Date(endDate).getTime() - new Date().getTime();
+      if (difference > 0) {
+        return {
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / 1000 / 60) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        };
+      }
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    };
+
+    setTimeLeft(calculateTimeLeft());
+    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
+    return () => clearInterval(timer);
+  }, [endDate]);
+
+  return timeLeft;
+}
+
+// Calculate percentage saved
+function calculatePercentSaved(original: number, sale: number): number {
+  return Math.round(((original - sale) / original) * 100);
 }
 
 // ─── Product Card ─────────────────────────────────────────────────────────────
@@ -240,3 +290,146 @@ const AirconProductList = ({
 
 export { AirconProductCard, AirconProductList };
 export type { AirconProduct };
+
+// ─── Deal Card Component ───────────────────────────────────────────────────────
+
+const DealCard = ({ deal }: DealCardProps) => {
+  const timeLeft = useCountdown(deal.ends_at);
+  const percentSaved = calculatePercentSaved(deal.original_price_zar, deal.sale_price_zar);
+  const hasImages = deal.images.length > 0;
+  const primaryImage = hasImages ? deal.images[0] : "/placeholder.jpg";
+
+  const isExpired = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
+
+  return (
+    <Card className="group relative block rounded-none border border-solid border-[#0A2540]/30 bg-transparent py-5 shadow-none ring ring-border">
+      
+      {/* Entire card is clickable */}
+      <Link
+        href={`/deals/${deal.slug}`}
+        className="absolute inset-0 z-50 size-full"
+        aria-label={`View ${deal.name}`}
+      />
+
+      <CardContent>
+
+        {/* ── Image area ── */}
+        <div className="relative overflow-hidden">
+          <AspectRatio
+            ratio={0.833}
+            className="overflow-hidden rounded-[1.25rem]"
+          >
+            <img
+              src={primaryImage}
+              alt={deal.name}
+              className="block size-full object-cover object-center scale-110 transition-transform duration-350 group-hover:scale-100"
+            />
+          </AspectRatio>
+
+          {/* % Saved badge - brand blue #1C99D6 */}
+          <Badge
+            className="absolute start-3 top-3 z-30 rounded-full bg-[#1C99D6] text-white text-xs font-semibold"
+          >
+            Save {percentSaved}%
+          </Badge>
+
+          {/* Deal type badge */}
+          <Badge
+            variant="outline"
+            className="absolute end-3 top-3 z-30 rounded-full bg-white text-xs font-semibold text-[#1E3A5F]"
+          >
+            {deal.deal_type}
+          </Badge>
+        </div>
+
+        {/* ── Card info ── */}
+        <div className="space-y-2 pt-3.5">
+
+          {/* Product name */}
+          <CardTitle className="leading-snug text-base text-[#1E3A5F] line-clamp-2">
+            {deal.name}
+          </CardTitle>
+
+          {/* Description */}
+          <p className="text-xs text-muted-foreground line-clamp-2">
+            {deal.description}
+          </p>
+
+          {/* Countdown timer */}
+          {!isExpired && (
+            <div className="flex items-center gap-2 text-xs text-[#1C99D6] font-medium">
+              <Clock className="w-3 h-3" />
+              <span>
+                {timeLeft.days > 0 && `${timeLeft.days}d `}
+                {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
+              </span>
+            </div>
+          )}
+
+          {isExpired && (
+            <div className="flex items-center gap-2 text-xs text-red-500 font-medium">
+              <AlertCircle className="w-3 h-3" />
+              <span>Deal expired</span>
+            </div>
+          )}
+
+          {/* Price block */}
+          <div className="flex items-center gap-2">
+            <span className="text-lg font-bold text-[#D85A30]">
+              {formatZAR(deal.sale_price_zar)}
+            </span>
+            <span className="text-sm text-muted-foreground line-through">
+              {formatZAR(deal.original_price_zar)}
+            </span>
+          </div>
+
+          {/* Stock urgency */}
+          {deal.stock_remaining <= 5 && deal.stock_remaining > 0 && (
+            <span className="inline-flex items-center gap-1 text-xs text-amber-600 font-medium">
+              <AlertCircle className="w-3 h-3" />
+              Only {deal.stock_remaining} left
+            </span>
+          )}
+
+          {deal.stock_remaining === 0 && (
+            <span className="inline-flex items-center gap-1 text-xs text-red-500 font-medium">
+              <AlertCircle className="w-3 h-3" />
+              Sold Out
+            </span>
+          )}
+
+          {/* CTA buttons */}
+          <div className="flex gap-2 pt-1">
+            <Button
+              asChild
+              className="flex-1 rounded-full bg-[#D85A30] hover:bg-[#c44e28] text-white text-sm"
+            >
+              <Link href={`/enquire?deal=${deal.id}`}>Buy Now</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              className="flex-1 rounded-full border-green-500 text-green-600 hover:bg-green-50 text-sm"
+            >
+              <a
+                href="https://wa.me/27000000000?text=I'm interested in the deal: ${encodeURIComponent(deal.name)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                WhatsApp
+              </a>
+            </Button>
+          </div>
+
+          {/* Deal ends date */}
+          <p className="text-[10px] text-muted-foreground text-center">
+            Deal ends: {new Date(deal.ends_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </p>
+
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export { DealCard };

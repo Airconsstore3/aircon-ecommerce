@@ -80,6 +80,24 @@ export interface OrderTracking {
   created_at: string;
 }
 
+export interface Deal {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  original_price_zar: number;
+  sale_price_zar: number;
+  ends_at: string; // ISO date string
+  deal_type: 'residential' | 'commercial' | 'bundle' | 'clearance';
+  stock_remaining: number;
+  is_hero: boolean; // Featured hero deal
+  product_id?: string; // Link to product if applicable
+  images: string[];
+  includes?: string[]; // What's included in the deal
+  created_at: string;
+  updated_at: string;
+}
+
 // Categories
 export const mockCategories: Category[] = [
   {
@@ -505,3 +523,155 @@ export const mockOrderTracking: OrderTracking[] = [
     created_at: '2025-02-15T08:45:00Z',
   },
 ];
+
+// Deals - Winter Specials for Cape Town (June timing)
+export const mockDeals: Deal[] = [
+  // Hero Deal - Supply + Install Bundle
+  {
+    id: 'deal-1',
+    name: 'Samsung 9000BTU Complete Package',
+    slug: 'samsung-9000btu-winter-special',
+    description: 'Complete package including Samsung 9000BTU inverter unit + standard installation. Perfect for small to medium rooms. Winter special - limited stock available.',
+    original_price_zar: 11498,
+    sale_price_zar: 9999,
+    ends_at: '2025-08-31T23:59:59Z',
+    deal_type: 'bundle',
+    stock_remaining: 5,
+    is_hero: true,
+    product_id: 'prod-1',
+    images: [
+      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+    ],
+    includes: [
+      'Samsung 9000BTU Inverter Unit',
+      'Standard Installation',
+      '3m Copper Pipe Kit',
+      'Electrical Connection',
+      'Testing & Commissioning',
+    ],
+    created_at: '2025-06-01T00:00:00Z',
+    updated_at: '2025-06-01T00:00:00Z',
+  },
+  // Residential Deal
+  {
+    id: 'deal-2',
+    name: 'LG 12000BTU Inverter Split - Winter Special',
+    slug: 'lg-12000btu-winter-special',
+    description: 'Powerful 12000BTU inverter air conditioner for medium to large rooms. Advanced air purification and dual inverter compressor technology.',
+    original_price_zar: 11999,
+    sale_price_zar: 10499,
+    ends_at: '2025-07-31T23:59:59Z',
+    deal_type: 'residential',
+    stock_remaining: 8,
+    is_hero: false,
+    product_id: 'prod-2',
+    images: [
+      '/Hero Images/Featured In section/WindFree™ 4-Way Cassette.png',
+    ],
+    includes: [
+      'LG 12000BTU Inverter Unit',
+      'Remote Control',
+      '1 Year Manufacturer Warranty',
+    ],
+    created_at: '2025-06-01T00:00:00Z',
+    updated_at: '2025-06-01T00:00:00Z',
+  },
+  // Commercial Deal
+  {
+    id: 'deal-3',
+    name: 'Daikin 24000BTU Commercial Package',
+    slug: 'daikin-24000btu-commercial-special',
+    description: 'High-capacity ducted air conditioning system for commercial spaces. Includes professional installation and site survey.',
+    original_price_zar: 25000,
+    sale_price_zar: 21999,
+    ends_at: '2025-09-30T23:59:59Z',
+    deal_type: 'commercial',
+    stock_remaining: 3,
+    is_hero: false,
+    product_id: 'prod-3',
+    images: [
+      '/Hero Images/Featured In section/Daikin Emura.png',
+    ],
+    includes: [
+      'Daikin 24000BTU Ducted System',
+      'Professional Installation',
+      'Site Survey',
+      '3 Year Extended Warranty',
+    ],
+    created_at: '2025-06-01T00:00:00Z',
+    updated_at: '2025-06-01T00:00:00Z',
+  },
+  // Clearance Deal
+  {
+    id: 'deal-4',
+    name: 'Copper Pipe Kit 3m - Clearance',
+    slug: 'copper-pipe-kit-clearance',
+    description: 'Complete 3m copper pipe kit with all fittings included. High-quality copper for optimal heat transfer and durability. Limited stock clearance.',
+    original_price_zar: 699,
+    sale_price_zar: 499,
+    ends_at: '2025-06-30T23:59:59Z',
+    deal_type: 'clearance',
+    stock_remaining: 12,
+    is_hero: false,
+    images: [
+      '/Hero Images/Featured In section/Midea 6,000 BTU DOE Smart Portable Air Conditioner,.png',
+    ],
+    includes: [
+      '3m Copper Pipes',
+      'Insulation',
+      'Fittings',
+      'Flaring Tool',
+    ],
+    created_at: '2025-06-01T00:00:00Z',
+    updated_at: '2025-06-01T00:00:00Z',
+  },
+  // Bundle Deal - Maintenance Subscription
+  {
+    id: 'deal-5',
+    name: 'Unit + Annual Maintenance Bundle',
+    slug: 'unit-maintenance-bundle',
+    description: 'Purchase any residential unit and get 50% off annual maintenance plan. Keep your aircon running efficiently year-round.',
+    original_price_zar: 9898,
+    sale_price_zar: 8898,
+    ends_at: '2025-08-31T23:59:59Z',
+    deal_type: 'bundle',
+    stock_remaining: 20,
+    is_hero: false,
+    images: [
+      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+    ],
+    includes: [
+      'Any Residential Unit (9000-12000BTU)',
+      'Annual Maintenance Plan (50% off)',
+      'Priority Scheduling',
+      'Free Filter Cleaning Kit',
+    ],
+    created_at: '2025-06-01T00:00:00Z',
+    updated_at: '2025-06-01T00:00:00Z',
+  },
+  // Multi-Room Commercial Deal
+  {
+    id: 'deal-6',
+    name: 'Multi-Room Commercial Package (3 Units)',
+    slug: 'multi-room-commercial-package',
+    description: 'Install 3 x 12000BTU units in your commercial space and save R3000. Perfect for offices, retail stores, or restaurants.',
+    original_price_zar: 35997,
+    sale_price_zar: 32997,
+    ends_at: '2025-09-30T23:59:59Z',
+    deal_type: 'commercial',
+    stock_remaining: 4,
+    is_hero: false,
+    images: [
+      '/Hero Images/Featured In section/WindFree™ 4-Way Cassette.png',
+    ],
+    includes: [
+      '3 x 12000BTU Inverter Units',
+      'Professional Installation for All',
+      'Commercial Site Survey',
+      'Extended 5 Year Warranty',
+    ],
+    created_at: '2025-06-01T00:00:00Z',
+    updated_at: '2025-06-01T00:00:00Z',
+  },
+];
+
