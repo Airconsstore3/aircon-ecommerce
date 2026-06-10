@@ -449,7 +449,7 @@ const ProductCard = ({
             <Link href={link}>
               <button
                 type="button"
-                className="w-[75%] h-[40px] border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-[14px] font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-[8px] font-[var(--font-google-sans-flex)]"
+                className="w-full max-w-[200px] h-[40px] border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-[14px] font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-[8px] font-[var(--font-google-sans-flex)]"
               >
                 <ShoppingCart className="w-[16px] h-[16px]" />
                 Buy Now
