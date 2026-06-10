@@ -44,19 +44,19 @@ function DealsPageContent() {
       
       {/* Hero Promo Banner */}
       {heroDeal && (
-        <div className="bg-gradient-to-r from-[#1C99D6] to-[#1E3A5F] text-white py-8 px-4">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <Sparkles className="w-8 h-8" />
+        <div className="bg-gradient-to-r from-[#1C99D6] to-[#1E3A5F] text-white py-[32px] px-[16px]">
+          <div className="max-w-[1280px] mx-auto">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-[16px]">
+              <div className="flex items-center gap-[12px]">
+                <Sparkles className="w-[32px] h-[32px]" />
                 <div>
-                  <h1 className="text-2xl font-bold">Winter Special</h1>
-                  <p className="text-sm opacity-90">{heroDeal.name} - Limited Time Offer</p>
+                  <h1 className="text-[24px] font-bold leading-tight">Winter Special</h1>
+                  <p className="text-[14px] opacity-90 leading-snug">{heroDeal.name} - Limited Time Offer</p>
                 </div>
               </div>
               <Button
                 asChild
-                className="bg-white text-[#1C99D6] hover:bg-gray-100 rounded-full font-semibold"
+                className="bg-white text-[#1C99D6] hover:bg-gray-100 rounded-full font-semibold px-[24px] py-[12px]"
               >
                 <a href={`/enquire?deal=${heroDeal.id}`}>Get This Deal</a>
               </Button>
@@ -66,23 +66,23 @@ function DealsPageContent() {
       )}
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-[1280px] mx-auto px-[16px] sm:px-[24px] lg:px-[32px] py-[32px]">
         
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#1E3A5F] mb-2">Aircon Specials & Deals</h1>
-          <p className="text-muted-foreground">
+        <div className="mb-[32px]">
+          <h1 className="text-[30px] font-bold text-[#1E3A5F] mb-[8px] leading-tight">Aircon Specials & Deals</h1>
+          <p className="text-[14px] text-muted-foreground leading-relaxed">
             Limited-time offers on residential and commercial air conditioning solutions in Cape Town
           </p>
         </div>
 
         {/* Filter Tabs */}
-        <div className="flex flex-wrap gap-2 mb-8 border-b pb-4">
+        <div className="flex flex-wrap gap-[8px] mb-[32px] border-b pb-[16px]">
           {(['all', 'residential', 'commercial', 'bundle', 'clearance'] as DealFilter[]).map((filter) => (
             <button
               key={filter}
               onClick={() => setActiveFilter(filter)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+              className={`px-[16px] py-[8px] rounded-full text-[14px] font-medium transition-colors ${
                 activeFilter === filter
                   ? 'bg-[#1C99D6] text-white'
                   : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -95,17 +95,17 @@ function DealsPageContent() {
 
         {/* Deals Grid */}
         {filteredDeals.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[24px]">
             {filteredDeals.map((deal) => (
               <DealCard key={deal.id} deal={deal} />
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No deals available for this category.</p>
+          <div className="text-center py-[48px]">
+            <p className="text-[14px] text-muted-foreground">No deals available for this category.</p>
             <Button
               variant="outline"
-              className="mt-4"
+              className="mt-[16px]"
               onClick={() => setActiveFilter('all')}
             >
               View All Deals
@@ -114,31 +114,31 @@ function DealsPageContent() {
         )}
 
         {/* Email Capture for Deal Alerts */}
-        <div className="mt-16 bg-gray-50 rounded-2xl p-8 border">
-          <div className="max-w-2xl mx-auto text-center">
-            <div className="flex justify-center mb-4">
-              <div className="bg-[#1C99D6] p-3 rounded-full">
-                <Mail className="w-6 h-6 text-white" />
+        <div className="mt-[64px] bg-gray-50 rounded-[16px] p-[32px] border">
+          <div className="max-w-[512px] mx-auto text-center">
+            <div className="flex justify-center mb-[16px]">
+              <div className="bg-[#1C99D6] p-[12px] rounded-full">
+                <Mail className="w-[24px] h-[24px] text-white" />
               </div>
             </div>
-            <h2 className="text-2xl font-bold text-[#1E3A5F] mb-2">Get Deal Alerts</h2>
-            <p className="text-muted-foreground mb-6">
+            <h2 className="text-[24px] font-bold text-[#1E3A5F] mb-[8px] leading-tight">Get Deal Alerts</h2>
+            <p className="text-[14px] text-muted-foreground mb-[24px] leading-relaxed">
               Be the first to know about new aircon specials and exclusive offers. Sign up for our deal alerts.
             </p>
-            <form onSubmit={handleEmailSubmit} className="flex gap-2 max-w-md mx-auto">
+            <form onSubmit={handleEmailSubmit} className="flex gap-[8px] max-w-[400px] mx-auto">
               <Input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="flex-1"
+                className="flex-1 h-[40px]"
               />
-              <Button type="submit" className="bg-[#1C99D6] hover:bg-[#1680b0] rounded-full">
+              <Button type="submit" className="bg-[#1C99D6] hover:bg-[#1680b0] rounded-full px-[24px] h-[40px]">
                 Subscribe
               </Button>
             </form>
-            <p className="text-xs text-muted-foreground mt-3">
+            <p className="text-[12px] text-muted-foreground mt-[12px]">
               We respect your privacy. Unsubscribe anytime.
             </p>
           </div>
