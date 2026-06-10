@@ -361,8 +361,8 @@ const ListCarousel = ({ productsList }: ListCarouselProps) => {
       }}
       setApi={setApi}
     >
-      <div className="flex items-center justify-between pb-6">
-        <div className="flex flex-wrap items-end gap-2">
+      <div className="flex items-center justify-between pb-[24px]">
+        <div className="flex flex-wrap items-end gap-[8px]">
           <h2 className="text-[28px] md:text-[48px] leading-[1.1] font-normal text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)]">
             Promo Sales
           </h2>
@@ -370,7 +370,7 @@ const ListCarousel = ({ productsList }: ListCarouselProps) => {
             Discounts 10-20%
           </span>
         </div>
-        <div className="hidden items-center gap-2 xl:flex">
+        <div className="hidden items-center gap-[8px] xl:flex">
           <CarouselPrevious className="static translate-0 rounded-full bg-[#1C99D6] text-white hover:bg-[#1C99D6]/80 h-[40px] w-[40px] border-0" />
           <CarouselNext className="static translate-0 rounded-full bg-[#1C99D6] text-white hover:bg-[#1C99D6]/80 h-[40px] w-[40px] border-0" />
         </div>
@@ -433,7 +433,7 @@ const ProductCard = ({
   }
 
   return (
-    <Card className="group gap-2 rounded-none border border-solid border-[#0A2540]/30 bg-transparent p-0 shadow-none">
+    <Card className="group gap-[8px] rounded-none border border-solid border-[#0A2540]/30 bg-transparent p-0 shadow-none">
       <CardHeader className="gap-0 p-0">
         <AspectRatio ratio={0.76984127} className="overflow-hidden">
           <Link href={link} className="block size-full">
@@ -445,7 +445,7 @@ const ProductCard = ({
               />
             )}
           </Link>
-          <div className="absolute left-4 right-4 bottom-12 flex justify-center">
+          <div className="absolute left-[16px] right-[16px] bottom-[48px] flex justify-center">
             <Link href={link}>
               <button
                 type="button"
@@ -458,19 +458,19 @@ const ProductCard = ({
           </div>
         </AspectRatio>
       </CardHeader>
-      <CardContent className="p-0 pl-4">
+      <CardContent className="p-0 pl-[16px]">
         {price?.sale && (
           <div className="text-sm">
             <span className="text-destructive">Sale</span>
           </div>
         )}
         <div
-          className={`pt-0.5 ${!price?.sale && "mt-5"}`}
+          className={`pt-[2px] ${!price?.sale && "mt-[20px]"}`}
         >
           <Link href={collection.link} className="text-sm font-bold">
             {collection.label}
           </Link>
-          <div className="flex flex-wrap items-center gap-2 xl:flex-nowrap">
+          <div className="flex flex-wrap items-center gap-[8px] xl:flex-nowrap">
             <CardTitle className="text-sm font-normal">{name}</CardTitle>
             <div className="transition-opacity duration-400 group-hover:opacity-100 xl:opacity-0">
               <ProductForm colorHinges={variants} form={form} />
@@ -478,12 +478,12 @@ const ProductCard = ({
           </div>
         </div>
         {rating && (
-          <div className="mt-2">
-            <Rating rate={rating} className="[&_svg]:size-3 [&>div]:size-3" />
+          <div className="mt-[8px]">
+            <Rating rate={rating} className="[&_svg]:size-[12px] [&>div]:size-[12px]" />
           </div>
         )}
       </CardContent>
-      <CardFooter className="relative mt-1 flex-col items-start gap-3 p-0 pl-4 xl:flex-row">
+      <CardFooter className="relative mt-[4px] flex-col items-start gap-[12px] p-0 pl-[16px] xl:flex-row">
         <div>
           <Price onSale={sale != null} className="text-sm font-light text-black">
             <PriceValue price={sale} currency="ZAR" variant="sale" />
