@@ -385,12 +385,12 @@ const ListCarousel = ({ productsList }: ListCarouselProps) => {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <div className="flex items-center justify-center pt-5 xl:hidden">
+      <div className="flex items-center justify-center pt-[20px] xl:hidden">
         {productsList.map((_, index) => (
           <button
             onClick={() => api?.scrollTo(index)}
             data-active={current === index + 1}
-            className="flex size-6 after:m-auto after:h-1 after:w-5 after:bg-muted-foreground/50 after:transition-colors data-[active=true]:after:bg-primary sm:last:hidden"
+            className="flex size-[24px] after:m-auto after:h-[4px] after:w-[20px] after:bg-muted-foreground/50 after:transition-colors data-[active=true]:after:bg-primary sm:last:hidden"
             key={`product-list-6-pagination-bullets-${index}`}
           ></button>
         ))}
@@ -449,9 +449,9 @@ const ProductCard = ({
             <Link href={link}>
               <button
                 type="button"
-                className="w-3/4 h-10 border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-sm font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-2 font-[var(--font-google-sans-flex)]"
+                className="w-[75%] h-[40px] border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-[14px] font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-[8px] font-[var(--font-google-sans-flex)]"
               >
-                <ShoppingCart className="w-4 h-4" />
+                <ShoppingCart className="w-[16px] h-[16px]" />
                 Buy Now
               </button>
             </Link>
