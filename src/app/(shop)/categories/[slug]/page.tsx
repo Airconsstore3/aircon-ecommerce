@@ -308,25 +308,25 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
               <>
                 <AirconProductList products={filteredProducts} columns={columns} />
                 {/* Pagination */}
-                <div className="flex items-center justify-center gap-2 mt-8">
-                  <Button variant="outline" size="icon" disabled className="rounded-full">
-                    <ChevronRight className="w-4 h-4 rotate-180" />
+                <div className="flex items-center justify-center gap-1 mt-12">
+                  <Button variant="ghost" size="icon" disabled className="rounded-lg w-10 h-10">
+                    <ChevronRight className="w-5 h-5 rotate-180" />
                   </Button>
-                  <Button variant="default" size="icon" className="rounded-full bg-[#1C99D6] hover:bg-[#1680b0]">
+                  <Button variant="default" size="icon" className="rounded-lg w-10 h-10 bg-[#1C99D6] hover:bg-[#1680b0] text-base font-medium">
                     1
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-full">
+                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10 text-base font-medium hover:bg-gray-100">
                     2
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-full">
+                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10 text-base font-medium hover:bg-gray-100">
                     3
                   </Button>
-                  <span className="text-muted-foreground">...</span>
-                  <Button variant="outline" size="icon" className="rounded-full">
+                  <span className="text-muted-foreground text-lg px-2">...</span>
+                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10 text-base font-medium hover:bg-gray-100">
                     10
                   </Button>
-                  <Button variant="outline" size="icon" className="rounded-full">
-                    <ChevronRight className="w-4 h-4" />
+                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10">
+                    <ChevronRight className="w-5 h-5" />
                   </Button>
                 </div>
               </>
