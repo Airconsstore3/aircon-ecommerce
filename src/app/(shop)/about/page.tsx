@@ -7,20 +7,23 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-[#1E3A5F] text-white py-20 md:py-32">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-normal mb-4">
-              Cape Town's Trusted Aircon Specialists
-            </h1>
-            <div className="w-24 h-1 bg-[#1C99D6] mb-6"></div>
-            <p className="text-lg md:text-xl text-gray-200">
-              Supplying, installing and maintaining aircon systems across Cape Town since 2015
-            </p>
-            <p className="text-sm text-gray-300 mt-2">
-              Airconsstore
-            </p>
-          </div>
+      <section className="relative h-[450px] flex items-center overflow-hidden">
+        {/* Background image */}
+        <img
+          src="/Hero Images/hero summer winter.webp"
+          alt="About background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Content */}
+        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+            About Us
+          </h1>
+          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
+            Cape Town's Trusted Aircon Specialists — Supplying, installing and maintaining aircon systems across Cape Town since 2015
+          </p>
         </div>
       </section>
 

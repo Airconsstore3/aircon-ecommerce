@@ -38,33 +38,47 @@ function DealsPageContent() {
 
   return (
     <div className="min-h-screen bg-white">
-      
+
       {/* Hero Section */}
-      <div className="bg-[#FAFAF9] py-[80px] px-[16px]">
-        <div className="max-w-[1280px] mx-auto text-center">
-          <h1 className="text-[48px] md:text-[64px] font-bold text-[#1E3A5F] uppercase tracking-[2px] leading-tight mb-[24px]">
-            Latest Deals
+      <section className="relative h-[450px] flex items-center overflow-hidden">
+        {/* Background image */}
+        <img
+          src="/Hero Images/hero summer winter.webp"
+          alt="Deals background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Content */}
+        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+            Sale
           </h1>
-          <p className="text-[16px] md:text-[18px] text-[#94A3B8] max-w-[600px] mx-auto leading-relaxed mb-[32px]">
+          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
             Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-[16px]">
-            <Button
-              asChild
-              className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
-            >
-              <a href="#deals-grid">Shop Now</a>
-            </Button>
-            <Button
-              variant="outline"
-              asChild
-              className="border-[#1C99D6] text-[#1C99D6] hover:bg-[#1C99D6] hover:text-white rounded-full font-semibold px-[32px] py-[12px] text-[14px]"
-            >
-              <a href="/enquire">Get a Quote</a>
-            </Button>
+          <div className="flex flex-col sm:flex-row items-start gap-[24px]">
+            <div className="aircon-angled-button-wrap">
+              <Button
+                asChild
+                variant="ghost"
+                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+              >
+                <a href="#deals-grid">Shop Now</a>
+              </Button>
+            </div>
+            <div className="aircon-angled-button-wrap">
+              <Button
+                asChild
+                variant="ghost"
+                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+              >
+                <a href="/enquire">Get a Quote</a>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Main Content */}
       <div className="max-w-[1280px] mx-auto px-[16px] sm:px-[24px] lg:px-[32px] py-[32px]">

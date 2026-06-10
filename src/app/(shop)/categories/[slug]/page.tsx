@@ -157,6 +157,27 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative h-[450px] flex items-center overflow-hidden">
+        {/* Background image */}
+        <img
+          src="/Hero Images/hero summer winter.webp"
+          alt={`${categoryInfo[categorySlug]?.name || 'Category'} background`}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Content */}
+        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+            {categoryInfo[categorySlug]?.name || 'Category'}
+          </h1>
+          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
+            {categoryInfo[categorySlug]?.description || 'Browse our selection'}
+          </p>
+        </div>
+      </section>
+
       {/* Promo Banner */}
       {activePromotion && (
         <div className="bg-[#1C99D6] text-white py-3 px-4 text-center">

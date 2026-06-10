@@ -32,22 +32,43 @@ export default function RepairsPage() {
 
   if (isSubmitted) {
     return (
-      <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
-        <div className="container max-w-2xl mx-auto">
-          <Card className="rounded-xl shadow-sm p-8 border-0 text-center">
-            <CheckCircle className="size-16 text-emerald-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-normal text-[#1E3A5F] mb-2">
-              Repair Request Submitted
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className="relative h-[450px] flex items-center overflow-hidden">
+          {/* Background image */}
+          <img
+            src="/Hero Images/hero summer winter.webp"
+            alt="Repairs background"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/50" />
+          {/* Content */}
+          <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+            <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+              Repairs
             </h1>
-            <p className="text-muted-foreground mb-4">
-              Your reference number is:
+            <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
+              Professional repair services for all aircon brands
             </p>
-            <div className="bg-muted rounded-lg p-4 mb-6">
-              <p className="text-xl font-mono font-semibold text-[#1E3A5F]">
-                {refNumber}
+          </div>
+        </section>
+        <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
+          <div className="container max-w-2xl mx-auto">
+            <Card className="rounded-xl shadow-sm p-8 border-0 text-center">
+              <CheckCircle className="size-16 text-emerald-500 mx-auto mb-4" />
+              <h1 className="text-2xl font-normal text-[#1E3A5F] mb-2">
+                Repair Request Submitted
+              </h1>
+              <p className="text-muted-foreground mb-4">
+                Your reference number is:
               </p>
-            </div>
-            <p className="text-sm text-muted-foreground mb-6">
+              <div className="bg-muted rounded-lg p-4 mb-6">
+                <p className="text-xl font-mono font-semibold text-[#1E3A5F]">
+                  {refNumber}
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground mb-6">
               We'll contact you shortly to confirm your appointment.
             </p>
             <Button
@@ -60,21 +81,43 @@ export default function RepairsPage() {
           </Card>
         </div>
       </section>
+      </div>
     );
   }
 
   return (
-    <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
-      <div className="container max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
-            Book a Repair or Callout
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative h-[450px] flex items-center overflow-hidden">
+        {/* Background image */}
+        <img
+          src="/Hero Images/hero summer winter.webp"
+          alt="Repairs background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Content */}
+        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+            Repairs
           </h1>
-          <p className="text-muted-foreground">
-            Fast response across Cape Town Metro
+          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
+            Professional repair services for all aircon brands
           </p>
         </div>
+      </section>
+      <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
+        <div className="container max-w-2xl mx-auto">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
+              Book a Repair or Callout
+            </h1>
+            <p className="text-muted-foreground">
+              Fast response across Cape Town Metro
+            </p>
+          </div>
 
         {/* Service Type Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -260,5 +303,6 @@ export default function RepairsPage() {
         </Card>
       </div>
     </section>
+    </div>
   );
 }

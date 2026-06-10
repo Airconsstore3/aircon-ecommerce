@@ -18,26 +18,38 @@ export default function InstallationPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-[#1E3A5F] text-white py-20 md:py-32">
-        <div className="container max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="max-w-3xl">
-            <h1 className="text-4xl md:text-5xl font-normal mb-4">
-              Professional Aircon Installation
-            </h1>
-            <p className="text-lg md:text-xl text-gray-200 mb-8">
-              Licensed technicians, clean workmanship, fully certified installs across Cape Town
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
+      <section className="relative h-[450px] flex items-center overflow-hidden">
+        {/* Background image */}
+        <img
+          src="/Hero Images/hero summer winter.webp"
+          alt="Installation background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Content */}
+        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+            Installation
+          </h1>
+          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
+            Licensed technicians, clean workmanship, fully certified installs across Cape Town
+          </p>
+          <div className="flex flex-col sm:flex-row items-start gap-[24px]">
+            <div className="aircon-angled-button-wrap">
               <Button
-                className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                 asChild
+                variant="ghost"
+                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
               >
-                <Link href="/enquire">Get a Free Quote</Link>
+                <Link href="/enquire">Get a Quote</Link>
               </Button>
+            </div>
+            <div className="aircon-angled-button-wrap">
               <Button
-                variant="outline"
-                className="border-white text-white hover:bg-white/10 rounded-lg"
                 asChild
+                variant="ghost"
+                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
               >
                 <a href="tel:+27000000000">Call Us</a>
               </Button>

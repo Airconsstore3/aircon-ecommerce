@@ -156,48 +156,46 @@ function ProductsPageContent() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section for Sale Page */}
-      {searchParams.get('sale') === 'true' && (
-        <div className="relative h-[400px] flex items-center overflow-hidden">
-          {/* Background image */}
-          <img
-            src="/Hero Images/hero summer winter.webp"
-            alt="Latest deals background"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-black/50" />
-          {/* Content */}
-          <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
-            <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[40px] mb-[24px]">
-              Latest Deals
-            </h1>
-            <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
-              Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
-            </p>
-            <div className="flex flex-col sm:flex-row items-start gap-[24px]">
-              <div className="aircon-angled-button-wrap">
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
-                >
-                  <a href="#products-grid">Shop Now</a>
-                </Button>
-              </div>
-              <div className="aircon-angled-button-wrap">
-                <Button
-                  asChild
-                  variant="ghost"
-                  className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
-                >
-                  <a href="/enquire">Get a Quote</a>
-                </Button>
-              </div>
+      {/* Hero Section */}
+      <div className="relative h-[450px] flex items-center overflow-hidden">
+        {/* Background image */}
+        <img
+          src="/Hero Images/hero summer winter.webp"
+          alt="All Aircons background"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 bg-black/50" />
+        {/* Content */}
+        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
+          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
+            {searchParams.get('sale') === 'true' ? 'Latest Deals' : 'All Aircons'}
+          </h1>
+          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
+            Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
+          </p>
+          <div className="flex flex-col sm:flex-row items-start gap-[24px]">
+            <div className="aircon-angled-button-wrap">
+              <Button
+                asChild
+                variant="ghost"
+                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+              >
+                <a href="#products-grid">Shop Now</a>
+              </Button>
+            </div>
+            <div className="aircon-angled-button-wrap">
+              <Button
+                asChild
+                variant="ghost"
+                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+              >
+                <a href="/enquire">Get a Quote</a>
+              </Button>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Promo Banner */}
       {activePromotion && (
