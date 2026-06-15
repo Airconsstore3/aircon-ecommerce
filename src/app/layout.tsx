@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/components/shop/CartProvider";
 import { NavbarWrapper } from "@/components/shop/NavbarWrapper";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,6 +38,7 @@ export default function RootLayout({
           <NavbarWrapper />
           <main className="min-h-screen pt-[var(--secondary-nav-height)] md:pt-[5.25rem]">{children}</main>
         </CartProvider>
+        <Toaster position="bottom-right" richColors />
       </body>
     </html>
   );

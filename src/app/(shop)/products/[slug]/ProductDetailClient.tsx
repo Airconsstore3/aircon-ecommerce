@@ -36,6 +36,7 @@ import {
 import { cn } from "@/lib/utils";
 import { AirconProductCard } from "@/components/shop/ProductCard";
 import { mockProducts } from "@/lib/mock-data";
+import { useCart } from "@/components/shop/CartProvider";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -103,6 +104,7 @@ const SPEC_LABELS: Record<string, string> = {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
+  const { addItem } = useCart();
   const stockStatus = getStockStatus(product);
   const hasSale =
     product.sale_price_zar !== null &&
@@ -288,13 +290,32 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   Sold Out
                 </Button>
               ) : (
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white"
-                >
-                  <Link href="/enquire">Get Quote</Link>
-                </Button>
+                <>
+                  <Button
+                    size="lg"
+                    className="w-full rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white"
+                    onClick={() => addItem({
+                      id: product.id,
+                      name: product.name,
+                      slug: product.slug,
+                      price_zar: product.price_zar,
+                      sale_price_zar: product.sale_price_zar ?? undefined,
+                      images: product.images,
+                      type: product.type,
+                      is_enquiry_only: product.is_enquiry_only,
+                    })}
+                  >
+                    Add to Cart
+                  </Button>
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="w-full rounded-full border-[#1C99D6] text-[#1C99D6] hover:bg-[#1C99D6] hover:text-white"
+                  >
+                    <Link href="/enquire">Get Quote</Link>
+                  </Button>
+                </>
               )}
 
               {/* WhatsApp button */}

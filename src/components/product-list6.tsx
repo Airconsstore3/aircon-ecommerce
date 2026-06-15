@@ -5,6 +5,7 @@ import type { ControllerRenderProps, UseFormReturn } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/components/shop/CartProvider";
 import z from "zod";
 
@@ -465,6 +466,7 @@ const ProductCard = ({
   is_enquiry_only = false,
 }: ProductCardProps) => {
   const { addItem } = useCart();
+  const router = useRouter();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -498,7 +500,7 @@ const ProductCard = ({
           <div className="absolute left-[16px] right-[16px] bottom-[48px] flex justify-center">
             <button
               type="button"
-              onClick={() =>
+              onClick={() => {
                 addItem({
                   id,
                   name,
@@ -508,8 +510,9 @@ const ProductCard = ({
                   images: [image.src],
                   type,
                   is_enquiry_only,
-                })
-              }
+                });
+                router.push('/cart');
+              }}
               style={{ width: 'var(--button-width, 200px)' }}
               className="h-[40px] border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] text-[14px] font-normal rounded-none transition-all hover:bg-[#1C99D6] hover:border-solid hover:border-[#1C99D6] hover:text-white flex items-center justify-center gap-[8px] font-[var(--font-google-sans-flex)]"
             >

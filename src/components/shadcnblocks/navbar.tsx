@@ -59,6 +59,7 @@ import {
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/components/shop/CartProvider";
 
 type HomeLink = {
   href: string;
@@ -321,6 +322,7 @@ const MobileMenu = ({ menu, navMenu }: MobileMenuProps) => {
 
 const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
   const isMobile = useIsMobile();
+  const { itemCount } = useCart();
 
   return (
     <div className="border-b border-[#1C99D6]/15 bg-white/95 px-4 py-1 shadow-sm backdrop-blur-sm md:px-6">
@@ -362,9 +364,11 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
                 <ShoppingCart />
               </a>
             </Button>
-            <Badge className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-amber-500 text-[0.625rem] font-medium text-primary-foreground">
-              0
-            </Badge>
+            {itemCount > 0 && (
+              <Badge className="absolute -top-1 -right-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1C99D6] px-1 text-[0.625rem] font-medium text-white">
+                {itemCount}
+              </Badge>
+            )}
           </div>
         </div>
         <div className="hidden w-full justify-center overflow-x-auto lg:flex">
@@ -412,7 +416,7 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
             </a>
           </Button>
           <Button variant="ghost" className="px-2 font-[var(--font-google-sans-flex)] text-xs font-medium uppercase tracking-wider text-[#0A2540] hover:bg-[#1C99D6]/10 sm:text-sm" asChild>
-            <a href="/cart">Cart (0)</a>
+            <a href="/cart">Cart {itemCount > 0 ? `(${itemCount})` : ""}</a>
           </Button>
           <MobileMenu menu={sideMenu} navMenu={menu} homeLink={home} />
         </div>

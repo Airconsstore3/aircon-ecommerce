@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { toast } from 'sonner';
 
 export interface CartItem {
   id: string;
@@ -28,11 +29,9 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [mounted, setMounted] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
-  // Load from localStorage on mount
   useEffect(() => {
-    setMounted(true);
     const saved = localStorage.getItem('cart');
     if (saved) {
       try {
@@ -41,23 +40,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
         console.error('Failed to parse cart from localStorage', e);
       }
     }
+    setHydrated(true);
   }, []);
 
-  // Save to localStorage whenever items change
   useEffect(() => {
-    if (mounted) {
+    if (hydrated) {
       localStorage.setItem('cart', JSON.stringify(items));
     }
-  }, [items, mounted]);
+  }, [items, hydrated]);
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
+    console.log('Adding item to cart:', item);
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
+        console.log('Item already exists, incrementing quantity');
+        toast.success("Added to cart", {
+          description: item.name,
+          duration: 2000,
+        });
         return prev.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
+      console.log('Adding new item');
+      toast.success("Added to cart", {
+        description: item.name,
+        duration: 2000,
+      });
       return [...prev, { ...item, quantity: 1 }];
     });
   };

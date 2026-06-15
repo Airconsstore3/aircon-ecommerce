@@ -43,11 +43,19 @@ export function Navbar() {
   const { itemCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [badgeAnimate, setBadgeAnimate] = useState(false);
 
   useEffect(() => {
     document.documentElement.style.setProperty("--primary-nav-height", "4rem");
     document.documentElement.style.setProperty("--secondary-nav-height", "3rem");
   }, []);
+
+  useEffect(() => {
+    if (itemCount > 0) {
+      setBadgeAnimate(true);
+      setTimeout(() => setBadgeAnimate(false), 300);
+    }
+  }, [itemCount]);
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -115,7 +123,7 @@ export function Navbar() {
               </Link>
             </Button>
             {itemCount > 0 && (
-              <Badge className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-gray-500 text-[0.625rem] font-medium text-white">
+              <Badge className={`absolute -top-1 -right-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1C99D6] px-1 text-[0.625rem] font-medium text-white transition-transform ${badgeAnimate ? 'scale-125' : ''}`}>
                 {itemCount}
               </Badge>
             )}
