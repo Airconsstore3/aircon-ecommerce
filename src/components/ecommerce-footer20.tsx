@@ -142,7 +142,7 @@ const FOOTER_LINKS: FooterLinksSection[] = [
       },
       {
         text: "Installation Kits",
-        link: "/categories/kits",
+        link: "/categories/installation",
       },
       {
         text: "Accessories",

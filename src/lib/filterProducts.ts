@@ -51,6 +51,8 @@ export function filterProducts(
         'installation': 'cat-3',
         'kits': 'cat-3',
         'maintenance': 'cat-4',
+        'accessories': 'cat-3',
+        'warranty': 'cat-4',
       };
       
       const categoryId = categoryMap[categorySlug];

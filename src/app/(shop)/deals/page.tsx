@@ -118,7 +118,7 @@ function DealsPageContent() {
               ))}
             </div>
             {/* Pagination */}
-            <div className="flex items-center justify-center gap-1 mt-12">
+            <div className="flex items-center justify-center gap-1 mt-8">
               <Button variant="ghost" size="icon" disabled className="rounded-lg w-10 h-10">
                 <ChevronRight className="w-5 h-5 rotate-180" />
               </Button>

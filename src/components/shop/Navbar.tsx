@@ -14,7 +14,7 @@ const navLinks = [
   { href: '/categories/residential', label: 'Residential' },
   { href: '/categories/commercial', label: 'Commercial' },
   { href: '/categories/maintenance', label: 'Maintenance' },
-  { href: '/categories/installation', label: 'Kits' },
+  { href: '/categories/installation', label: 'Installation' },
 ];
 
 const sideMenu = [

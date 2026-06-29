@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import { useCart } from "@/components/shop/CartProvider";
+import { toast } from "sonner";
+import { mockProducts } from "@/lib/mock-data";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -17,6 +20,7 @@ interface AirconProduct {
   slug: string;
   brand: string | null;
   btu_size: string | null;
+  btu_range: number | null;
   type: string;
   price_zar: number;
   sale_price_zar: number | null;
@@ -47,6 +51,7 @@ interface DealCardProps {
     deal_type: 'residential' | 'commercial' | 'bundle' | 'clearance';
     stock_remaining: number;
     is_hero: boolean;
+    product_id?: string;
     images: string[];
     includes?: string[];
   };
@@ -231,26 +236,35 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* CTA button */}
           <div className="pt-1">
             {product.is_enquiry_only ? (
-              <Button
-                asChild
-                className="w-full rounded-full bg-[#1E3A5F] hover:bg-[#16304f] text-white text-sm"
-              >
-                <Link href={`/products/${product.slug}`}>Request Quote</Link>
-              </Button>
+              <div className="aircon-angled-button-wrap w-full">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent"
+                >
+                  <Link href={`/products/${product.slug}`}>Request Quote</Link>
+                </Button>
+              </div>
             ) : stockStatus === "sold_out" ? (
-              <Button
-                disabled
-                className="w-full rounded-full bg-gray-200 text-gray-400 text-sm cursor-not-allowed"
-              >
-                Sold Out
-              </Button>
+              <div className="aircon-angled-button-wrap w-full">
+                <Button
+                  disabled
+                  variant="ghost"
+                  className="aircon-angled-button h-auto w-full rounded-none opacity-50 cursor-not-allowed"
+                >
+                  Sold Out
+                </Button>
+              </div>
             ) : (
-              <Button
-                asChild
-                className="w-full rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white text-sm"
-              >
-                <Link href={`/products/${product.slug}`}>Get Quote</Link>
-              </Button>
+              <div className="aircon-angled-button-wrap w-full">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent"
+                >
+                  <Link href={`/products/${product.slug}`}>Get Quote</Link>
+                </Button>
+              </div>
             )}
           </div>
 
@@ -298,8 +312,27 @@ const DealCard = ({ deal }: DealCardProps) => {
   const percentSaved = calculatePercentSaved(deal.original_price_zar, deal.sale_price_zar);
   const hasImages = deal.images.length > 0;
   const primaryImage = hasImages ? deal.images[0] : "/placeholder.jpg";
+  const { addItem } = useCart();
+  const productSlug = deal.product_id
+    ? mockProducts.find((product) => product.id === deal.product_id)?.slug
+    : undefined;
+  const productHref = productSlug ? `/products/${productSlug}` : `/deals/${deal.slug}`;
 
   const isExpired = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
+
+  const handleAddToCart = () => {
+    addItem({
+      id: deal.id,
+      name: deal.name,
+      slug: deal.slug,
+      price_zar: deal.original_price_zar,
+      sale_price_zar: deal.sale_price_zar,
+      images: deal.images,
+      type: deal.deal_type,
+      is_enquiry_only: false,
+    });
+    toast.success(`${deal.name} added to cart`);
+  };
 
   return (
     <Card className="group relative block rounded-none border border-solid border-[#0A2540]/30 bg-transparent py-5 shadow-none ring ring-border">
@@ -399,26 +432,26 @@ const DealCard = ({ deal }: DealCardProps) => {
           )}
 
           {/* CTA buttons */}
-          <div className="flex gap-2 pt-1">
-            <Button
-              asChild
-              className="flex-1 rounded-full bg-[#1C99D6] hover:bg-[#1680b0] text-white text-sm"
-            >
-              <Link href={`/enquire?deal=${deal.id}`}>Buy Now</Link>
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="flex-1 rounded-full border-green-500 text-green-600 hover:bg-green-50 text-sm"
-            >
-              <a
-                href="https://wa.me/27000000000?text=I'm interested in the deal: ${encodeURIComponent(deal.name)}"
-                target="_blank"
-                rel="noopener noreferrer"
+          <div className="relative z-[60] flex flex-col gap-2 pt-2">
+            <div>
+              <Button
+                variant="outline"
+                className="w-full rounded-none border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] hover:bg-[#1C99D6]/10 font-[var(--font-google-sans-flex)]"
+                onClick={handleAddToCart}
               >
-                WhatsApp
-              </a>
-            </Button>
+                <ShoppingBag className="mr-2 size-4" />
+                Add to cart
+              </Button>
+            </div>
+            <div>
+              <Button
+                asChild
+                variant="ghost"
+                className="w-full rounded-none border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] hover:bg-[#1C99D6]/10 font-[var(--font-google-sans-flex)]"
+              >
+                <Link href={productHref}>View product</Link>
+              </Button>
+            </div>
           </div>
 
           {/* Deal ends date */}

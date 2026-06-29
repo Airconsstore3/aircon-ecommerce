@@ -136,25 +136,43 @@ const Help2 = ({
                 {contactDescription}
               </p>
             </div>
-            <div className="grid gap-3 sm:grid-cols-3">
-              <Link href="/enquire" className="w-full">
-                <Button variant="outline" className="w-full bg-background">
-                  <MessageSquare className="mr-2 size-4" />
-                  Live Chat
+            <div className="grid gap-4 sm:grid-cols-3 items-stretch">
+              <div className="aircon-angled-button-wrap w-full flex">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent flex-1"
+                >
+                  <Link href="/enquire" className="flex items-center justify-center">
+                    <MessageSquare className="mr-2 size-4" />
+                    Live Chat
+                  </Link>
                 </Button>
-              </Link>
-              <Link href="mailto:info@airconsstore.co.za" className="w-full">
-                <Button variant="outline" className="w-full bg-background">
-                  <Mail className="mr-2 size-4" />
-                  Email Us
+              </div>
+              <div className="aircon-angled-button-wrap w-full flex">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent flex-1"
+                >
+                  <Link href="mailto:info@airconsstore.co.za" className="flex items-center justify-center">
+                    <Mail className="mr-2 size-4" />
+                    Email Us
+                  </Link>
                 </Button>
-              </Link>
-              <Link href="tel:+27000000000" className="w-full">
-                <Button variant="outline" className="w-full bg-background">
-                  <Phone className="mr-2 size-4" />
-                  Call Us
+              </div>
+              <div className="aircon-angled-button-wrap w-full flex">
+                <Button
+                  asChild
+                  variant="ghost"
+                  className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent flex-1"
+                >
+                  <Link href="tel:+27000000000" className="flex items-center justify-center">
+                    <Phone className="mr-2 size-4" />
+                    Call Us
+                  </Link>
                 </Button>
-              </Link>
+              </div>
             </div>
           </div>
         </div>
