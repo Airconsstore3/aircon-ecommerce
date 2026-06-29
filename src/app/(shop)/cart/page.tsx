@@ -27,7 +27,7 @@ export default function CartPage() {
 
   const handleApplyPromo = (e: React.FormEvent) => {
     e.preventDefault();
-    if (promoCode.toUpperCase() === "WINTER25") {
+    if (promoCode.toUpperCase() === "SUMMER15") {
       setPromoApplied(true);
       setPromoError(false);
     } else {
@@ -179,7 +179,7 @@ export default function CartPage() {
           </div>
           {promoApplied && (
             <p className="text-sm text-emerald-600 mt-2">
-              WINTER25 applied — 15% off
+              SUMMER15 applied — 15% off
             </p>
           )}
           {promoError && (

@@ -21,6 +21,9 @@ export interface Product {
   sort_order: number;
   specs: Record<string, string>;
   documents: string[];
+  stock_count: number;
+  is_sold_out: boolean;
+  low_stock_threshold: number;
   created_at: string;
   updated_at: string;
 }
@@ -194,6 +197,9 @@ export const mockProducts: Product[] = [
       '/documents/samsung-9000btu-spec-sheet.pdf',
       '/documents/samsung-9000btu-manual.pdf',
     ],
+    stock_count: 15,
+    is_sold_out: false,
+    low_stock_threshold: 3,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -234,6 +240,9 @@ export const mockProducts: Product[] = [
     documents: [
       '/documents/lg-12000btu-spec-sheet.pdf',
     ],
+    stock_count: 20,
+    is_sold_out: false,
+    low_stock_threshold: 5,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -272,6 +281,9 @@ export const mockProducts: Product[] = [
     documents: [
       '/documents/daikin-ducted-spec-sheet.pdf',
     ],
+    stock_count: 5,
+    is_sold_out: false,
+    low_stock_threshold: 2,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -302,6 +314,9 @@ export const mockProducts: Product[] = [
       includes: 'Electrical connection, testing, warranty registration',
     },
     documents: [],
+    stock_count: 100,
+    is_sold_out: false,
+    low_stock_threshold: 10,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -334,6 +349,9 @@ export const mockProducts: Product[] = [
     documents: [
       '/documents/maintenance-plan-terms.pdf',
     ],
+    stock_count: 100,
+    is_sold_out: false,
+    low_stock_threshold: 20,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -367,6 +385,9 @@ export const mockProducts: Product[] = [
     documents: [
       '/documents/pipe-kit-specs.pdf',
     ],
+    stock_count: 25,
+    is_sold_out: false,
+    low_stock_threshold: 5,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -399,6 +420,9 @@ export const mockProducts: Product[] = [
     documents: [
       '/documents/warranty-terms.pdf',
     ],
+    stock_count: 100,
+    is_sold_out: false,
+    low_stock_threshold: 15,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
@@ -431,6 +455,9 @@ export const mockProducts: Product[] = [
     documents: [
       '/documents/bundle-terms.pdf',
     ],
+    stock_count: 10,
+    is_sold_out: false,
+    low_stock_threshold: 3,
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },

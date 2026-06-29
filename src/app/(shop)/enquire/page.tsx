@@ -17,6 +17,7 @@ import z from "zod";
 
 import type { PriceType } from "@/components/price";
 import { Price, PriceValue } from "@/components/price";
+import { CONTACT_PHONE } from "@/lib/constants";
 import {
   Accordion,
   AccordionContent,
@@ -189,6 +190,7 @@ function EnquiryPageContent({ className }: EnquiryPageProps) {
 
   const [submitted, setSubmitted] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
+  const [warnings, setWarnings] = useState<string[]>([]);
 
   const onSubmit: SubmitHandler<EnquiryFormType> = async (data: EnquiryFormType) => {
     console.log(data);
@@ -209,6 +211,7 @@ function EnquiryPageContent({ className }: EnquiryPageProps) {
       
       const result = await response.json();
       setReferenceNumber(result.referenceNumber);
+      setWarnings(result.warnings || []);
       setSubmitted(true);
     } catch (error) {
       console.error('Error submitting enquiry:', error);
@@ -225,7 +228,7 @@ function EnquiryPageContent({ className }: EnquiryPageProps) {
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">Get a Quote</h1>
-          <p className="text-muted-foreground">Need help? Call us on <span className="font-semibold text-[#1C99D6]">082 123 4567</span></p>
+          <p className="text-muted-foreground">Need help? Call us on <span className="font-semibold text-[#1C99D6]">{CONTACT_PHONE}</span></p>
         </div>
         
         <FormProvider {...form}>
@@ -238,7 +241,7 @@ function EnquiryPageContent({ className }: EnquiryPageProps) {
             </div>
             <div className="xl:col-span-2">
               {submitted ? (
-                <SuccessState referenceNumber={referenceNumber} email={form.getValues("contact.email")} />
+                <SuccessState referenceNumber={referenceNumber} email={form.getValues("contact.email")} warnings={warnings} />
               ) : (
                 <EnquiryForm onSubmit={onSubmit} />
               )}
@@ -660,7 +663,7 @@ const ContactFields = () => {
             <Input
               {...field}
               type="tel"
-              placeholder="082 123 4567"
+              placeholder={CONTACT_PHONE}
               id="contact-phone"
               aria-invalid={fieldState.invalid}
             />
@@ -1152,7 +1155,7 @@ const MessageField = () => {
   );
 };
 
-const SuccessState = ({ referenceNumber, email }: { referenceNumber: string; email: string }) => {
+const SuccessState = ({ referenceNumber, email, warnings }: { referenceNumber: string; email: string; warnings: string[] }) => {
   return (
     <div className="rounded-lg border-border bg-background p-7 shadow-lg">
       <div className="flex flex-col items-center justify-center py-12 text-center space-y-6">
@@ -1166,6 +1169,16 @@ const SuccessState = ({ referenceNumber, email }: { referenceNumber: string; ema
         <p className="text-muted-foreground max-w-md">
           We will confirm within 2 hours via WhatsApp and email to <span className="font-medium text-[#1E3A5F]">{email}</span>
         </p>
+        {warnings.length > 0 && (
+          <div className="w-full max-w-md rounded-lg bg-amber-50 border border-amber-200 p-4 text-left">
+            <p className="text-sm font-medium text-amber-800 mb-2">Note:</p>
+            <ul className="text-sm text-amber-700 space-y-1">
+              {warnings.map((warning, index) => (
+                <li key={index}>• {warning}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <div className="flex gap-3 w-full max-w-xs">
           <Button
             asChild

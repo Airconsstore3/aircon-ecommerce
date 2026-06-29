@@ -10,6 +10,7 @@ interface AirconProduct {
   slug: string;
   brand: string | null;
   btu_size: string | null;
+  btu_range: number | null;
   type: string;
   price_zar: number;
   sale_price_zar: number | null;
@@ -49,6 +50,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     slug: product.slug,
     brand: product.brand,
     btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
+    btu_range: product.btu_range,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,
@@ -58,9 +60,9 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     description: product.description,
     specs: product.specs,
     stock: {
-      stock_count: 10, // Mock stock count
-      is_sold_out: false, // Mock - no sold out
-      low_stock_threshold: 3,
+      stock_count: product.stock_count,
+      is_sold_out: product.is_sold_out,
+      low_stock_threshold: product.low_stock_threshold,
     },
   };
 

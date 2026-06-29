@@ -46,6 +46,7 @@ function convertToAirconProduct(product: Product): AirconProduct {
     slug: product.slug,
     brand: product.brand,
     btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
+    btu_range: product.btu_range,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,
@@ -53,9 +54,9 @@ function convertToAirconProduct(product: Product): AirconProduct {
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
     stock: {
-      stock_count: 10,
-      is_sold_out: false,
-      low_stock_threshold: 3,
+      stock_count: product.stock_count,
+      is_sold_out: product.is_sold_out,
+      low_stock_threshold: product.low_stock_threshold,
     },
   };
 }

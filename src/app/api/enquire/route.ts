@@ -111,38 +111,41 @@ function formatWhatsAppMessage(data: EnquiryData, referenceNumber: string): stri
 }
 
 // Send WhatsApp message via CallMeBot
-async function sendWhatsAppMessage(phone: string, message: string): Promise<boolean> {
+async function sendWhatsAppMessage(phone: string, message: string): Promise<{ success: boolean; error?: string }> {
   try {
     // CallMeBot API - requires API key from https://www.callmebot.com
     // This is a placeholder - user needs to configure their API key
     const callmebotPhone = process.env.CALLMEBOT_PHONE;
     const callmebotApiKey = process.env.CALLMEBOT_API_KEY;
-    
+
     if (!callmebotPhone || !callmebotApiKey) {
       console.warn('CallMeBot credentials not configured - skipping WhatsApp');
-      return false;
+      return { success: false, error: 'CallMeBot credentials not configured' };
     }
-    
+
     const url = `https://api.callmebot.com/whatsapp.php?phone=${callmebotPhone}&text=${encodeURIComponent(message)}&apikey=${callmebotApiKey}`;
     const response = await fetch(url);
-    return response.ok;
+    if (!response.ok) {
+      return { success: false, error: 'CallMeBot API request failed' };
+    }
+    return { success: true };
   } catch (error) {
     console.error('Error sending WhatsApp message:', error);
-    return false;
+    return { success: false, error: 'Failed to send WhatsApp message' };
   }
 }
 
 // Send confirmation email via Resend
-async function sendConfirmationEmail(email: string, referenceNumber: string, data: EnquiryData): Promise<boolean> {
+async function sendConfirmationEmail(email: string, referenceNumber: string, data: EnquiryData): Promise<{ success: boolean; error?: string }> {
   try {
     // Resend API - requires API key from https://resend.com
     const resendApiKey = process.env.RESEND_API_KEY;
-    
+
     if (!resendApiKey) {
       console.warn('Resend API key not configured - skipping email');
-      return false;
+      return { success: false, error: 'Resend API key not configured' };
     }
-    
+
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
@@ -170,18 +173,21 @@ async function sendConfirmationEmail(email: string, referenceNumber: string, dat
         `,
       }),
     });
-    
-    return response.ok;
+
+    if (!response.ok) {
+      return { success: false, error: 'Resend API request failed' };
+    }
+    return { success: true };
   } catch (error) {
     console.error('Error sending email:', error);
-    return false;
+    return { success: false, error: 'Failed to send confirmation email' };
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
     const data: EnquiryData = await request.json();
-    
+
     // Validate required fields
     if (!data.contact?.fullName || !data.contact?.email || !data.contact?.phone) {
       return NextResponse.json(
@@ -189,26 +195,37 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     // Generate reference number
     const referenceNumber = generateReferenceNumber();
-    
+
     // Format WhatsApp message
     const whatsappMessage = formatWhatsAppMessage(data, referenceNumber);
-    
-    // Send WhatsApp message (async, don't block response)
-    sendWhatsAppMessage(data.contact.phone, whatsappMessage).catch(console.error);
-    
-    // Send confirmation email (async, don't block response)
-    sendConfirmationEmail(data.contact.email, referenceNumber, data).catch(console.error);
-    
+
+    // Send WhatsApp message
+    const whatsappResult = await sendWhatsAppMessage(data.contact.phone, whatsappMessage);
+
+    // Send confirmation email
+    const emailResult = await sendConfirmationEmail(data.contact.email, referenceNumber, data);
+
     // Log enquiry for reference
     console.log(`[ENQUIRY] ${referenceNumber} - ${data.contact.fullName} (${data.contact.email})`);
-    
+    console.log(`[INTEGRATIONS] WhatsApp: ${whatsappResult.success ? 'OK' : 'FAILED'}, Email: ${emailResult.success ? 'OK' : 'FAILED'}`);
+
+    // Build warnings for failed integrations
+    const warnings: string[] = [];
+    if (!whatsappResult.success) {
+      warnings.push(`WhatsApp notification failed: ${whatsappResult.error}`);
+    }
+    if (!emailResult.success) {
+      warnings.push(`Confirmation email failed: ${emailResult.error}`);
+    }
+
     return NextResponse.json({
       success: true,
       referenceNumber,
       message: 'Enquiry submitted successfully',
+      warnings: warnings.length > 0 ? warnings : undefined,
     });
   } catch (error) {
     console.error('Error processing enquiry:', error);

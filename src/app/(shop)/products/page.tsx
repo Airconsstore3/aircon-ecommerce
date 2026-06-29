@@ -30,6 +30,7 @@ function convertToAirconProduct(product: Product): AirconProduct {
     slug: product.slug,
     brand: product.brand,
     btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
+    btu_range: product.btu_range,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,
@@ -37,9 +38,9 @@ function convertToAirconProduct(product: Product): AirconProduct {
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
     stock: {
-      stock_count: 10, // Mock stock count
-      is_sold_out: false, // Mock - no sold out
-      low_stock_threshold: 3,
+      stock_count: product.stock_count,
+      is_sold_out: product.is_sold_out,
+      low_stock_threshold: product.low_stock_threshold,
     },
   };
 }
@@ -76,11 +77,19 @@ function ProductsPageContent() {
   const filteredProducts = useMemo(() => {
     let filtered = [...airconProducts];
 
-    // Category filter
+    // Category filter (includes derived residential/commercial)
     const categories = searchParams.getAll("category");
     if (categories.length > 0) {
       filtered = filtered.filter((p) =>
-        categories.includes(p.type)
+        categories.some((cat) => {
+          if (cat === "residential") {
+            return p.type === "aircon" && p.btu_range !== null && p.btu_range <= 32000;
+          }
+          if (cat === "commercial") {
+            return p.type === "aircon" && p.btu_range !== null && p.btu_range >= 32000;
+          }
+          return p.type === cat;
+        })
       );
     }
 
@@ -210,7 +219,7 @@ function ProductsPageContent() {
       )}
 
       {/* Breadcrumb */}
-      <div className="w-full px-4 sm:px-20 pt-[220px] pb-[120px] mb-8 md:pt-[180px] border-b">
+      <div className="w-full px-4 sm:px-20 pt-12 pb-8 mb-8 border-b">
         <nav className="flex items-center text-sm text-muted-foreground">
           <a href="/" className="hover:text-foreground flex items-center gap-1">
             Home
@@ -324,7 +333,7 @@ function ProductsPageContent() {
               <>
                 <AirconProductList products={filteredProducts} columns={columns} />
                 {/* Pagination */}
-                <div className="flex items-center justify-center gap-1 mt-12">
+                <div className="flex items-center justify-center gap-1 mt-8">
                   <Button variant="ghost" size="icon" disabled className="rounded-lg w-10 h-10">
                     <ChevronRight className="w-5 h-5 rotate-180" />
                   </Button>

@@ -50,11 +50,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, hydrated]);
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
-    console.log('Adding item to cart:', item);
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
-        console.log('Item already exists, incrementing quantity');
         toast.success("Added to cart", {
           description: item.name,
           duration: 2000,
@@ -63,7 +61,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      console.log('Adding new item');
       toast.success("Added to cart", {
         description: item.name,
         duration: 2000,
