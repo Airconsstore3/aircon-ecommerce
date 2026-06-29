@@ -40,7 +40,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { AirconProductCard } from "@/components/shop/ProductCard";
-import { mockProducts } from "@/lib/mock-data";
 import { useCart } from "@/components/shop/CartProvider";
 import { toast } from "sonner";
 

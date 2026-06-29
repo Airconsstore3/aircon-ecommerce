@@ -1,6 +1,7 @@
 import "photoswipe/style.css";
-import { mockProducts } from "@/lib/mock-data";
+import { createClient } from "@/utils/supabase/server";
 import { ProductDetailClient } from "./ProductDetailClient";
+import { cookies } from "next/headers";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -30,7 +31,14 @@ interface AirconProduct {
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const product = mockProducts.find((p) => p.slug === slug);
+  const supabase = createClient(await cookies());
+  
+  const { data: product } = await supabase
+    .from('products')
+    .select('*')
+    .eq('slug', slug)
+    .eq('is_published', true)
+    .single();
 
   if (!product) {
     return (
@@ -43,7 +51,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     );
   }
 
-  // Adapt Product to AirconProduct with stock info
+  // Adapt Supabase product to AirconProduct with stock info
   const airconProduct: AirconProduct = {
     id: product.id,
     name: product.name,

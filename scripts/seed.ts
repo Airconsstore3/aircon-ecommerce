@@ -103,9 +103,16 @@ async function seedProducts() {
 async function seedDeals() {
   console.log('\n📦 Seeding deals...');
   
+  const now = new Date();
+  
   for (const deal of mockDeals) {
     // Map old product_id to new UUID (if exists)
     const newProductId = deal.product_id ? productMap.get(deal.product_id) : null;
+
+    // Calculate future end date based on current date
+    const originalEndsAt = new Date(deal.ends_at);
+    const monthsFromNow = originalEndsAt.getMonth() - 5; // Original was Aug 2025, so calculate offset
+    const futureEndsAt = new Date(now.getFullYear(), now.getMonth() + monthsFromNow, now.getDate());
 
     const { error } = await supabase
       .from('deals')
@@ -115,7 +122,7 @@ async function seedDeals() {
         description: deal.description,
         original_price_zar: deal.original_price_zar,
         sale_price_zar: deal.sale_price_zar,
-        ends_at: deal.ends_at,
+        ends_at: futureEndsAt.toISOString(),
         deal_type: deal.deal_type,
         stock_remaining: deal.stock_remaining,
         is_hero: deal.is_hero,
@@ -129,7 +136,7 @@ async function seedDeals() {
       throw error;
     }
 
-    console.log(`  ✓ ${deal.name}`);
+    console.log(`  ✓ ${deal.name} (ends: ${futureEndsAt.toISOString()})`);
   }
 
   console.log(`✓ Inserted ${mockDeals.length} deals`);

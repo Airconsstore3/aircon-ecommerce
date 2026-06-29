@@ -1,16 +1,31 @@
-import { mockDeals, mockProducts } from "@/lib/mock-data";
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Clock, AlertCircle, ShoppingBag, CheckCircle2 } from "lucide-react";
+import { Clock, AlertCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useCart } from "@/components/shop/CartProvider";
-import { toast } from "sonner";
+import DealAddToCartButton from "./DealAddToCartButton";
 
 export default async function DealDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const deal = mockDeals.find((d) => d.slug === slug);
+  const supabase = createClient(await cookies());
+  
+  // Fetch deal with linked product
+  const { data: deal } = await supabase
+    .from('deals')
+    .select(`
+      *,
+      products!deals_product_id_fkey (
+        slug,
+        name,
+        brand,
+        images
+      )
+    `)
+    .eq('slug', slug)
+    .single();
 
   if (!deal) {
     return (
@@ -26,11 +41,8 @@ export default async function DealDetailPage({ params }: { params: Promise<{ slu
     );
   }
 
-  // Find linked product if exists
-  const linkedProduct = deal.product_id
-    ? mockProducts.find((p) => p.id === deal.product_id)
-    : null;
-
+  // Get linked product from the join
+  const linkedProduct = deal.products || null;
   const productSlug = linkedProduct?.slug;
   const productHref = productSlug ? `/products/${productSlug}` : null;
 
@@ -156,7 +168,7 @@ export default async function DealDetailPage({ params }: { params: Promise<{ slu
                 <CardContent className="p-6">
                   <h3 className="text-lg font-normal text-[#0A2540] mb-4 font-[var(--font-google-sans-flex)]">What's Included</h3>
                   <ul className="space-y-2">
-                    {deal.includes.map((item, index) => (
+                    {deal.includes.map((item: string, index: number) => (
                       <li key={index} className="flex items-start gap-2 text-sm">
                         <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
                         <span>{item}</span>
@@ -218,34 +230,5 @@ export default async function DealDetailPage({ params }: { params: Promise<{ slu
         </div>
       </div>
     </section>
-  );
-}
-
-// Client component for cart interaction
-function DealAddToCartButton({ deal }: { deal: typeof mockDeals[0] }) {
-  const { addItem } = useCart();
-
-  const handleAddToCart = () => {
-    addItem({
-      id: deal.id,
-      name: deal.name,
-      slug: deal.slug,
-      price_zar: deal.original_price_zar,
-      sale_price_zar: deal.sale_price_zar,
-      images: deal.images,
-      type: deal.deal_type,
-      is_enquiry_only: false,
-    });
-    toast.success(`${deal.name} added to cart`);
-  };
-
-  return (
-    <Button
-      className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white"
-      onClick={handleAddToCart}
-    >
-      <ShoppingBag className="w-4 h-4 mr-2" />
-      Add to Cart
-    </Button>
   );
 }

@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { useCart } from "@/components/shop/CartProvider";
 import { toast } from "sonner";
-import { mockProducts } from "@/lib/mock-data";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -55,6 +54,7 @@ interface DealCardProps {
     images: string[];
     includes?: string[];
   };
+  productSlug?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -307,15 +307,13 @@ export type { AirconProduct };
 
 // ─── Deal Card Component ───────────────────────────────────────────────────────
 
-const DealCard = ({ deal }: DealCardProps) => {
+const DealCard = ({ deal, productSlug }: DealCardProps) => {
   const timeLeft = useCountdown(deal.ends_at);
   const percentSaved = calculatePercentSaved(deal.original_price_zar, deal.sale_price_zar);
   const hasImages = deal.images.length > 0;
   const primaryImage = hasImages ? deal.images[0] : "/placeholder.jpg";
   const { addItem } = useCart();
-  const productSlug = deal.product_id
-    ? mockProducts.find((product) => product.id === deal.product_id)?.slug
-    : undefined;
+
   const productHref = productSlug ? `/products/${productSlug}` : `/deals/${deal.slug}`;
 
   const isExpired = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;

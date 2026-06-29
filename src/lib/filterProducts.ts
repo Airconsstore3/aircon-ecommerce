@@ -1,66 +1,84 @@
-import { Product } from './mock-data';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 export type FilterType = 'deals' | 'residential' | 'commercial' | 'all-aircon' | 'accessories' | 'sale' | 'category';
 
-export function filterProducts(
-  products: Product[],
+export async function filterProducts(
+  supabase: SupabaseClient,
   filterType: FilterType,
   categorySlug?: string
-): Product[] {
+) {
+  let query = supabase
+    .from('products')
+    .select('*')
+    .eq('is_published', true);
+
   switch (filterType) {
     case 'deals':
       // Show only products flagged as deals
-      return products.filter(p => p.is_deal === true);
+      query = query.eq('is_deal', true);
+      break;
 
     case 'residential':
       // Show aircons with BTU <= 32000
-      return products.filter(p => 
-        p.type === 'aircon' && 
-        p.btu_range !== null && 
-        p.btu_range <= 32000
-      );
+      query = query
+        .eq('type', 'aircon')
+        .not('btu_range', 'is', null)
+        .lte('btu_range', 32000);
+      break;
 
     case 'commercial':
       // Show aircons with BTU >= 32000
-      return products.filter(p => 
-        p.type === 'aircon' && 
-        p.btu_range !== null && 
-        p.btu_range >= 32000
-      );
+      query = query
+        .eq('type', 'aircon')
+        .not('btu_range', 'is', null)
+        .gte('btu_range', 32000);
+      break;
 
     case 'all-aircon':
-      // Show all products (no filter)
-      return products;
+      // Show all products (no additional filter)
+      break;
 
     case 'accessories':
       // Show only accessories
-      return products.filter(p => p.type === 'accessory');
+      query = query.eq('type', 'accessory');
+      break;
 
     case 'sale':
       // Show products with sale price
-      return products.filter(p => p.is_sale === true);
+      query = query.not('sale_price_zar', 'is', null);
+      break;
 
     case 'category':
-      // Match by category slug (using category_id mapping)
-      if (!categorySlug) return products;
+      // Match by category slug - need to join with categories table
+      if (!categorySlug) break;
       
-      // Map category slugs to category IDs
-      const categoryMap: Record<string, string> = {
-        'residential': 'cat-1',
-        'commercial': 'cat-2',
-        'installation': 'cat-3',
-        'kits': 'cat-3',
-        'maintenance': 'cat-4',
-        'accessories': 'cat-3',
-        'warranty': 'cat-4',
-      };
-      
-      const categoryId = categoryMap[categorySlug];
-      if (!categoryId) return products;
-      
-      return products.filter(p => p.category_id === categoryId);
+      query = supabase
+        .from('products')
+        .select(`
+          *,
+          categories!products_category_id_fkey (
+            slug
+          )
+        `)
+        .eq('is_published', true)
+        .eq('categories.slug', categorySlug);
+      break;
 
     default:
-      return products;
+      break;
   }
+
+  const { data, error } = await query;
+  
+  if (error) {
+    console.error('Error filtering products:', error);
+    return [];
+  }
+
+  // For category filter, we need to flatten the joined data
+  if (filterType === 'category') {
+    return data || [];
+  }
+
+  return data || [];
 }

@@ -1,29 +1,20 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2, ChevronRight } from "lucide-react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useMemo, useEffect, Suspense } from "react";
+import { Suspense } from "react";
 import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
-import { mockProducts, mockPromotions, Product } from "@/lib/mock-data";
+import { createClient } from "@/utils/supabase/server";
 import { filterProducts } from "@/lib/filterProducts";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import ProductsClient from "./ProductsClient";
+import { cookies } from "next/headers";
 
 export const dynamic = 'force-dynamic';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-// Adapt Product to AirconProduct with stock info
-function convertToAirconProduct(product: Product): AirconProduct {
+// Adapt Supabase product to AirconProduct with stock info
+function convertToAirconProduct(product: any): AirconProduct {
   return {
     id: product.id,
     name: product.name,
@@ -45,340 +36,139 @@ function convertToAirconProduct(product: Product): AirconProduct {
   };
 }
 
-// ─── Products Page Component ───────────────────────────────────────────────────
+// Build filter options from Supabase data
+const CATEGORY_LABELS: Record<string, string> = {
+  residential: "Residential",
+  commercial: "Commercial",
+  aircon: "Air Conditioners",
+  kit: "Kits & Bundles",
+  accessory: "Accessories & Services",
+};
 
-function ProductsPageContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const [columns, setColumns] = useState<2 | 3 | 4>(4);
-  const [isMounted, setIsMounted] = useState(false);
+function buildCategoryFilters(products: any[]) {
+  const counts = new Map<string, number>();
+  products.forEach((p) => {
+    // Base type count
+    counts.set(p.type, (counts.get(p.type) || 0) + 1);
 
-  // Get active promotion
-  const activePromotion = useMemo(() => {
-    const now = new Date();
-    return mockPromotions.find(
-      (promo) =>
-        promo.is_active &&
-        (!promo.starts_at || new Date(promo.starts_at) <= now) &&
-        (!promo.expires_at || new Date(promo.expires_at) >= now)
-    );
-  }, []);
-
-  // Convert and filter products
-  const airconProducts = useMemo(() => {
-    const saleParam = searchParams.get('sale');
-    const filterType = saleParam === 'true' ? 'sale' : 'all-aircon';
-    const filtered = filterProducts(mockProducts, filterType);
-    return filtered.map(convertToAirconProduct);
-  }, [searchParams]);
-
-  // Apply filters from URL params
-  const filteredProducts = useMemo(() => {
-    let filtered = [...airconProducts];
-
-    // Category filter (includes derived residential/commercial)
-    const categories = searchParams.getAll("category");
-    if (categories.length > 0) {
-      filtered = filtered.filter((p) =>
-        categories.some((cat) => {
-          if (cat === "residential") {
-            return p.type === "aircon" && p.btu_range !== null && p.btu_range <= 32000;
-          }
-          if (cat === "commercial") {
-            return p.type === "aircon" && p.btu_range !== null && p.btu_range >= 32000;
-          }
-          return p.type === cat;
-        })
-      );
-    }
-
-    // Brand filter
-    const brands = searchParams.getAll("brand");
-    if (brands.length > 0) {
-      filtered = filtered.filter((p) =>
-        p.brand && brands.includes(p.brand.toLowerCase())
-      );
-    }
-
-    // BTU filter
-    const btus = searchParams.getAll("btu");
-    if (btus.length > 0) {
-      filtered = filtered.filter((p) =>
-        p.btu_size && btus.some((btu) => p.btu_size?.includes(btu))
-      );
-    }
-
-    // Price range filter
-    const minPrice = searchParams.get("minPrice");
-    const maxPrice = searchParams.get("maxPrice");
-    if (minPrice) {
-      filtered = filtered.filter((p) => p.price_zar >= parseInt(minPrice));
-    }
-    if (maxPrice) {
-      filtered = filtered.filter((p) => p.price_zar <= parseInt(maxPrice));
-    }
-
-    // In stock only
-    const inStockOnly = searchParams.get("inStock") === "true";
-    if (inStockOnly) {
-      filtered = filtered.filter((p) => !p.stock.is_sold_out);
-    }
-
-    // Sort
-    const sort = searchParams.get("sort");
-    if (sort) {
-      switch (sort) {
-        case "price-low":
-          filtered.sort((a, b) => a.price_zar - b.price_zar);
-          break;
-        case "price-high":
-          filtered.sort((a, b) => b.price_zar - a.price_zar);
-          break;
-        case "newest":
-          filtered.sort((a, b) => b.id.localeCompare(a.id));
-          break;
-        case "featured":
-        default:
-          filtered.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
-          break;
+    // Derived residential/commercial counts
+    if (p.type === "aircon" && p.btu_range !== null) {
+      if (p.btu_range <= 32000) {
+        counts.set("residential", (counts.get("residential") || 0) + 1);
+      }
+      if (p.btu_range >= 32000) {
+        counts.set("commercial", (counts.get("commercial") || 0) + 1);
       }
     }
+  });
 
-    return filtered;
-  }, [airconProducts, searchParams]);
+  const entries = Array.from(counts.entries());
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  return entries
+    .map(([type, count]) => ({
+      value: type,
+      label: CATEGORY_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1),
+      count,
+    }))
+    .sort((a, b) => {
+      const priority: Record<string, number> = { residential: 0, commercial: 1 };
+      const pa = priority[a.value] ?? 2;
+      const pb = priority[b.value] ?? 2;
+      if (pa !== pb) return pa - pb;
+      return b.count - a.count;
+    });
+}
 
-  if (!isMounted) {
-    return <div className="min-h-screen bg-white">Loading...</div>;
-  }
+function buildBtuFilters(products: any[]) {
+  const counts = new Map<number, number>();
+  products.forEach((p) => {
+    if (p.btu_range !== null) {
+      counts.set(p.btu_range, (counts.get(p.btu_range) || 0) + 1);
+    }
+  });
+  return Array.from(counts.entries())
+    .sort((a, b) => a[0] - b[0])
+    .map(([btu, count]) => ({
+      value: String(btu),
+      label: `${btu.toLocaleString()} BTU`,
+      count,
+    }));
+}
 
-  // Update sort
-  const updateSort = (value: string) => {
-    const current = new URLSearchParams(searchParams.toString());
-    current.set("sort", value);
-    router.push(`?${current.toString()}`);
-  };
+function buildBrandFilters(products: any[]) {
+  const counts = new Map<string, number>();
+  products.forEach((p) => {
+    if (p.brand) {
+      const key = p.brand.toLowerCase();
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+  });
+  return Array.from(counts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .map(([brand, count]) => ({
+      value: brand,
+      label: brand.charAt(0).toUpperCase() + brand.slice(1),
+      count,
+    }));
+}
 
-  return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <div className="relative h-[450px] flex items-center overflow-hidden">
-        {/* Background image */}
-        <img
-          src="/Hero Images/hero summer winter.webp"
-          alt="All Aircons background"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-black/50" />
-        {/* Content */}
-        <div className="relative z-10 max-w-[1280px] mx-auto w-full px-[16px] sm:px-[24px] lg:px-[32px]">
-          <h1 className="font-[var(--font-google-sans-flex)] text-[48px] md:text-[64px] lg:text-[72px] font-normal tracking-tight leading-tight text-white mt-[60px] mb-[24px]">
-            {searchParams.get('sale') === 'true' ? 'Latest Deals' : 'All Aircons'}
-          </h1>
-          <p className="font-[var(--font-google-sans-flex)] text-[16px] md:text-[18px] font-normal leading-relaxed text-white/90 max-w-[600px] mb-[32px]">
-            Taking care of your comfort is essential for a healthy home and office environment. A consistent air conditioning routine that includes cooling, heating, and maintenance.
-          </p>
-          <div className="flex flex-col sm:flex-row items-start gap-[24px]">
-            <div className="aircon-angled-button-wrap">
-              <Button
-                asChild
-                variant="ghost"
-                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
-              >
-                <a href="#products-grid">Shop Now</a>
-              </Button>
-            </div>
-            <div className="aircon-angled-button-wrap">
-              <Button
-                asChild
-                variant="ghost"
-                className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
-              >
-                <a href="/enquire">Get a Quote</a>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+// ─── Server Component ───────────────────────────────────────────────────────────
 
-      {/* Promo Banner */}
-      {activePromotion && (
-        <div className="bg-[#1C99D6] text-white py-3 px-4 text-center">
-          <p className="text-sm font-medium">
-            {activePromotion.name}
-            {activePromotion.code && (
-              <span className="ml-2 font-bold">Code: {activePromotion.code}</span>
-            )}
-          </p>
-        </div>
-      )}
-
-      {/* Breadcrumb */}
-      <div className="w-full px-4 sm:px-20 pt-12 pb-8 mb-8 border-b">
-        <nav className="flex items-center text-sm text-muted-foreground">
-          <a href="/" className="hover:text-foreground flex items-center gap-1">
-            Home
-          </a>
-          <ChevronRight className="w-4 h-4" />
-          <span className="text-foreground font-medium">Products</span>
-        </nav>
-      </div>
-
-      {/* Main Content */}
-      <div className="w-full px-4 sm:px-20 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Desktop Filter Sidebar */}
-          <div className="hidden lg:block w-64 shrink-0">
-            <FilterSidebar />
-          </div>
-
-          {/* Product Grid Area */}
-          <div className="flex-1">
-            {/* Header with Sort and Filter Button */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <div>
-                <h1 className="text-2xl font-normal text-[#1E3A5F]">Products</h1>
-                <p className="text-sm text-muted-foreground">
-                  Showing {filteredProducts.length} products
-                </p>
-              </div>
-
-              <div className="flex items-center gap-3">
-                {/* Mobile Filter Button */}
-                <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" className="lg:hidden">
-                      <Filter className="mr-2 h-4 w-4" />
-                      Filters
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="w-full sm:w-80">
-                    <SheetHeader>
-                      <SheetTitle>Filters</SheetTitle>
-                    </SheetHeader>
-                    <div className="mt-6">
-                      <FilterSidebar
-                        isMobile
-                        isOpen={mobileFilterOpen}
-                        onClose={() => setMobileFilterOpen(false)}
-                      />
-                    </div>
-                  </SheetContent>
-                </Sheet>
-
-                {/* Columns Toggle - Hidden on mobile */}
-                <div className="hidden sm:flex items-center gap-1">
-                  <Button
-                    size="icon"
-                    variant={columns === 2 ? "default" : "ghost"}
-                    className={cn(
-                      "rounded-full",
-                      columns === 2 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
-                    )}
-                    onClick={() => setColumns(2)}
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant={columns === 3 ? "default" : "ghost"}
-                    className={cn(
-                      "rounded-full",
-                      columns === 3 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
-                    )}
-                    onClick={() => setColumns(3)}
-                  >
-                    <Grid3x3 className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant={columns === 4 ? "default" : "ghost"}
-                    className={cn(
-                      "rounded-full",
-                      columns === 4 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
-                    )}
-                    onClick={() => setColumns(4)}
-                  >
-                    <Grid2x2 className="h-4 w-4" />
-                  </Button>
-                </div>
-
-                {/* Sort Dropdown */}
-                <Select
-                  value={searchParams.get("sort") || "featured"}
-                  onValueChange={updateSort}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SlidersHorizontal className="mr-2 h-4 w-4" />
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="featured">Featured</SelectItem>
-                    <SelectItem value="price-low">Price: Low to High</SelectItem>
-                    <SelectItem value="price-high">Price: High to Low</SelectItem>
-                    <SelectItem value="newest">Newest</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            {/* Product Grid */}
-            <div id="products-grid">
-            {filteredProducts.length > 0 ? (
-              <>
-                <AirconProductList products={filteredProducts} columns={columns} />
-                {/* Pagination */}
-                <div className="flex items-center justify-center gap-1 mt-8">
-                  <Button variant="ghost" size="icon" disabled className="rounded-lg w-10 h-10">
-                    <ChevronRight className="w-5 h-5 rotate-180" />
-                  </Button>
-                  <Button variant="default" size="icon" className="rounded-lg w-10 h-10 bg-[#1C99D6] hover:bg-[#1680b0] text-base font-medium">
-                    1
-                  </Button>
-                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10 text-base font-medium hover:bg-gray-100">
-                    2
-                  </Button>
-                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10 text-base font-medium hover:bg-gray-100">
-                    3
-                  </Button>
-                  <span className="text-muted-foreground text-lg px-2">...</span>
-                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10 text-base font-medium hover:bg-gray-100">
-                    10
-                  </Button>
-                  <Button variant="ghost" size="icon" className="rounded-lg w-10 h-10">
-                    <ChevronRight className="w-5 h-5" />
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No products found matching your filters.</p>
-                <Button
-                  variant="outline"
-                  className="mt-4"
-                  onClick={() => router.push("?")}
-                >
-                  Clear all filters
-                </Button>
-              </div>
-            )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+async function getActivePromotion() {
+  const supabase = createClient(await cookies());
+  const { data } = await supabase
+    .from('promotions')
+    .select('*')
+    .eq('is_active', true);
+  
+  const now = new Date();
+  return data?.find(
+    (promo: any) =>
+      (!promo.starts_at || new Date(promo.starts_at) <= now) &&
+      (!promo.expires_at || new Date(promo.expires_at) >= now)
   );
 }
 
-export default function ProductsPage() {
+async function getProducts() {
+  const supabase = createClient(await cookies());
+  const { data } = await supabase
+    .from('products')
+    .select('*')
+    .eq('is_published', true);
+  
+  return data || [];
+}
+
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: { sale?: string };
+}) {
+  const supabase = createClient(await cookies());
+  const [products, activePromotion] = await Promise.all([
+    getProducts(),
+    getActivePromotion(),
+  ]);
+
+  const saleParam = searchParams.sale === 'true' ? 'sale' : 'all-aircon';
+  const filtered = await filterProducts(supabase, saleParam);
+  const airconProducts = filtered.map(convertToAirconProduct);
+
+  // Build filter options from Supabase data
+  const categoryOptions = buildCategoryFilters(products);
+  const btuOptions = buildBtuFilters(products);
+  const brandOptions = buildBrandFilters(products);
+
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
-      <ProductsPageContent />
+      <ProductsClient 
+        products={airconProducts}
+        activePromotion={activePromotion}
+        initialSaleParam={saleParam}
+        categoryOptions={categoryOptions}
+        btuOptions={btuOptions}
+        brandOptions={brandOptions}
+      />
     </Suspense>
   );
 }
