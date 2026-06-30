@@ -39,7 +39,8 @@
 }
 
 body {
-  background: var(--background);
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
   color: var(--foreground);
   font-family: Inter, system-ui, sans-serif;
   font-weight: 400;
