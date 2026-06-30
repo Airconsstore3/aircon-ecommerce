@@ -274,3 +274,13 @@ header .bg-accent button {
   background: #FFFFFF !important;
   border: 1px solid #E2E8F0 !important;
 }
+
+/* Force body background to white when admin section exists */
+body:has(.admin-section) {
+  background: #FFFFFF !important;
+}
+
+/* Force root background variable when admin section exists */
+body:has(.admin-section) {
+  --background: #FFFFFF !important;
+}
