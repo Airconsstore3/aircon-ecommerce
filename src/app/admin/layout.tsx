@@ -60,7 +60,24 @@ export default function AdminLayout({ children }: PropsWithChildren) {
           --background: #FFFFFF !important;
           --card: #FFFFFF !important;
         }
+        * {
+          background-color: inherit !important;
+        }
       `}</style>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              document.body.style.backgroundColor = '#FFFFFF';
+              document.body.style.setProperty('background', '#FFFFFF', 'important');
+              document.body.style.setProperty('background-color', '#FFFFFF', 'important');
+              document.documentElement.style.backgroundColor = '#FFFFFF';
+              document.documentElement.style.setProperty('background', '#FFFFFF', 'important');
+              document.documentElement.style.setProperty('background-color', '#FFFFFF', 'important');
+            })();
+          `,
+        }}
+      />
       <div 
         className="min-h-screen bg-white admin-section" 
         style={{ 

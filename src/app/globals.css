@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F0F9FF;
+  --background: #FFFFFF;
   --foreground: #0A2540;
   --primary: #1C99D6;
   --primary-foreground: #ffffff;
@@ -283,4 +283,17 @@ body:has(.admin-section) {
 /* Force root background variable when admin section exists */
 body:has(.admin-section) {
   --background: #FFFFFF !important;
+}
+
+/* Force main element background to white in admin section */
+body:has(.admin-section) main {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
+}
+
+/* Force all elements in admin section to have white background */
+.admin-section main,
+.admin-section > div > div > main {
+  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
 }
