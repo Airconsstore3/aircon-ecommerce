@@ -1,15 +1,12 @@
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-);
+import { createClient } from "@/utils/supabase/server";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
 
 export default async function AdminDashboard() {
-  try {
-    console.log("=== DASHBOARD START ===");
-    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+  const cookieStore = await import("next/headers").then((m) => m.cookies());
+  const supabase = createClient(cookieStore);
 
+  try {
     const [
       { count: totalProducts },
       { count: lowStockProducts },
@@ -33,142 +30,168 @@ export default async function AdminDashboard() {
       supabase.from("categories").select("*", { count: "exact", head: true }),
     ]);
 
-    console.log("Dashboard stats loaded:", {
-      totalProducts,
-      lowStockProducts,
-      activeDeals,
-      activePromotions,
-      totalCategories,
-    });
-
   const stats = [
     {
       name: "Total Products",
       value: totalProducts || 0,
-      color: "bg-blue-500",
+      color: "#1C99D6",
     },
     {
       name: "Low Stock Items",
       value: lowStockProducts || 0,
-      color: "bg-yellow-500",
+      color: "#F59E0B",
     },
     {
       name: "Active Deals",
       value: activeDeals || 0,
-      color: "bg-green-500",
+      color: "#22C55E",
     },
     {
       name: "Active Promotions",
       value: activePromotions || 0,
-      color: "bg-purple-500",
+      color: "#8B5CF6",
     },
     {
       name: "Categories",
       value: totalCategories || 0,
-      color: "bg-pink-500",
+      color: "#EC4899",
     },
   ];
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Dashboard Overview</h1>
+    <div>
+      <h1 className="text-3xl font-bold mb-6" style={{ color: "#0A2540" }}>
+        Dashboard Overview
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {stats.map((stat) => (
-          <div key={stat.name} className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                  {stat.name}
-                </p>
-                <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                  {stat.value}
-                </p>
+          <Card key={stat.name}>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium" style={{ color: "#64748B" }}>
+                    {stat.name}
+                  </p>
+                  <p className="text-3xl font-bold mt-2" style={{ color: "#0A2540" }}>
+                    {stat.value}
+                  </p>
+                </div>
+                <div
+                  className="w-12 h-12 rounded-full"
+                  style={{ backgroundColor: stat.color, opacity: 0.2 }}
+                />
               </div>
-              <div className={`w-12 h-12 rounded-full ${stat.color} opacity-20`} />
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-          <div className="space-y-3">
-            <a
-              href="/admin/products/new"
-              className="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <div className="font-medium">Add New Product</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Create a new product listing
-              </div>
-            </a>
-            <a
-              href="/admin/categories/new"
-              className="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <div className="font-medium">Add New Category</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Create a new product category
-              </div>
-            </a>
-            <a
-              href="/admin/deals/new"
-              className="block p-4 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-            >
-              <div className="font-medium">Create New Deal</div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">
-                Set up a promotional deal
-              </div>
-            </a>
-          </div>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle style={{ color: "#0A2540" }}>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <Link
+                href="/admin/products/new"
+                className="block p-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-200"
+              >
+                <div className="font-medium" style={{ color: "#0A2540" }}>
+                  Add New Product
+                </div>
+                <div className="text-sm" style={{ color: "#64748B" }}>
+                  Create a new product listing
+                </div>
+              </Link>
+              <Link
+                href="/admin/categories/new"
+                className="block p-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-200"
+              >
+                <div className="font-medium" style={{ color: "#0A2540" }}>
+                  Add New Category
+                </div>
+                <div className="text-sm" style={{ color: "#64748B" }}>
+                  Create a new product category
+                </div>
+              </Link>
+              <Link
+                href="/admin/deals/new"
+                className="block p-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-200"
+              >
+                <div className="font-medium" style={{ color: "#0A2540" }}>
+                  Create New Deal
+                </div>
+                <div className="text-sm" style={{ color: "#64748B" }}>
+                  Set up a promotional deal
+                </div>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold mb-4">System Status</h2>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div>
-                <div className="font-medium">Database Connection</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Supabase
+        <Card>
+          <CardHeader>
+            <CardTitle style={{ color: "#0A2540" }}>System Status</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200">
+                <div>
+                  <div className="font-medium" style={{ color: "#0A2540" }}>
+                    Database Connection
+                  </div>
+                  <div className="text-sm" style={{ color: "#64748B" }}>
+                    Supabase
+                  </div>
                 </div>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#22C55E" }} />
               </div>
-              <div className="w-3 h-3 bg-green-500 rounded-full" />
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div>
-                <div className="font-medium">Storage</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Product Images
+              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200">
+                <div>
+                  <div className="font-medium" style={{ color: "#0A2540" }}>
+                    Storage
+                  </div>
+                  <div className="text-sm" style={{ color: "#64748B" }}>
+                    Product Images
+                  </div>
                 </div>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#22C55E" }} />
               </div>
-              <div className="w-3 h-3 bg-green-500 rounded-full" />
-            </div>
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-              <div>
-                <div className="font-medium">Authentication</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">
-                  Supabase Auth
+              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200">
+                <div>
+                  <div className="font-medium" style={{ color: "#0A2540" }}>
+                    Authentication
+                  </div>
+                  <div className="text-sm" style={{ color: "#64748B" }}>
+                    Supabase Auth
+                  </div>
                 </div>
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#22C55E" }} />
               </div>
-              <div className="w-3 h-3 bg-green-500 rounded-full" />
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
   } catch (error) {
-    console.error("Dashboard error:", error);
     return (
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-6">Dashboard Overview</h1>
-        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
-          <p className="font-medium">Error loading dashboard</p>
-          <p className="text-sm mt-1">{error instanceof Error ? error.message : 'Unknown error'}</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold mb-6" style={{ color: "#0A2540" }}>
+          Dashboard Overview
+        </h1>
+        <Card>
+          <CardContent className="p-6">
+            <p className="font-medium" style={{ color: "#DC2626" }}>
+              Error loading dashboard
+            </p>
+            <p className="text-sm mt-1" style={{ color: "#64748B" }}>
+              {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
