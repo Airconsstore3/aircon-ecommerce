@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { createBrowserClient } from "@supabase/ssr";
 
-const supabase = createClient(
+const supabase = createBrowserClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
 );
 
 export default function AdminLoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,6 +42,9 @@ export default function AdminLoginPage() {
         console.log("Session created successfully");
         console.log("Session user:", data.session.user);
         console.log("Attempting redirect to /admin/dashboard");
+        
+        // Refresh server components to pick up new auth state
+        router.refresh();
         
         // Use window.location for full page redirect to ensure session cookie is set
         window.location.href = "/admin/dashboard";
