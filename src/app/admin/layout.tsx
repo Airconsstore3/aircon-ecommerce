@@ -1,4 +1,4 @@
-import { type PropsWithChildren } from "react";
+import { type PropsWithChildren, useEffect } from "react";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
 import { useRouter } from "next/navigation";
@@ -19,6 +19,12 @@ export default function AdminLayout({ children }: PropsWithChildren) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
   );
+
+  useEffect(() => {
+    document.body.style.backgroundColor = "#FFFFFF";
+    document.documentElement.style.setProperty("--background", "#FFFFFF");
+    document.documentElement.style.setProperty("--card", "#FFFFFF");
+  }, []);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
