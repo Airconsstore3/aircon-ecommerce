@@ -20,17 +20,33 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
+      console.log("=== LOGIN START ===");
+      console.log("Email:", email);
+      console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      console.log("Supabase response:", { data, error });
+
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
 
       if (data.session) {
+        console.log("Session created successfully");
+        console.log("Session user:", data.session.user);
+        console.log("Attempting redirect to /admin/dashboard");
+        
         // Use window.location for full page redirect to ensure session cookie is set
         window.location.href = "/admin/dashboard";
+        
+        console.log("Redirect command executed");
       } else {
+        console.error("No session created");
         setError("No session created. Please check your credentials.");
       }
     } catch (error: any) {
@@ -38,6 +54,7 @@ export default function AdminLoginPage() {
       setError(error.message || error.error_description || "Failed to sign in");
     } finally {
       setLoading(false);
+      console.log("=== LOGIN END ===");
     }
   };
 
