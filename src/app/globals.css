@@ -39,8 +39,7 @@
 }
 
 body {
-  background: #FFFFFF !important;
-  background-color: #FFFFFF !important;
+  background: var(--background);
   color: var(--foreground);
   font-family: Inter, system-ui, sans-serif;
   font-weight: 400;
@@ -258,43 +257,4 @@ header .bg-accent button {
 .aircon-angled-nav:hover::before,
 .aircon-angled-nav:hover::after {
   background-color: #ffffff;
-}
-
-/* Admin section overrides - force white background */
-.admin-section {
-  background: #FFFFFF !important;
-}
-
-.admin-section aside,
-.admin-section header,
-.admin-section main {
-  background: #FFFFFF !important;
-}
-
-.admin-section [data-slot="card"] {
-  background: #FFFFFF !important;
-  border: 1px solid #E2E8F0 !important;
-}
-
-/* Force body background to white when admin section exists */
-body:has(.admin-section) {
-  background: #FFFFFF !important;
-}
-
-/* Force root background variable when admin section exists */
-body:has(.admin-section) {
-  --background: #FFFFFF !important;
-}
-
-/* Force main element background to white in admin section */
-body:has(.admin-section) main {
-  background: #FFFFFF !important;
-  background-color: #FFFFFF !important;
-}
-
-/* Force all elements in admin section to have white background */
-.admin-section main,
-.admin-section > div > div > main {
-  background: #FFFFFF !important;
-  background-color: #FFFFFF !important;
 }
