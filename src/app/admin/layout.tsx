@@ -22,8 +22,10 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 
   useEffect(() => {
     document.body.style.backgroundColor = "#FFFFFF";
-    document.documentElement.style.setProperty("--background", "#FFFFFF");
-    document.documentElement.style.setProperty("--card", "#FFFFFF");
+    document.body.style.setProperty("background", "#FFFFFF", "important");
+    document.documentElement.style.setProperty("--background", "#FFFFFF", "important");
+    document.documentElement.style.setProperty("--card", "#FFFFFF", "important");
+    document.documentElement.style.setProperty("background", "#FFFFFF", "important");
   }, []);
 
   const handleSignOut = async () => {
@@ -34,21 +36,36 @@ export default function AdminLayout({ children }: PropsWithChildren) {
   const pathname = typeof window !== "undefined" ? window.location.pathname : "";
 
   return (
-    <div 
-      className="min-h-screen bg-white admin-section" 
-      style={{ 
-        fontFamily: "Google Sans Flex, sans-serif", 
-        backgroundColor: "#FFFFFF",
-        "--background": "#FFFFFF",
-        "--foreground": "#0A2540",
-        "--card": "#FFFFFF",
-        "--card-foreground": "#0A2540",
-        "--muted": "#F1F5F9",
-        "--muted-foreground": "#64748B",
-        "--border": "#E2E8F0",
-        "--input": "#E2E8F0"
-      } as React.CSSProperties}
-    >
+    <>
+      <style jsx global>{`
+        body {
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+        }
+        html {
+          background: #FFFFFF !important;
+          background-color: #FFFFFF !important;
+        }
+        :root {
+          --background: #FFFFFF !important;
+          --card: #FFFFFF !important;
+        }
+      `}</style>
+      <div 
+        className="min-h-screen bg-white admin-section" 
+        style={{ 
+          fontFamily: "Google Sans Flex, sans-serif", 
+          backgroundColor: "#FFFFFF",
+          "--background": "#FFFFFF",
+          "--foreground": "#0A2540",
+          "--card": "#FFFFFF",
+          "--card-foreground": "#0A2540",
+          "--muted": "#F1F5F9",
+          "--muted-foreground": "#64748B",
+          "--border": "#E2E8F0",
+          "--input": "#E2E8F0"
+        } as React.CSSProperties}
+      >
       <div className="flex">
         {/* Sidebar */}
         <aside className="w-64 bg-white border-r border-slate-200 min-h-screen fixed left-0 top-0" style={{ backgroundColor: "#FFFFFF" }}>
@@ -112,5 +129,6 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         </div>
       </div>
     </div>
+    </>
   );
 }
