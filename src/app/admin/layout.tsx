@@ -135,7 +135,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
           </header>
 
           {/* Page content */}
-          <main className="p-6">{children}</main>
+          <main className="p-6" style={{ backgroundColor: "#FFFFFF" }}>{children}</main>
         </div>
       </div>
     </div>
