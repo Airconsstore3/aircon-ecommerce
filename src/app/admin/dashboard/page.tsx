@@ -6,28 +6,40 @@ const supabase = createClient(
 );
 
 export default async function AdminDashboard() {
-  const [
-    { count: totalProducts },
-    { count: lowStockProducts },
-    { count: activeDeals },
-    { count: activePromotions },
-    { count: totalCategories },
-  ] = await Promise.all([
-    supabase.from("products").select("*", { count: "exact", head: true }),
-    supabase
-      .from("products")
-      .select("*", { count: "exact", head: true })
-      .lte("stock_count", 3),
-    supabase
-      .from("deals")
-      .select("*", { count: "exact", head: true })
-      .gt("ends_at", new Date().toISOString()),
-    supabase
-      .from("promotions")
-      .select("*", { count: "exact", head: true })
-      .eq("is_active", true),
-    supabase.from("categories").select("*", { count: "exact", head: true }),
-  ]);
+  try {
+    console.log("=== DASHBOARD START ===");
+    console.log("Supabase URL:", process.env.NEXT_PUBLIC_SUPABASE_URL);
+
+    const [
+      { count: totalProducts },
+      { count: lowStockProducts },
+      { count: activeDeals },
+      { count: activePromotions },
+      { count: totalCategories },
+    ] = await Promise.all([
+      supabase.from("products").select("*", { count: "exact", head: true }),
+      supabase
+        .from("products")
+        .select("*", { count: "exact", head: true })
+        .lte("stock_count", 3),
+      supabase
+        .from("deals")
+        .select("*", { count: "exact", head: true })
+        .gt("ends_at", new Date().toISOString()),
+      supabase
+        .from("promotions")
+        .select("*", { count: "exact", head: true })
+        .eq("is_active", true),
+      supabase.from("categories").select("*", { count: "exact", head: true }),
+    ]);
+
+    console.log("Dashboard stats loaded:", {
+      totalProducts,
+      lowStockProducts,
+      activeDeals,
+      activePromotions,
+      totalCategories,
+    });
 
   const stats = [
     {
@@ -148,4 +160,16 @@ export default async function AdminDashboard() {
       </div>
     </div>
   );
+  } catch (error) {
+    console.error("Dashboard error:", error);
+    return (
+      <div className="p-6">
+        <h1 className="text-3xl font-bold mb-6">Dashboard Overview</h1>
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">
+          <p className="font-medium">Error loading dashboard</p>
+          <p className="text-sm mt-1">{error instanceof Error ? error.message : 'Unknown error'}</p>
+        </div>
+      </div>
+    );
+  }
 }
