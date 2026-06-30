@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F0F9FF;
+  --background: #FFFFFF;
   --foreground: #0A2540;
   --primary: #1C99D6;
   --primary-foreground: #ffffff;
@@ -309,4 +309,14 @@ div[class*="min-h-screen"] {
 [data-slot="card"],
 .bg-card {
   background: #FFFFFF !important;
+}
+
+/* Force white background on body when in admin section */
+body {
+  background: #FFFFFF !important;
+}
+
+/* Override root CSS variables for admin section */
+:root {
+  --background: #FFFFFF !important;
 }
