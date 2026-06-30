@@ -258,3 +258,55 @@ header .bg-accent button {
 .aircon-angled-nav:hover::after {
   background-color: #ffffff;
 }
+
+/* Admin section overrides - force white background */
+body:has([class*="min-h-screen"]) {
+  background: #FFFFFF !important;
+}
+
+/* Override card background in admin section */
+div[class*="min-h-screen"] .bg-card,
+div[class*="min-h-screen"] [data-slot="card"] {
+  background: #FFFFFF !important;
+}
+
+/* Force white background on admin layout root */
+div[class*="min-h-screen"] {
+  background: #FFFFFF !important;
+}
+
+/* Direct override for admin routes - most specific selector */
+div.min-h-screen.bg-white,
+div[class*="min-h-screen"][class*="bg-white"] {
+  background: #FFFFFF !important;
+}
+
+/* Override body background for admin section */
+body:has(div[class*="min-h-screen"]) {
+  background: #FFFFFF !important;
+}
+
+/* Force white on all admin section backgrounds */
+aside[class*="bg-white"],
+header[class*="bg-white"],
+main {
+  background: #FFFFFF !important;
+}
+
+/* Admin section CSS variable overrides - force white theme */
+div[class*="min-h-screen"] {
+  --background: #FFFFFF !important;
+  --foreground: #0A2540 !important;
+  --card: #FFFFFF !important;
+  --card-foreground: #0A2540 !important;
+  --muted: #F1F5F9 !important;
+  --muted-foreground: #64748B !important;
+  --border: #E2E8F0 !important;
+  --input: #E2E8F0 !important;
+}
+
+/* Force card background to white */
+[data-slot="card"],
+.bg-card {
+  background: #FFFFFF !important;
+}

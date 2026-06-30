@@ -28,10 +28,10 @@ export default function AdminLayout({ children }: PropsWithChildren) {
   const pathname = typeof window !== "undefined" ? window.location.pathname : "";
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: "Google Sans Flex, sans-serif" }}>
+    <div className="min-h-screen bg-white" style={{ fontFamily: "Google Sans Flex, sans-serif", backgroundColor: "#FFFFFF" }}>
       <div className="flex">
         {/* Sidebar */}
-        <aside className="w-64 bg-white border-r border-slate-200 min-h-screen fixed left-0 top-0">
+        <aside className="w-64 bg-white border-r border-slate-200 min-h-screen fixed left-0 top-0" style={{ backgroundColor: "#FFFFFF" }}>
           <div className="p-6 border-b border-slate-200">
             <Link href="/admin/dashboard" className="text-xl font-bold" style={{ color: "#0A2540" }}>
               Aircons Store Admin

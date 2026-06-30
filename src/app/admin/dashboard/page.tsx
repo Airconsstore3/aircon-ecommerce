@@ -66,8 +66,8 @@ export default async function AdminDashboard() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
         {stats.map((stat) => (
-          <Card key={stat.name}>
-            <CardContent className="p-6">
+          <Card key={stat.name} style={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0" }}>
+            <CardContent className="p-6" style={{ backgroundColor: "#FFFFFF" }}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium" style={{ color: "#64748B" }}>
@@ -88,15 +88,16 @@ export default async function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card>
+        <Card style={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0" }}>
           <CardHeader>
             <CardTitle style={{ color: "#0A2540" }}>Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent style={{ backgroundColor: "#FFFFFF" }}>
             <div className="space-y-3">
               <Link
                 href="/admin/products/new"
                 className="block p-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-200"
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className="font-medium" style={{ color: "#0A2540" }}>
                   Add New Product
@@ -108,6 +109,7 @@ export default async function AdminDashboard() {
               <Link
                 href="/admin/categories/new"
                 className="block p-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-200"
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className="font-medium" style={{ color: "#0A2540" }}>
                   Add New Category
@@ -119,6 +121,7 @@ export default async function AdminDashboard() {
               <Link
                 href="/admin/deals/new"
                 className="block p-4 rounded-lg hover:bg-slate-50 transition-colors border border-slate-200"
+                style={{ backgroundColor: "#FFFFFF" }}
               >
                 <div className="font-medium" style={{ color: "#0A2540" }}>
                   Create New Deal
@@ -131,13 +134,13 @@ export default async function AdminDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card style={{ backgroundColor: "#FFFFFF", border: "1px solid #E2E8F0" }}>
           <CardHeader>
             <CardTitle style={{ color: "#0A2540" }}>System Status</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent style={{ backgroundColor: "#FFFFFF" }}>
             <div className="space-y-3">
-              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200" style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
                   <div className="font-medium" style={{ color: "#0A2540" }}>
                     Database Connection
@@ -148,7 +151,7 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#22C55E" }} />
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200" style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
                   <div className="font-medium" style={{ color: "#0A2540" }}>
                     Storage
@@ -159,7 +162,7 @@ export default async function AdminDashboard() {
                 </div>
                 <div className="w-3 h-3 rounded-full" style={{ backgroundColor: "#22C55E" }} />
               </div>
-              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200">
+              <div className="flex items-center justify-between p-4 rounded-lg border border-slate-200" style={{ backgroundColor: "#FFFFFF" }}>
                 <div>
                   <div className="font-medium" style={{ color: "#0A2540" }}>
                     Authentication
