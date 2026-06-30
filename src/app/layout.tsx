@@ -3,7 +3,6 @@ import { Inter, Poppins } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { CartProvider } from "@/components/shop/CartProvider";
-import { NavbarWrapper } from "@/components/shop/NavbarWrapper";
 import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -35,8 +34,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} ${googleSansFlex.variable} ${poppins.variable}`}>
         <CartProvider>
-          <NavbarWrapper />
-          <main className="min-h-screen pt-[var(--secondary-nav-height)] md:pt-[5.25rem]">{children}</main>
+          <main className="min-h-screen">{children}</main>
         </CartProvider>
         <Toaster position="bottom-right" richColors />
       </body>
