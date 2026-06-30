@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -10,7 +9,6 @@ const supabase = createClient(
 );
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,19 +20,16 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      console.log("Attempting login with:", email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      console.log("Supabase response:", { data, error });
-
       if (error) throw error;
 
       if (data.session) {
-        console.log("Login successful, redirecting...");
-        router.push("/admin/dashboard");
+        // Use window.location for full page redirect to ensure session cookie is set
+        window.location.href = "/admin/dashboard";
       } else {
         setError("No session created. Please check your credentials.");
       }
