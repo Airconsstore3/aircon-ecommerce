@@ -21,11 +21,21 @@ export default function AdminLayout({ children }: PropsWithChildren) {
   );
 
   useEffect(() => {
+    // Force white background on body and html
     document.body.style.backgroundColor = "#FFFFFF";
     document.body.style.setProperty("background", "#FFFFFF", "important");
+    document.body.style.setProperty("background-color", "#FFFFFF", "important");
+    document.documentElement.style.backgroundColor = "#FFFFFF";
+    document.documentElement.style.setProperty("background", "#FFFFFF", "important");
+    document.documentElement.style.setProperty("background-color", "#FFFFFF", "important");
     document.documentElement.style.setProperty("--background", "#FFFFFF", "important");
     document.documentElement.style.setProperty("--card", "#FFFFFF", "important");
-    document.documentElement.style.setProperty("background", "#FFFFFF", "important");
+    
+    // Also override any computed styles
+    const computedStyle = window.getComputedStyle(document.body);
+    if (computedStyle.backgroundColor !== "rgb(255, 255, 255)") {
+      document.body.style.setProperty("background-color", "#FFFFFF", "important");
+    }
   }, []);
 
   const handleSignOut = async () => {
