@@ -22,16 +22,25 @@ export default function AdminLoginPage() {
     setError("");
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log("Attempting login with:", email);
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
+      console.log("Supabase response:", { data, error });
+
       if (error) throw error;
 
-      router.push("/admin/dashboard");
+      if (data.session) {
+        console.log("Login successful, redirecting...");
+        router.push("/admin/dashboard");
+      } else {
+        setError("No session created. Please check your credentials.");
+      }
     } catch (error: any) {
-      setError(error.message || "Failed to sign in");
+      console.error("Login error:", error);
+      setError(error.message || error.error_description || "Failed to sign in");
     } finally {
       setLoading(false);
     }
