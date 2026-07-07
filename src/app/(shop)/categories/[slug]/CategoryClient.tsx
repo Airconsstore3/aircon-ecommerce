@@ -58,7 +58,7 @@ export default function CategoryClient({
   const searchParams = useSearchParams();
   const router = useRouter();
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
-  const [columns, setColumns] = useState<2 | 3 | 4>(4);
+  const [columns, setColumns] = useState<3 | 4>(3);
 
   // Apply additional filters from URL params
   const filteredProducts = useMemo(() => {
@@ -191,10 +191,10 @@ export default function CategoryClient({
           {/* Product Grid Area */}
           <div className="flex-1">
             {/* Header with Sort and Filter Button */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div className="sticky top-0 z-40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 bg-[#1C99D6] px-4 py-3 shadow-sm">
               <div>
-                <h1 className="text-2xl font-normal text-[#1E3A5F]">{category.name}</h1>
-                <p className="text-sm text-muted-foreground">
+                <h1 className="text-2xl font-normal text-white">{category.name}</h1>
+                <p className="text-sm text-white/80">
                   Showing {filteredProducts.length} products
                 </p>
               </div>
@@ -203,7 +203,7 @@ export default function CategoryClient({
                 {/* Mobile Filter Button */}
                 <Sheet open={mobileFilterOpen} onOpenChange={setMobileFilterOpen}>
                   <SheetTrigger asChild>
-                    <Button variant="outline" className="lg:hidden">
+                    <Button variant="outline" className="lg:hidden border-white text-white hover:bg-white/10 hover:text-white">
                       <Filter className="mr-2 h-4 w-4" />
                       Filters
                     </Button>
@@ -229,21 +229,10 @@ export default function CategoryClient({
                 <div className="hidden sm:flex items-center gap-1">
                   <Button
                     size="icon"
-                    variant={columns === 2 ? "default" : "ghost"}
-                    className={cn(
-                      "rounded-full",
-                      columns === 2 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
-                    )}
-                    onClick={() => setColumns(2)}
-                  >
-                    <LayoutGrid className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    size="icon"
                     variant={columns === 3 ? "default" : "ghost"}
                     className={cn(
                       "rounded-full",
-                      columns === 3 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
+                      columns === 3 ? "bg-white hover:bg-white/90 text-[#1C99D6]" : "text-white hover:bg-white/10"
                     )}
                     onClick={() => setColumns(3)}
                   >
@@ -254,7 +243,7 @@ export default function CategoryClient({
                     variant={columns === 4 ? "default" : "ghost"}
                     className={cn(
                       "rounded-full",
-                      columns === 4 ? "bg-[#1C99D6] hover:bg-[#1680b0] text-white" : ""
+                      columns === 4 ? "bg-white hover:bg-white/90 text-[#1C99D6]" : "text-white hover:bg-white/10"
                     )}
                     onClick={() => setColumns(4)}
                   >
@@ -267,7 +256,7 @@ export default function CategoryClient({
                   value={searchParams.get("sort") || "featured"}
                   onValueChange={updateSort}
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[180px] border-white text-white bg-transparent focus:ring-white focus:ring-offset-0 [&>span]:text-white [&>svg]:text-white">
                     <SlidersHorizontal className="mr-2 h-4 w-4" />
                     <SelectValue placeholder="Sort by" />
                   </SelectTrigger>

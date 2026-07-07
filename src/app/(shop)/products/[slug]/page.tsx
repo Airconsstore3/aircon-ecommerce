@@ -12,6 +12,7 @@ interface AirconProduct {
   brand: string | null;
   btu_size: string | null;
   btu_range: number | null;
+  available_btu_sizes: number[] | null;
   type: string;
   price_zar: number;
   sale_price_zar: number | null;
@@ -59,6 +60,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     brand: product.brand,
     btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
     btu_range: product.btu_range,
+    available_btu_sizes: product.available_btu_sizes,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,

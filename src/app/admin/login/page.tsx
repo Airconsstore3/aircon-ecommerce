@@ -131,6 +131,3 @@ export default function AdminLoginPage() {
     </div>
   );
 }
-
-// This page should not use the admin layout
-AdminLoginPage.layout = null;

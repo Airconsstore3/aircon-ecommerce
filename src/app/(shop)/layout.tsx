@@ -6,11 +6,11 @@ export default function ShopLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <div className="shop-layout">
       <NavbarWrapper />
-      <main className="min-h-screen pt-[var(--secondary-nav-height)] md:pt-[5.25rem]">
+      <main className="min-h-screen pt-[var(--secondary-nav-height)]">
         {children}
       </main>
-    </>
+    </div>
   );
 }

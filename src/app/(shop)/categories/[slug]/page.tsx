@@ -44,6 +44,7 @@ function convertToAirconProduct(product: any): AirconProduct {
     images: product.images,
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
+    description: product.description,
     stock: {
       stock_count: product.stock_count,
       is_sold_out: product.is_sold_out,

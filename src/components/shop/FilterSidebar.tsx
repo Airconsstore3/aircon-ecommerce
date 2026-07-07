@@ -171,7 +171,7 @@ const FilterSidebar = ({
       <Separator />
 
       {/* Accordion Filter Groups */}
-      <Accordion type="multiple" defaultValue={["category", "btu", "brand"]} className="w-full">
+      <Accordion type="multiple" defaultValue={[]} className="w-full">
         <FilterGroup groupId="category" title="Category" options={categoryOptions} />
         <FilterGroup groupId="btu" title="BTU Capacity" options={btuOptions} />
         <FilterGroup groupId="brand" title="Brand" options={brandOptions} />
@@ -230,7 +230,11 @@ const FilterSidebar = ({
   }
 
   // Desktop: Render as sidebar
-  return <aside className="w-64 shrink-0">{sidebarContent}</aside>;
+  return (
+    <aside className="w-full shrink-0">
+      {sidebarContent}
+    </aside>
+  );
 };
 
 export { FilterSidebar };

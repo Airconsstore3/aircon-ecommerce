@@ -28,6 +28,7 @@ function convertToAirconProduct(product: any): AirconProduct {
     images: product.images,
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
+    description: product.description,
     stock: {
       stock_count: product.stock_count,
       is_sold_out: product.is_sold_out,
@@ -142,15 +143,16 @@ async function getProducts() {
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { sale?: string };
+  searchParams: Promise<{ sale?: string }>;
 }) {
   const supabase = createClient(await cookies());
-  const [products, activePromotion] = await Promise.all([
+  const [products, activePromotion, params] = await Promise.all([
     getProducts(),
     getActivePromotion(),
+    searchParams,
   ]);
 
-  const saleParam = searchParams.sale === 'true' ? 'sale' : 'all-aircon';
+  const saleParam = params.sale === 'true' ? 'sale' : 'all-aircon';
   const filtered = await filterProducts(supabase, saleParam);
   const airconProducts = filtered.map(convertToAirconProduct);
 

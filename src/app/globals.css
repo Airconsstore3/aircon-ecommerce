@@ -16,7 +16,13 @@
   --border: #B8E3F7;
   --input: #B8E3F7;
   --ring: #1C99D6;
+  --card: #FFFFFF;
+  --card-foreground: #0A2540;
+  --popover: #FFFFFF;
+  --popover-foreground: #0A2540;
   --radius: 0.5rem;
+  --primary-nav-height: 0rem;
+  --secondary-nav-height: 8rem;
 }
 
 @theme inline {
@@ -35,6 +41,10 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
   --radius: var(--radius);
 }
 
@@ -57,26 +67,26 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
 }
 
-/* Navbar color overrides */
-header .bg-primary {
+/* Navbar color overrides - only apply to shop navbar */
+.shop-layout header .bg-primary {
   background: #0A2540 !important;
 }
 
-header .text-primary-foreground {
+.shop-layout header .text-primary-foreground {
   color: #ffffff !important;
 }
 
-header .bg-amber-500 {
+.shop-layout header .bg-amber-500 {
   background: #1C99D6 !important;
 }
 
-header .bg-accent {
+.shop-layout header .bg-accent {
   background: #F0F9FF !important;
 }
 
 /* Secondary nav text color */
-header .bg-accent a,
-header .bg-accent button {
+.shop-layout header .bg-accent a,
+.shop-layout header .bg-accent button {
   color: #0A2540 !important;
 }
 

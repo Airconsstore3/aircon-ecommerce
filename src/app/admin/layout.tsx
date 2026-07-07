@@ -1,7 +1,9 @@
+"use client";
+
 import { type PropsWithChildren, useEffect, useState } from "react";
 import Link from "next/link";
 import { createBrowserClient } from "@supabase/ssr";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const navItems = [
   { href: "/admin/dashboard", label: "Dashboard" },
@@ -40,7 +42,11 @@ export default function AdminLayout({ children }: PropsWithChildren) {
     router.push("/admin/login");
   };
 
-  const pathname = typeof window !== "undefined" ? window.location.pathname : "";
+  const pathname = usePathname();
+
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
 
   return (
     <div 
@@ -97,7 +103,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         {/* Main content */}
         <div className="flex-1 ml-64">
           {/* Top bar */}
-          <header className="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
+          <header className="admin-header bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center">
             <div className="text-sm" style={{ color: "#64748B" }}>
               {userEmail}
             </div>

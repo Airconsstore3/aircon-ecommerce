@@ -240,12 +240,12 @@ const Navbar = ({
     document.documentElement.style.setProperty("--primary-nav-height", "0rem");
     document.documentElement.style.setProperty(
       "--secondary-nav-height",
-      "6rem",
+      "8rem",
     );
   }, []);
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-50", className)}>
+    <header className={cn("fixed inset-x-0 top-0 z-[60]", className)}>
       <div className="h-[var(--secondary-nav-height)]">
         <SecondaryMenu menu={menu} home={home} sideMenu={sideMenu} />
       </div>
@@ -325,7 +325,7 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
   const { itemCount } = useCart();
 
   return (
-    <div className="border-b border-[#1C99D6]/15 bg-white/95 px-4 py-1 shadow-sm backdrop-blur-sm md:px-6">
+    <div className="border-b border-[#1C99D6]/15 bg-white px-4 py-1 shadow-sm md:px-6">
       <div className="relative flex h-full flex-col items-center justify-center gap-0 md:justify-start md:gap-1">
         <Logo url={home.href} className="min-w-0 shrink-0">
           {home.logo.src && (

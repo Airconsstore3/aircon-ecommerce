@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingBag, Clock, AlertCircle } from "lucide-react";
+import { ShoppingBag, Clock, AlertCircle, Heart } from "lucide-react";
 import Link from "next/link";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
@@ -26,6 +26,7 @@ interface AirconProduct {
   images: string[];
   is_enquiry_only: boolean;
   is_featured: boolean;
+  description?: string | null;
   stock: {
     stock_count: number;
     is_sold_out: boolean;
@@ -69,6 +70,37 @@ function getStockStatus(product: AirconProduct) {
   return "in_stock";
 }
 
+function getRoomCoverage(btuRange: number | null): string | null {
+  if (!btuRange) return null;
+
+  if (btuRange <= 9000) return "Covers rooms up to 20 m²";
+  if (btuRange <= 12000) return "Covers rooms up to 30 m²";
+  if (btuRange <= 18000) return "Covers rooms up to 40 m²";
+  if (btuRange <= 24000) return "Covers rooms up to 55 m²";
+  if (btuRange <= 30000) return "Covers rooms up to 65 m²";
+  if (btuRange <= 36000) return "Covers rooms up to 80 m²";
+  if (btuRange <= 48000) return "Covers spaces up to 110 m²";
+  if (btuRange <= 60000) return "Covers spaces up to 140 m²";
+  return "Covers large commercial spaces";
+}
+
+function getProductDescriptionBullets(product: AirconProduct, stockStatus: ReturnType<typeof getStockStatus>) {
+  const descriptionBullets = product.description
+    ?.split(/(?:\r?\n|\.\s+)/)
+    .map((item) => item.trim().replace(/\.$/, ""))
+    .filter(Boolean)
+    .slice(0, 4) ?? [];
+
+  const fallbackBullets = [
+    product.brand ? `${product.brand} air conditioning system` : "Reliable air conditioning system",
+    getRoomCoverage(product.btu_range) ?? "Designed for efficient cooling comfort",
+    product.is_enquiry_only ? "Quote-based pricing for tailored installation" : "Available for ordering and installation",
+    stockStatus === "low_stock" ? `Low stock — ${product.stock.stock_count} left` : stockStatus === "sold_out" ? "Currently sold out" : "Installation support available",
+  ];
+
+  return [...descriptionBullets, ...fallbackBullets].slice(0, 4);
+}
+
 // Countdown timer helper
 function useCountdown(endDate: string) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -106,56 +138,60 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
   const stockStatus = getStockStatus(product);
   const hasImages = product.images.length > 0;
   const primaryImage = hasImages ? product.images[0] : "/placeholder.jpg";
-  const secondaryImage = product.images.length > 1 ? product.images[1] : primaryImage;
   const hasSale = product.sale_price_zar !== null && product.sale_price_zar < product.price_zar;
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const usps = getProductDescriptionBullets(product, stockStatus);
+  const inverterLabel =
+    product.type === "aircon"
+      ? product.name.toLowerCase().includes("inverter")
+        ? "Inverter"
+        : "Non-inverter"
+      : null;
+  const isEnquiryOnly =
+    product.is_enquiry_only ||
+    (product.type === "aircon" &&
+      product.btu_range !== null &&
+      product.btu_range > 62000);
 
   return (
-    <Card className="group relative block rounded-none border border-solid border-[#0A2540]/30 bg-transparent py-5 shadow-none ring ring-border">
+    <Card className="group relative flex h-full min-h-[560px] w-full flex-col overflow-hidden rounded-[15px] border-0 bg-white py-0 shadow-sm transition-shadow duration-300 hover:shadow-md">
 
       {/* Entire card is clickable — goes to product detail page */}
       <Link
         href={`/products/${product.slug}`}
-        className="absolute inset-0 z-50 size-full"
+        className="absolute inset-0 z-10 size-full"
         aria-label={`View ${product.name}`}
       />
 
-      <CardContent>
+      <CardContent className="relative z-20 flex h-full flex-col p-0 pointer-events-none">
 
         {/* ── Image area ── */}
-        <div className="relative overflow-hidden">
-          <AspectRatio
-            ratio={0.833}
-            className="overflow-hidden rounded-[1.25rem]"
+        <div className="relative w-full px-6 pt-10 pb-4">
+          <button
+            type="button"
+            onClick={() => setIsWishlisted((current) => !current)}
+            className="pointer-events-auto absolute right-4 top-4 z-40 p-1 text-black/70 transition-colors hover:text-red-500"
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
           >
-            {/* Primary image — shown by default, fades out on hover */}
-            <div className="absolute inset-0 size-full transition-opacity duration-350 first:z-20 group-hover:first:opacity-0">
-              <img
-                src={primaryImage}
-                alt={product.name}
-                className="block size-full object-cover object-center scale-110 transition-transform duration-350 group-hover:scale-100"
-              />
-            </div>
+            <Heart className={cn("h-6 w-6 transition-all", isWishlisted ? "fill-red-500 stroke-red-500" : "stroke-[1.5px]")} />
+          </button>
+          <Link
+            href={`/products/${product.slug}`}
+            className="pointer-events-auto block h-[230px] w-full bg-contain bg-center bg-no-repeat transition-transform duration-300 group-hover:scale-[1.03]"
+            style={{ backgroundImage: `url(${primaryImage})` }}
+            aria-label={`View ${product.name}`}
+          />
 
-            {/* Secondary image — appears on hover */}
-            <div className="absolute inset-0 size-full z-10">
-              <img
-                src={secondaryImage}
-                alt={product.name}
-                className="block size-full object-cover object-center scale-110 transition-transform duration-350 group-hover:scale-100"
-              />
-            </div>
-
-            {/* Sold out overlay */}
-            {stockStatus === "sold_out" && (
-              <div className="absolute inset-0 z-20 bg-white/60 rounded-[1.25rem]" />
-            )}
-          </AspectRatio>
+          {/* Sold out overlay */}
+          {stockStatus === "sold_out" && (
+            <div className="absolute inset-x-6 bottom-4 top-10 z-30 rounded-[15px] bg-white/60" />
+          )}
 
           {/* Brand badge — top left */}
           {product.brand && (
             <Badge
               variant="outline"
-              className="absolute start-3 top-3 z-30 rounded-full bg-white text-xs font-semibold text-[#1E3A5F]"
+              className="absolute start-4 top-4 z-30 rounded-full bg-white text-xs font-semibold text-[#1E3A5F]"
             >
               {product.brand}
             </Badge>
@@ -164,7 +200,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* SALE badge — top right */}
           {hasSale && (
             <Badge
-              className="absolute end-3 top-3 z-30 rounded-full bg-[#1C99D6] text-white text-xs font-semibold"
+              className="absolute left-4 top-14 z-30 rounded-full bg-[#1C99D6] text-xs font-semibold text-white"
             >
               SALE
             </Badge>
@@ -173,7 +209,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* Enquiry only badge — top right (replaces SALE) */}
           {product.is_enquiry_only && !hasSale && (
             <Badge
-              className="absolute end-3 top-3 z-30 rounded-full bg-[#1E3A5F] text-white text-xs font-semibold"
+              className="absolute left-4 top-14 z-30 rounded-full bg-[#1E3A5F] text-xs font-semibold text-white"
             >
               Quote Only
             </Badge>
@@ -181,25 +217,31 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
         </div>
 
         {/* ── Card info ── */}
-        <div className="space-y-1.5 pt-3.5">
+        <div className="flex w-full flex-1 flex-col items-center px-6 text-center">
 
           {/* Product name */}
-          <CardTitle className="leading-snug text-base text-[#1E3A5F] line-clamp-1">
+          <CardTitle className="mb-3 min-h-[40px] text-[14px] sm:text-[15px] font-medium leading-tight text-black line-clamp-2 group-hover:underline">
             {product.name}
           </CardTitle>
 
-          {/* Brand + BTU */}
-          {(product.brand || product.btu_size) && (
-            <p className="text-xs text-muted-foreground">
-              {[product.brand, product.btu_size].filter(Boolean).join(" · ")}
+          {/* Brand + Inverter */}
+          {(product.brand || inverterLabel) && (
+            <p className="mb-3 text-xs text-muted-foreground">
+              {product.brand && <span>{product.brand}</span>}
+              {inverterLabel && (
+                <>
+                  {product.brand && <span className="mx-1">·</span>}
+                  <span className="font-bold text-[#1E3A5F]">{inverterLabel}</span>
+                </>
+              )}
             </p>
           )}
 
           {/* Price block */}
-          {product.is_enquiry_only ? (
-            <p className="text-sm font-medium text-[#1E3A5F]">Price on request</p>
+          {isEnquiryOnly ? (
+            <p className="mb-3 text-sm font-semibold text-[#1C99D6]">Commercial</p>
           ) : hasSale ? (
-            <div className="flex items-center gap-2">
+            <div className="mb-3 flex items-center justify-center gap-2">
               <span className="text-sm font-semibold text-[#1C99D6]">
                 {formatZAR(product.sale_price_zar!)}
               </span>
@@ -208,41 +250,54 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
               </span>
             </div>
           ) : (
-            <p className="text-sm font-semibold text-[#1C99D6]">
+            <p className="mb-3 text-sm font-semibold text-[#1C99D6]">
               {formatZAR(product.price_zar)}
             </p>
           )}
 
           {/* Stock badge */}
-          {stockStatus === "in_stock" && (
-            <span className="inline-flex items-center gap-1 text-xs text-green-600 font-medium">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500" />
-              In Stock
-            </span>
-          )}
-          {stockStatus === "low_stock" && (
-            <span className="inline-flex items-center gap-1 text-xs text-amber-600 font-medium">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500" />
-              Low Stock — {product.stock.stock_count} left
-            </span>
-          )}
-          {stockStatus === "sold_out" && (
-            <span className="inline-flex items-center gap-1 text-xs text-red-500 font-medium">
-              <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-400" />
-              Sold Out
-            </span>
-          )}
+          <div className="mb-3 min-h-5">
+            {stockStatus === "in_stock" && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-green-600">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500" />
+                In Stock
+              </span>
+            )}
+            {stockStatus === "low_stock" && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+                Low Stock — {product.stock.stock_count} left
+              </span>
+            )}
+            {stockStatus === "sold_out" && (
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-red-500">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-red-400" />
+                Sold Out
+              </span>
+            )}
+          </div>
+
+          <div className="w-full border-y border-gray-200 py-4">
+            <ul className="m-0 flex list-none flex-col gap-2 p-0">
+              {usps.map((usp) => (
+                <li key={usp} className="relative pl-4 text-left font-[var(--font-google-sans-flex)] text-[12px] font-normal leading-tight text-black">
+                  <span className="absolute left-0 top-[6px] h-[3px] w-[3px] rounded-full bg-[#1C99D6]" />
+                  <span className="line-clamp-2">{usp}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* CTA button */}
-          <div className="pt-1">
-            {product.is_enquiry_only ? (
+          <div className="pointer-events-auto mt-auto w-full p-6 px-0">
+            {isEnquiryOnly ? (
               <div className="aircon-angled-button-wrap w-full">
                 <Button
                   asChild
                   variant="ghost"
                   className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent"
                 >
-                  <Link href={`/products/${product.slug}`}>Request Quote</Link>
+                  <Link href={`/products/${product.slug}`}>Price on Request</Link>
                 </Button>
               </div>
             ) : stockStatus === "sold_out" ? (
@@ -262,7 +317,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
                   variant="ghost"
                   className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent"
                 >
-                  <Link href={`/products/${product.slug}`}>Get Quote</Link>
+                  <Link href={`/products/${product.slug}`}>View Product</Link>
                 </Button>
               </div>
             )}
@@ -278,17 +333,16 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
 
 interface AirconProductListProps {
   products: AirconProduct[];
-  columns?: 2 | 3 | 4;
+  columns?: 3 | 4;
   className?: string;
 }
 
 const AirconProductList = ({ 
   products, 
-  columns = 4, 
+  columns = 3, 
   className 
 }: AirconProductListProps) => {
   const gridClasses = {
-    2: "grid-cols-1 sm:grid-cols-2",
     3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3",
     4: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4",
   };
