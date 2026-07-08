@@ -30,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { getProductImages } from "@/lib/product-images";
 import { useCart } from "@/components/shop/CartProvider";
 import { toast } from "sonner";
 
@@ -262,6 +263,10 @@ const Gallery = ({
   activeIndex: number;
   onSelect: (imageIndex: number) => void;
 }) => {
+  if (images.length === 0) {
+    return <div className="min-h-[440px] w-full border-t border-gray-100 bg-white" />;
+  }
+
   return (
     <div className="flex w-full flex-col gap-4 md:flex-row">
       <div className="order-2 flex max-h-[500px] gap-3 overflow-x-auto md:order-1 md:flex-col md:overflow-y-auto">
@@ -330,12 +335,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
 
+  const productImageUrls = useMemo(() => getProductImages(product), [product]);
+
   const productImages = useMemo<ProductImage[]>(
-    () =>
-      product.images.length > 0
-        ? product.images.map((url) => ({ url, alt: product.name }))
-        : [{ url: "/placeholder.jpg", alt: product.name }],
-    [product.images, product.name]
+    () => productImageUrls.map((url) => ({ url, alt: product.name })),
+    [productImageUrls, product.name]
   );
 
   const isInstallationEnquiry = useMemo(
@@ -401,7 +405,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       slug: product.slug,
       price_zar: unitPrice,
       sale_price_zar: undefined,
-      images: product.images,
+      images: productImageUrls,
       type: product.type,
       is_enquiry_only: product.is_enquiry_only,
     });
@@ -432,7 +436,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             <div className="mb-6">
               <span className="mb-1 block text-sm text-gray-500">Configured unit price</span>
               <strong className="text-[30px] font-bold text-[#1C99D6]">
-                {isEnquiryOnly ? "Commercial" : formatPrice(unitPrice)}
+                {isEnquiryOnly ? "Commercial" : formatPrice(baseUnitPrice)}
               </strong>
             </div>
 
@@ -650,143 +654,141 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                     </Dialog>
                   </section>
 
-                  {hasInstallation && !isInstallationEnquiry && (
-                    <section aria-labelledby="installation-kit-title" className="space-y-4">
-                      <div className="space-y-1">
-                        <h2 id="installation-kit-title" className="text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
-                          Installation kits
-                        </h2>
-                      </div>
+                  <section aria-labelledby="installation-kit-title" className="space-y-4">
+                    <div className="space-y-1">
+                      <h2 id="installation-kit-title" className="text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
+                        Installation kits
+                      </h2>
+                    </div>
 
-                      <div className="flex w-full flex-col border border-gray-300 sm:max-w-xs sm:flex-row">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setHasInstallationKits(false);
-                            setInstallationKitTermsAccepted(false);
-                          }}
-                          aria-pressed={!hasInstallationKits}
-                          className={cn(
-                            "w-full px-4 py-3 text-sm font-medium transition-all sm:flex-1",
-                            !hasInstallationKits
-                              ? "bg-[#1C99D6] text-white"
-                              : "bg-white text-[#58585A] hover:bg-gray-50 sm:border-l-0"
-                          )}
-                        >
-                          No
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setShowInstallationKitTerms(true)}
-                          aria-pressed={hasInstallationKits}
-                          className={cn(
-                            "w-full border-t border-gray-300 px-4 py-3 text-sm font-medium transition-all sm:flex-1 sm:border-l sm:border-t-0",
-                            hasInstallationKits
-                              ? "bg-[#1C99D6] text-white"
-                              : "bg-white text-[#58585A] hover:bg-gray-50"
-                          )}
-                        >
-                          Yes
-                        </button>
-                      </div>
+                    <div className="flex w-full flex-col border border-gray-300 sm:max-w-xs sm:flex-row">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setHasInstallationKits(false);
+                          setInstallationKitTermsAccepted(false);
+                        }}
+                        aria-pressed={!hasInstallationKits}
+                        className={cn(
+                          "w-full px-4 py-3 text-sm font-medium transition-all sm:flex-1",
+                          !hasInstallationKits
+                            ? "bg-[#1C99D6] text-white"
+                            : "bg-white text-[#58585A] hover:bg-gray-50 sm:border-l-0"
+                        )}
+                      >
+                        No
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowInstallationKitTerms(true)}
+                        aria-pressed={hasInstallationKits}
+                        className={cn(
+                          "w-full border-t border-gray-300 px-4 py-3 text-sm font-medium transition-all sm:flex-1 sm:border-l sm:border-t-0",
+                          hasInstallationKits
+                            ? "bg-[#1C99D6] text-white"
+                            : "bg-white text-[#58585A] hover:bg-gray-50"
+                        )}
+                      >
+                        Yes
+                      </button>
+                    </div>
 
-                      <p className="text-sm leading-relaxed text-[#717172]">
-                        {hasInstallationKits
-                          ? `${selectedInstallationKit.name} — ${selectedInstallationKit.description}`
-                          : "Add extra brackets, drain pipes, trunking and copper piping for longer pipe runs."}
-                      </p>
+                    <p className="text-sm leading-relaxed text-[#717172]">
+                      {hasInstallationKits
+                        ? `${selectedInstallationKit.name} — ${selectedInstallationKit.description}`
+                        : "Add extra brackets, drain pipes, trunking and copper piping for longer pipe runs."}
+                    </p>
 
-                      <Dialog open={showInstallationKitTerms} onOpenChange={setShowInstallationKitTerms}>
-                        <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle className="text-lg font-semibold text-[#58585A]">
-                              Installation Kit Options
-                            </DialogTitle>
-                            <DialogDescription className="sr-only">
-                              Select an installation kit and accept the terms.
-                            </DialogDescription>
-                          </DialogHeader>
+                    <Dialog open={showInstallationKitTerms} onOpenChange={setShowInstallationKitTerms}>
+                      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle className="text-lg font-semibold text-[#58585A]">
+                            Installation Kit Options
+                          </DialogTitle>
+                          <DialogDescription className="sr-only">
+                            Select an installation kit and accept the terms.
+                          </DialogDescription>
+                        </DialogHeader>
 
-                          <div className="space-y-4 text-sm leading-relaxed text-[#404040]">
-                            <p className="text-sm sm:text-base">
-                              Installation kits provide the extra materials needed when the indoor and outdoor units
-                              are further apart than the standard 3 metre back-to-back setup.
-                            </p>
+                        <div className="space-y-4 text-sm leading-relaxed text-[#404040]">
+                          <p className="text-sm sm:text-base">
+                            Installation kits provide the extra materials needed when the indoor and outdoor units
+                            are further apart than the standard 3 metre back-to-back setup.
+                          </p>
 
-                            <div className="space-y-3">
-                              <label className="block text-sm font-medium text-[#58585A]">Select installation kit</label>
-                              <Select value={selectedInstallationKitId} onValueChange={(value) => setSelectedInstallationKitId(value as InstallationKit["id"])}>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Choose a kit" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {INSTALLATION_KITS.map((kit) => (
-                                    <SelectItem key={kit.id} value={kit.id}>
-                                      {kit.name} — {formatPrice(kit.priceOffset)}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
+                          <div className="space-y-3">
+                            <label className="block text-sm font-medium text-[#58585A]">Select installation kit</label>
+                            <Select value={selectedInstallationKitId} onValueChange={(value) => setSelectedInstallationKitId(value as InstallationKit["id"])}>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Choose a kit" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {INSTALLATION_KITS.map((kit) => (
+                                  <SelectItem key={kit.id} value={kit.id}>
+                                    {kit.name} — {formatPrice(kit.priceOffset)}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
 
-                              <div className="border border-gray-200 bg-[#F9F9F9] p-4">
-                                <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                                  <span className="font-semibold text-[#58585A]">{selectedInstallationKit.name}</span>
-                                  <span className="font-semibold text-[#1C99D6]">
-                                    {formatPrice(selectedInstallationKit.priceOffset)}
-                                  </span>
-                                </div>
-                                <p className="mb-3 text-[#717172]">{selectedInstallationKit.description}</p>
-                                <ul className="grid gap-1 text-[#717172] sm:grid-cols-2">
-                                  {selectedInstallationKit.features.map((feature, index) => (
-                                    <li key={index} className="flex items-start gap-2">
-                                      <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 bg-[#1C99D6]" aria-hidden="true" />
-                                      <span>{feature}</span>
-                                    </li>
-                                  ))}
-                                </ul>
+                            <div className="border border-gray-200 bg-[#F9F9F9] p-4">
+                              <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                <span className="font-semibold text-[#58585A]">{selectedInstallationKit.name}</span>
+                                <span className="font-semibold text-[#1C99D6]">
+                                  {formatPrice(selectedInstallationKit.priceOffset)}
+                                </span>
                               </div>
+                              <p className="mb-3 text-[#717172]">{selectedInstallationKit.description}</p>
+                              <ul className="grid gap-1 text-[#717172] sm:grid-cols-2">
+                                {selectedInstallationKit.features.map((feature, index) => (
+                                  <li key={index} className="flex items-start gap-2">
+                                    <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 bg-[#1C99D6]" aria-hidden="true" />
+                                    <span>{feature}</span>
+                                  </li>
+                                ))}
+                              </ul>
                             </div>
-
-                            <div className="flex items-start gap-3 border-t border-gray-200 pt-4">
-                              <Checkbox
-                                id="installation-kit-terms-accepted"
-                                checked={installationKitTermsAccepted}
-                                onCheckedChange={(checked) => setInstallationKitTermsAccepted(checked === true)}
-                              />
-                              <label htmlFor="installation-kit-terms-accepted" className="cursor-pointer text-sm font-medium">
-                                I acknowledge that I have read and accept the installation kit terms
-                              </label>
-                            </div>
-
-                            <p className="text-xs text-[#717172]">
-                              Aircons Store shall not be held liable for any consequences arising from your failure to
-                              read, understand, or comply with these Terms and Conditions.
-                            </p>
                           </div>
 
-                          <DialogFooter className="flex-col gap-2 sm:flex-row">
-                            <Button
-                              variant="outline"
-                              onClick={() => setShowInstallationKitTerms(false)}
-                              className="w-full sm:w-auto"
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              disabled={!installationKitTermsAccepted}
-                              onClick={() => {
-                                setHasInstallationKits(true);
-                                setShowInstallationKitTerms(false);
-                              }}
-                              className="w-full bg-[#1C99D6] text-white hover:bg-[#1597c6] sm:w-auto disabled:bg-gray-200"
-                            >
-                              Proceed
-                            </Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </section>
-                  )}
+                          <div className="flex items-start gap-3 border-t border-gray-200 pt-4">
+                            <Checkbox
+                              id="installation-kit-terms-accepted"
+                              checked={installationKitTermsAccepted}
+                              onCheckedChange={(checked) => setInstallationKitTermsAccepted(checked === true)}
+                            />
+                            <label htmlFor="installation-kit-terms-accepted" className="cursor-pointer text-sm font-medium">
+                              I acknowledge that I have read and accept the installation kit terms
+                            </label>
+                          </div>
+
+                          <p className="text-xs text-[#717172]">
+                            Aircons Store shall not be held liable for any consequences arising from your failure to
+                            read, understand, or comply with these Terms and Conditions.
+                          </p>
+                        </div>
+
+                        <DialogFooter className="flex-col gap-2 sm:flex-row">
+                          <Button
+                            variant="outline"
+                            onClick={() => setShowInstallationKitTerms(false)}
+                            className="w-full sm:w-auto"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            disabled={!installationKitTermsAccepted}
+                            onClick={() => {
+                              setHasInstallationKits(true);
+                              setShowInstallationKitTerms(false);
+                            }}
+                            className="w-full bg-[#1C99D6] text-white hover:bg-[#1597c6] sm:w-auto disabled:bg-gray-200"
+                          >
+                            Proceed
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </section>
 
                   <section aria-labelledby="maintenance-title" className="space-y-4">
                     <div className="space-y-1">
@@ -993,7 +995,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                       ))}
                       <div className="flex items-center justify-between gap-4 border-t border-gray-200 pt-3">
                         <dt className="font-medium text-[#58585A]">Unit subtotal</dt>
-                        <dd className="font-semibold text-[#58585A]">{formatPrice(unitPrice)}</dd>
+                        <dd className="font-semibold text-[#58585A]">{formatPrice(baseUnitPrice)}</dd>
                       </div>
                       <div className="flex items-center justify-between gap-4">
                         <dt className="text-[#717172]">Quantity</dt>

@@ -170,8 +170,9 @@ export const mockProducts: Product[] = [
     brand: 'Samsung',
     btu_range: 9000,
     images: [
-      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
-      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree front.webp',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree open.webp',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree condenser front.webp',
     ],
     price_zar: 8999,
     sale_price_zar: 7999,
@@ -437,7 +438,8 @@ export const mockProducts: Product[] = [
     brand: 'Samsung',
     btu_range: null,
     images: [
-      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree front.webp',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree open.webp',
     ],
     price_zar: 10499,
     sale_price_zar: 9999,
@@ -567,7 +569,8 @@ export const mockDeals: Deal[] = [
     is_hero: true,
     product_id: 'prod-1',
     images: [
-      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree front.webp',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree open.webp',
     ],
     includes: [
       'Samsung 9000BTU Inverter Unit',
@@ -665,7 +668,7 @@ export const mockDeals: Deal[] = [
     stock_remaining: 20,
     is_hero: false,
     images: [
-      '/Hero Images/Featured In section/AR80 Wall-mount AC with Windfree™ and AI technology.png',
+      '/Hero Images/Product category pictures/Samsung AR80 WindFree front.webp',
     ],
     includes: [
       'Any Residential Unit (9000-12000BTU)',

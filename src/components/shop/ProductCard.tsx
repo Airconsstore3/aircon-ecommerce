@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { getCssImageUrl, getProductImages } from "@/lib/product-images";
 import { useState, useEffect } from "react";
 import { useCart } from "@/components/shop/CartProvider";
 import { toast } from "sonner";
@@ -136,8 +137,8 @@ function calculatePercentSaved(original: number, sale: number): number {
 
 const AirconProductCard = ({ product }: AirconProductCardProps) => {
   const stockStatus = getStockStatus(product);
-  const hasImages = product.images.length > 0;
-  const primaryImage = hasImages ? product.images[0] : "/placeholder.jpg";
+  const productImages = getProductImages(product);
+  const primaryImage = productImages[0];
   const hasSale = product.sale_price_zar !== null && product.sale_price_zar < product.price_zar;
   const [isWishlisted, setIsWishlisted] = useState(false);
   const usps = getProductDescriptionBullets(product, stockStatus);
@@ -175,12 +176,16 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           >
             <Heart className={cn("h-6 w-6 transition-all", isWishlisted ? "fill-red-500 stroke-red-500" : "stroke-[1.5px]")} />
           </button>
-          <Link
-            href={`/products/${product.slug}`}
-            className="pointer-events-auto block h-[230px] w-full bg-contain bg-center bg-no-repeat transition-transform duration-300 group-hover:scale-[1.03]"
-            style={{ backgroundImage: `url(${primaryImage})` }}
-            aria-label={`View ${product.name}`}
-          />
+          {primaryImage ? (
+            <Link
+              href={`/products/${product.slug}`}
+              className="pointer-events-auto block h-[230px] w-full bg-contain bg-center bg-no-repeat transition-transform duration-300 group-hover:scale-[1.03]"
+              style={{ backgroundImage: getCssImageUrl(primaryImage) }}
+              aria-label={`View ${product.name}`}
+            />
+          ) : (
+            <div className="h-[230px] w-full" />
+          )}
 
           {/* Sold out overlay */}
           {stockStatus === "sold_out" && (
@@ -190,8 +195,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* Brand badge — top left */}
           {product.brand && (
             <Badge
-              variant="outline"
-              className="absolute start-4 top-4 z-30 rounded-full bg-white text-xs font-semibold text-[#1E3A5F]"
+              className="absolute start-4 top-4 z-30 rounded-md border-none bg-[#E8F4FC] px-4 py-1 text-xs font-bold text-[#1E3A5F] hover:bg-[#E8F4FC]"
             >
               {product.brand}
             </Badge>
@@ -200,7 +204,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* SALE badge — top right */}
           {hasSale && (
             <Badge
-              className="absolute left-4 top-14 z-30 rounded-full bg-[#1C99D6] text-xs font-semibold text-white"
+              className="absolute left-4 top-16 z-30 rounded-md bg-[#1C99D6] px-4 py-1 text-xs font-bold text-white"
             >
               SALE
             </Badge>
@@ -209,7 +213,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* Enquiry only badge — top right (replaces SALE) */}
           {product.is_enquiry_only && !hasSale && (
             <Badge
-              className="absolute left-4 top-14 z-30 rounded-full bg-[#1E3A5F] text-xs font-semibold text-white"
+              className="absolute left-4 top-16 z-30 rounded-md bg-[#1E3A5F] px-4 py-1 text-xs font-bold text-white"
             >
               Quote Only
             </Badge>
@@ -239,10 +243,10 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
 
           {/* Price block */}
           {isEnquiryOnly ? (
-            <p className="mb-3 text-sm font-semibold text-[#1C99D6]">Commercial</p>
+            <p className="mb-3 text-base font-bold text-[#1C99D6]">Commercial</p>
           ) : hasSale ? (
             <div className="mb-3 flex items-center justify-center gap-2">
-              <span className="text-sm font-semibold text-[#1C99D6]">
+              <span className="text-base font-bold text-[#1C99D6]">
                 {formatZAR(product.sale_price_zar!)}
               </span>
               <span className="text-xs text-muted-foreground line-through">
@@ -250,7 +254,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
               </span>
             </div>
           ) : (
-            <p className="mb-3 text-sm font-semibold text-[#1C99D6]">
+            <p className="mb-3 text-base font-bold text-[#1C99D6]">
               {formatZAR(product.price_zar)}
             </p>
           )}
