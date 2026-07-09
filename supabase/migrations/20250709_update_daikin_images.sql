@@ -41,7 +41,7 @@ WHERE brand = 'Daikin' AND name ILIKE '%sensira%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter black.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter 2.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter 3.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter 6.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%sky air%' AND name ILIKE '%cassette%';
+WHERE brand = 'Daikin' AND name ILIKE '%sky air%' AND name ILIKE '%cassette%' AND name NOT ILIKE '%mini cassette%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Mini Cassette Inverter  1.webp","/Hero Images/Product category pictures/Daikin Sky Air Mini Cassette Inverter  2.webp"]'::jsonb
@@ -69,11 +69,11 @@ WHERE brand = 'Daikin' AND (name ILIKE '%commercial ducted%' OR name ILIKE '%duc
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%r32 rooftop%';
+WHERE brand = 'Daikin' AND name ILIKE '%r32 rooftop%' AND name NOT ILIKE '%base version%' AND name NOT ILIKE '%no fresh air%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 1.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 2.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 3.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%roftop%';
+WHERE brand = 'Daikin' AND name ILIKE '%r32 rooftop%' AND (name ILIKE '%base version%' OR name ILIKE '%no fresh air%');
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Packaged Rooftop Unit - Basic Air-Cooled R410A (Scroll Non-Inverter).webp","/Hero Images/Product category pictures/Daikin Packaged Rooftop Unit - Basic Air-Cooled R410A (Scroll Non-Inverter)  2.webp"]'::jsonb
@@ -85,8 +85,16 @@ WHERE brand = 'Daikin' AND name ILIKE '%outdoor%';
 
 -- Update Daikin deals with new webp images
 UPDATE deals
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 2.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 3.webp"]'::jsonb
+WHERE name ILIKE '%Daikin%' AND (name ILIKE '%FTXJ50AB%' OR name ILIKE '%FTXJ35AB%' OR name ILIKE '%FTXJ25AB%');
+
+UPDATE deals
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 3.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 5.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) condensert.webp"]'::jsonb
+WHERE name ILIKE '%Daikin%' AND name ILIKE '%FTXJ50AS%';
+
+UPDATE deals
 SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White).webp"]'::jsonb
-WHERE name ILIKE '%Daikin%' AND name ILIKE '%emura%';
+WHERE name ILIKE '%Daikin%' AND name ILIKE '%emura%' AND name NOT ILIKE '%FTXJ50AB%' AND name NOT ILIKE '%FTXJ35AB%' AND name NOT ILIKE '%FTXJ25AB%' AND name NOT ILIKE '%FTXJ50AS%';
 
 UPDATE deals
 SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp"]'::jsonb

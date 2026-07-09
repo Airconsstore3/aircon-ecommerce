@@ -419,7 +419,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
-    keywords: ["ftxm60a", "perfera 60", "perfera split ftmx60a"],
+    keywords: ["ftxm60a", "perfera 60", "perfera split ftxm60a"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
@@ -428,7 +428,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
-    keywords: ["ftxm35a", "perfera 35", "perfera split ftmx35a"],
+    keywords: ["ftxm35a", "perfera 35", "perfera split ftxm35a"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
@@ -437,7 +437,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
-    keywords: ["ftxm25a", "perfera 25", "perfera split ftmx25a"],
+    keywords: ["ftxm25a", "perfera 25", "perfera split ftxm25a"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
@@ -682,12 +682,7 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
 ];
 
 function getDaikinImages(name: string) {
-  const normalizedName = normalizeName(name);
-  const match = DAIKIN_MODEL_IMAGES.find(({ keywords }) =>
-    keywords.some((keyword) => normalizedName.includes(normalizeName(keyword)))
-  );
-
-  return match?.images ?? [];
+  return getBestKeywordImages(name, DAIKIN_MODEL_IMAGES);
 }
 
 function getLgImages(name: string) {
@@ -710,6 +705,24 @@ function getHisenseImages(name: string) {
 
 function normalizeName(name: string) {
   return name.toLowerCase().replace(/[\/_-]/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function getBestKeywordImages(name: string, mappings: Array<{ keywords: string[]; images: string[] }>) {
+  const normalizedName = normalizeName(name);
+  const matches = mappings
+    .map((mapping) => ({
+      mapping,
+      score: Math.max(
+        ...mapping.keywords.map((keyword) => {
+          const normalizedKeyword = normalizeName(keyword);
+          return normalizedName.includes(normalizedKeyword) ? normalizedKeyword.length : 0;
+        })
+      ),
+    }))
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => b.score - a.score);
+
+  return matches[0]?.mapping.images ?? [];
 }
 
 function getJetAirImages(name: string) {
