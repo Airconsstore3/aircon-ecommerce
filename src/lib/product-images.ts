@@ -442,6 +442,13 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     images: [`${PRODUCT_IMAGE_BASE}/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp`],
   },
   {
+    keywords: ["commercial ducted", "ducted system"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Multi Split Outdoor Unit.webp`,
+    ],
+  },
+  {
     keywords: ["sky air"],
     images: [`${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter.webp`],
   },

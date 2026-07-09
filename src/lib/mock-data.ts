@@ -258,8 +258,8 @@ export const mockProducts: Product[] = [
     brand: 'Daikin',
     btu_range: 24000,
     images: [
-      '/Hero Images/Featured In section/Daikin Emura.png',
-      '/Hero Images/Featured In section/Daikin Emura.png',
+      '/Hero Images/Product category pictures/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp',
+      '/Hero Images/Product category pictures/Daikin Multi Split Outdoor Unit.webp',
     ],
     price_zar: 0,
     sale_price_zar: null,

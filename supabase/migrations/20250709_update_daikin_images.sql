@@ -36,6 +36,10 @@ SET images = '["/Hero Images/Product category pictures/Daikin Sky Air R407C Duct
 WHERE brand = 'Daikin' AND name ILIKE '%sky air%' AND name ILIKE '%ducted%';
 
 UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp","/Hero Images/Product category pictures/Daikin Multi Split Outdoor Unit.webp"]'::jsonb
+WHERE brand = 'Daikin' AND (name ILIKE '%commercial ducted%' OR name ILIKE '%ducted system%');
+
+UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%r32 rooftop%';
 
