@@ -97,7 +97,19 @@ WHERE brand = 'Daikin' AND name ILIKE '%sky air%' AND name ILIKE '%mini cassette
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter 1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%sky air%' AND name ILIKE '%ceiling concealed%';
+WHERE brand = 'Daikin' AND name ILIKE '%FBA100A%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter 1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FBA125A%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter 1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FBA140A%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter 1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%sky air%' AND name ILIKE '%ceiling concealed%' AND name NOT ILIKE '%FBA100A%' AND name NOT ILIKE '%FBA125A%' AND name NOT ILIKE '%FBA140A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Ceiling Suspended Inverter.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Suspended Inverter remote.webp","/Hero Images/Product category pictures/Daikin Sky Air Ceiling Suspended Inverter  3.webp"]'::jsonb

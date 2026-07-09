@@ -569,6 +569,30 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
+    keywords: ["fba100a", "sky air fba100a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+    ],
+  },
+  {
+    keywords: ["fba125a", "sky air fba125a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+    ],
+  },
+  {
+    keywords: ["fba140a", "sky air fba140a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+    ],
+  },
+  {
     keywords: ["sky air ceiling concealed inverter", "sky air ceiling concealed"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
