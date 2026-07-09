@@ -349,6 +349,131 @@ const LG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
 ];
 
+const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
+  {
+    keywords: ["emura split", "emura"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["emura black"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["emura silver"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
+    ],
+  },
+  {
+    keywords: ["perfera split", "perfera"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
+    ],
+  },
+  {
+    keywords: ["sensira split", "sensira"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+    ],
+  },
+  {
+    keywords: ["sky air cassette inverter", "sky air cassette"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter black.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter 6.webp`,
+    ],
+  },
+  {
+    keywords: ["sky air mini cassette inverter", "sky air mini cassette"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Mini Cassette Inverter  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Mini Cassette Inverter  2.webp`,
+    ],
+  },
+  {
+    keywords: ["sky air ceiling concealed inverter", "sky air ceiling concealed"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+    ],
+  },
+  {
+    keywords: ["sky air ceiling suspended inverter", "sky air ceiling suspended"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Suspended Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Suspended Inverter remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Suspended Inverter  3.webp`,
+    ],
+  },
+  {
+    keywords: ["sky air wall mounted inverter", "sky air wall mounted"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Wall Mounted Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Wall Mounted Inverter  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Wall Mounted Inverter  4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Wall Mounted Inverter  5.webp`,
+    ],
+  },
+  {
+    keywords: ["sky air ducted split non-inverter", "sky air ducted"],
+    images: [`${PRODUCT_IMAGE_BASE}/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp`],
+  },
+  {
+    keywords: ["sky air"],
+    images: [`${PRODUCT_IMAGE_BASE}/Daikin Sky Air Cassette Inverter.webp`],
+  },
+  {
+    keywords: ["r32 rooftop", "rooftop"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp`,
+    ],
+  },
+  {
+    keywords: ["r32 rooftop base", "rooftop base"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["packaged rooftop", "packaged"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Packaged Rooftop Unit - Basic Air-Cooled R410A (Scroll Non-Inverter).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Packaged Rooftop Unit - Basic Air-Cooled R410A (Scroll Non-Inverter)  2.webp`,
+    ],
+  },
+  {
+    keywords: ["multi split outdoor", "outdoor unit"],
+    images: [`${PRODUCT_IMAGE_BASE}/Daikin Multi Split Outdoor Unit.webp`],
+  },
+];
+
 const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["j-smart mirror"],
@@ -481,6 +606,15 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
 ];
 
+function getDaikinImages(name: string) {
+  const normalizedName = normalizeName(name);
+  const match = DAIKIN_MODEL_IMAGES.find(({ keywords }) =>
+    keywords.some((keyword) => normalizedName.includes(normalizeName(keyword)))
+  );
+
+  return match?.images ?? [];
+}
+
 function getLgImages(name: string) {
   const normalizedName = normalizeName(name);
   const match = LG_MODEL_IMAGES.find(({ keywords }) =>
@@ -546,6 +680,10 @@ export function getProductImages(product: { name?: string; brand: string | null;
 
   if (brand === "lg") {
     return getLgImages(product.name ?? "");
+  }
+
+  if (brand === "daikin") {
+    return getDaikinImages(product.name ?? "");
   }
 
   // Only show database images for non-mapped brands if they are not Samsung-specific fallback images.
