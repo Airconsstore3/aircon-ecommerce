@@ -210,14 +210,6 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
             </Badge>
           )}
 
-          {/* Enquiry only badge — top right (replaces SALE) */}
-          {product.is_enquiry_only && !hasSale && (
-            <Badge
-              className="absolute left-4 top-16 z-30 rounded-md bg-[#1E3A5F] px-4 py-1 text-xs font-bold text-white"
-            >
-              Quote Only
-            </Badge>
-          )}
         </div>
 
         {/* ── Card info ── */}

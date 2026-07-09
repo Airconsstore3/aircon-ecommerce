@@ -510,51 +510,41 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["ftxf60d", "sensira 60", "sensira split ftxf60d"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
     ],
   },
   {
     keywords: ["ftxf50d", "sensira 50", "sensira split ftxf50d"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
     ],
   },
   {
     keywords: ["ftxf35e", "sensira 35", "sensira split ftxf35e"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
     ],
   },
   {
     keywords: ["ftxf25e", "sensira 25", "sensira split ftxf25e"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
     ],
   },
   {
     keywords: ["sensira split", "sensira"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
     ],
   },
   {

@@ -68,23 +68,23 @@ SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split.webp
 WHERE brand = 'Daikin' AND name ILIKE '%perfera%' AND name NOT ILIKE '%FTXM71A%' AND name NOT ILIKE '%FTXM60A%' AND name NOT ILIKE '%FTXM50A%' AND name NOT ILIKE '%FTXM35A%' AND name NOT ILIKE '%FTXM25A%';
 
 UPDATE products
-SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXF60D%';
 
 UPDATE products
-SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXF50D%';
 
 UPDATE products
-SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXF35E%';
 
 UPDATE products
-SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXF25E%';
 
 UPDATE products
-SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%sensira%' AND name NOT ILIKE '%FTXF60D%' AND name NOT ILIKE '%FTXF50D%' AND name NOT ILIKE '%FTXF35E%' AND name NOT ILIKE '%FTXF25E%';
 
 UPDATE products
@@ -145,7 +145,7 @@ SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25
 WHERE name ILIKE '%Daikin%' AND name ILIKE '%emura%' AND name NOT ILIKE '%FTXJ50AB%' AND name NOT ILIKE '%FTXJ35AB%' AND name NOT ILIKE '%FTXJ25AB%' AND name NOT ILIKE '%FTXJ50AS%';
 
 UPDATE deals
-SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp"]'::jsonb
 WHERE name ILIKE '%Daikin%' AND name ILIKE '%sensira%';
 
 UPDATE deals
