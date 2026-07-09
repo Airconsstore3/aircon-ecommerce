@@ -368,6 +368,15 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
+    keywords: ["ftxj50aw", "emura white 50", "emura split ftxj50aw"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+    ],
+  },
+  {
     keywords: ["ftxj50", "emura 50"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
@@ -386,6 +395,24 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
+    keywords: ["ftxj25aw", "emura white 25", "emura split ftxj25aw"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxj35aw", "emura white 35", "emura split ftxj35aw"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+    ],
+  },
+  {
     keywords: ["ftxj25ab", "emura black 25", "emura split ftxj25ab"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
@@ -399,6 +426,15 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxj35as", "emura silver 35", "emura split ftxj35as"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
     ],
   },
   {
@@ -419,7 +455,25 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
+    keywords: ["ftxm71a", "perfera 71", "perfera split ftxm71a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
+    ],
+  },
+  {
     keywords: ["ftxm60a", "perfera 60", "perfera split ftxm60a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxm50a", "perfera 50", "perfera split ftxm50a"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
@@ -451,6 +505,46 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxf60d", "sensira 60", "sensira split ftxf60d"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxf50d", "sensira 50", "sensira split ftxf50d"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxf35e", "sensira 35", "sensira split ftxf35e"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxf25e", "sensira 25", "sensira split ftxf25e"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Sensira Split 2.webp`,
     ],
   },
   {

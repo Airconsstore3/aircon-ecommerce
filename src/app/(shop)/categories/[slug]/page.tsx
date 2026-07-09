@@ -144,6 +144,18 @@ async function getActivePromotion() {
 async function getProductsByCategory(categorySlug: string) {
   const supabase = createClient(await cookies());
   
+  // For commercial category, use commercial filter to ensure only commercial aircons (BTU >= 32000)
+  if (categorySlug === 'commercial') {
+    const filtered = await filterProducts(supabase, 'commercial');
+    return filtered;
+  }
+  
+  // For residential category, use residential filter to ensure only residential aircons (BTU <= 32000)
+  if (categorySlug === 'residential') {
+    const filtered = await filterProducts(supabase, 'residential');
+    return filtered;
+  }
+  
   // Filter by category slug using Supabase query
   const filtered = await filterProducts(supabase, 'category', categorySlug);
   return filtered;

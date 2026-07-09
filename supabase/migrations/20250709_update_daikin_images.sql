@@ -8,6 +8,30 @@ SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25
 WHERE brand = 'Daikin' AND name ILIKE '%FTXJ50AS%';
 
 UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 3.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 5.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) condensert.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ35AS%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 3.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 5.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) condensert.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ25AS%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White).webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White)4.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) remote.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) 3.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ50AW%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White).webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White)4.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) remote.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) 3.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ35AW%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White).webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White)4.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) remote.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) 3.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ25AW%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 2.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 3.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ50AB%';
+
+UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 2.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AB (Black) 3.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXJ25AB%';
 
@@ -17,11 +41,19 @@ WHERE brand = 'Daikin' AND name ILIKE '%FTXJ35AB%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White).webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White)4.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) remote.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) 3.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%emura%' AND name NOT ILIKE '%FTXJ50AS%' AND name NOT ILIKE '%FTXJ50AB%' AND name NOT ILIKE '%FTXJ25AB%' AND name NOT ILIKE '%FTXJ35AB%';
+WHERE brand = 'Daikin' AND name ILIKE '%emura%' AND name NOT ILIKE '%FTXJ50AS%' AND name NOT ILIKE '%FTXJ35AS%' AND name NOT ILIKE '%FTXJ25AS%' AND name NOT ILIKE '%FTXJ50AB%' AND name NOT ILIKE '%FTXJ50AW%' AND name NOT ILIKE '%FTXJ25AB%' AND name NOT ILIKE '%FTXJ35AB%' AND name NOT ILIKE '%FTXJ25AW%' AND name NOT ILIKE '%FTXJ35AW%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXM71A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXM60A%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXM50A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
@@ -33,11 +65,27 @@ WHERE brand = 'Daikin' AND name ILIKE '%FTXM25A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%perfera%' AND name NOT ILIKE '%FTXM60A%' AND name NOT ILIKE '%FTXM35A%' AND name NOT ILIKE '%FTXM25A%';
+WHERE brand = 'Daikin' AND name ILIKE '%perfera%' AND name NOT ILIKE '%FTXM71A%' AND name NOT ILIKE '%FTXM60A%' AND name NOT ILIKE '%FTXM50A%' AND name NOT ILIKE '%FTXM35A%' AND name NOT ILIKE '%FTXM25A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%sensira%';
+WHERE brand = 'Daikin' AND name ILIKE '%FTXF60D%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXF50D%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXF35E%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXF25E%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%sensira%' AND name NOT ILIKE '%FTXF60D%' AND name NOT ILIKE '%FTXF50D%' AND name NOT ILIKE '%FTXF35E%' AND name NOT ILIKE '%FTXF25E%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter black.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter 2.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter 3.webp","/Hero Images/Product category pictures/Daikin Sky Air Cassette Inverter 6.webp"]'::jsonb
