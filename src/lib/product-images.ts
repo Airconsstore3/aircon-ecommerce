@@ -351,6 +351,14 @@ const LG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
 
 const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
+    keywords: ["ftxj50ab", "emura black 50", "emura split ftxj50ab"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+    ],
+  },
+  {
     keywords: ["ftxj50as", "emura silver 50", "emura split ftxj50as"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
