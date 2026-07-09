@@ -493,9 +493,13 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["ftxm25a", "perfera 25", "perfera split ftxm25a"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
     ],
   },
   {
