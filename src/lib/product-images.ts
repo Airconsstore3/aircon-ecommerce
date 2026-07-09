@@ -216,6 +216,66 @@ function getAllianceImages(name: string) {
   return match?.images ?? [];
 }
 
+const HISENSE_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
+  {
+    keywords: ["cassette inverter"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Hisense LCAC Cassette Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/Hisense LCAC Cassette Inverter front.webp`,
+    ],
+  },
+  {
+    keywords: ["cassette non-inverter", "cassette non inverter"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Hisense LCAC Cassette Non-Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/Hisense LCAC Cassette Non-Inverter  front.webp`,
+    ],
+  },
+  {
+    keywords: ["cassette"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Hisense LCAC Cassette Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/Hisense LCAC Cassette Inverter front.webp`,
+    ],
+  },
+  {
+    keywords: ["duct type inverter", "duct inverter"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense LCAC Duct Type Inverter.webp`],
+  },
+  {
+    keywords: ["duct type non-inverter", "duct non inverter", "duct non-inverter"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense LCAC Duct Type Non-Inverter.webp`],
+  },
+  {
+    keywords: ["duct type", "duct"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense LCAC Duct Type Inverter.webp`],
+  },
+  {
+    keywords: ["floor ceiling inverter", "floor/ceiling inverter", "floor-ceiling inverter"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense LCAC Floor Ceiling Inverter.webp`],
+  },
+  {
+    keywords: ["floor ceiling non-inverter", "floor/ceiling non inverter", "floor-ceiling non-inverter"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense LCAC Floor Ceiling Non-Inverter.webp`],
+  },
+  {
+    keywords: ["floor ceiling", "floor/ceiling", "floor-ceiling"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense LCAC Floor Ceiling Inverter.webp`],
+  },
+  {
+    keywords: ["rac inverter", "wall inverter"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense RAC Inverter.webp`],
+  },
+  {
+    keywords: ["rac non-inverter", "rac non inverter", "wall non-inverter"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense RAC Non-Inverter.webp`],
+  },
+  {
+    keywords: ["rac", "wall"],
+    images: [`${PRODUCT_IMAGE_BASE}/Hisense RAC Inverter.webp`],
+  },
+];
+
 const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["j-smart mirror"],
@@ -348,6 +408,15 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
 ];
 
+function getHisenseImages(name: string) {
+  const normalizedName = normalizeName(name);
+  const match = HISENSE_MODEL_IMAGES.find(({ keywords }) =>
+    keywords.some((keyword) => normalizedName.includes(normalizeName(keyword)))
+  );
+
+  return match?.images ?? [];
+}
+
 function normalizeName(name: string) {
   return name.toLowerCase().replace(/[\/_-]/g, " ").replace(/\s+/g, " ").trim();
 }
@@ -387,6 +456,10 @@ export function getProductImages(product: { name?: string; brand: string | null;
 
   if (brand === "jet-air" || brand === "jet air") {
     return getJetAirImages(product.name ?? "");
+  }
+
+  if (brand === "hisense") {
+    return getHisenseImages(product.name ?? "");
   }
 
   // Only show database images for non-mapped brands if they are not Samsung-specific fallback images.
