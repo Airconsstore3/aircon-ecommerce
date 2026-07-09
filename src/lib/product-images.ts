@@ -419,6 +419,15 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
+    keywords: ["ftxm60a", "perfera 60", "perfera split ftmx60a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
+    ],
+  },
+  {
     keywords: ["ftxm35a", "perfera 35", "perfera split ftmx35a"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,

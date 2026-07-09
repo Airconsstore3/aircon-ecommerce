@@ -21,6 +21,10 @@ WHERE brand = 'Daikin' AND name ILIKE '%emura%' AND name NOT ILIKE '%FTXJ50AS%' 
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXM60A%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXM35A%';
 
 UPDATE products
@@ -29,7 +33,7 @@ WHERE brand = 'Daikin' AND name ILIKE '%FTXM25A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%perfera%' AND name NOT ILIKE '%FTXM35A%' AND name NOT ILIKE '%FTXM25A%';
+WHERE brand = 'Daikin' AND name ILIKE '%perfera%' AND name NOT ILIKE '%FTXM60A%' AND name NOT ILIKE '%FTXM35A%' AND name NOT ILIKE '%FTXM25A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb
