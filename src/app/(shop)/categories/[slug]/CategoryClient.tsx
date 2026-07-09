@@ -185,6 +185,7 @@ export default function CategoryClient({
               categoryOptions={categoryOptions}
               btuOptions={btuOptions}
               brandOptions={brandOptions}
+              categorySlug={categorySlug}
             />
           </div>
 
@@ -220,6 +221,7 @@ export default function CategoryClient({
                         categoryOptions={categoryOptions}
                         btuOptions={btuOptions}
                         brandOptions={brandOptions}
+                        categorySlug={categorySlug}
                       />
                     </div>
                   </SheetContent>

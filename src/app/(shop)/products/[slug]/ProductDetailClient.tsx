@@ -334,6 +334,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const [hasProtectionPlan, setHasProtectionPlan] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
+  const [openInfo, setOpenInfo] = useState<string | null>(null);
 
   const productImageUrls = useMemo(() => getProductImages(product), [product]);
 
@@ -434,8 +435,8 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </h1>
 
             <div className="mb-6">
-              <span className="mb-1 block text-sm text-gray-500">Configured unit price</span>
-              <strong className="text-[30px] font-bold text-[#1C99D6]">
+              <span className="mb-1 block text-sm text-gray-500">Cost of unit</span>
+              <strong className="logo-text text-[26px] font-semibold text-[#1C99D6]">
                 {isEnquiryOnly ? "Commercial" : formatPrice(baseUnitPrice)}
               </strong>
             </div>
@@ -825,7 +826,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                             : "bg-white text-[#58585A] hover:bg-gray-50"
                         )}
                       >
-                        Yes (Price on request)
+                        Yes
                       </button>
                     </div>
 
@@ -1090,6 +1091,102 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <FileText className="h-4 w-4" aria-hidden="true" />
                 <span>Download Brochure</span>
               </Link>
+
+              <div className="border border-gray-200">
+                {[
+                  {
+                    id: "description",
+                    title: "Product information",
+                    content: descriptionPoints.length > 0 ? (
+                      <ul className="space-y-2">
+                        {descriptionPoints.map((point, index) => (
+                          <li
+                            key={index}
+                            className="flex items-start gap-2 text-sm leading-relaxed text-[#717172]"
+                          >
+                            <span
+                              className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 bg-[#1C99D6]"
+                              aria-hidden="true"
+                            />
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-[#717172]">
+                        No additional product information available.
+                      </p>
+                    ),
+                  },
+                  {
+                    id: "specifications",
+                    title: "Specifications",
+                    content: product.specs ? (
+                      <dl className="grid grid-cols-1 gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
+                        {Object.entries(product.specs).map(([key, value]) => (
+                          <div key={key}>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">
+                              {key}
+                            </dt>
+                            <dd className="text-[#404040]">{value}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    ) : (
+                      <p className="text-sm text-[#717172]">No specifications available.</p>
+                    ),
+                  },
+                  {
+                    id: "installation-warranty",
+                    title: "Installation & Warranty",
+                    content: (
+                      <div className="space-y-3 text-sm leading-relaxed text-[#717172]">
+                        <p>
+                          Professional back-to-back installation includes up to 3m piping, bracket
+                          and commissioning. Extended warranties and maintenance plans are
+                          available at checkout.
+                        </p>
+                        <ul className="list-disc space-y-1 pl-5">
+                          <li>Manufacturer warranty included</li>
+                          <li>Optional extended protection plan</li>
+                          <li>Installation available in selected areas</li>
+                        </ul>
+                      </div>
+                    ),
+                  },
+                ].map((section) => {
+                  const isOpen = openInfo === section.id;
+                  return (
+                    <div key={section.id} className="border-b border-gray-200 last:border-b-0">
+                      <button
+                        type="button"
+                        onClick={() => setOpenInfo(isOpen ? null : section.id)}
+                        aria-expanded={isOpen}
+                        className="flex w-full items-stretch text-left transition-colors hover:bg-gray-50"
+                      >
+                        <span className="flex flex-1 items-center px-5 py-5 text-base font-normal text-[#404040]">
+                          {section.title}
+                        </span>
+                        <span className="flex w-16 items-center justify-center border-l border-gray-200 text-[#1C99D6]">
+                          {isOpen ? (
+                            <Minus className="h-5 w-5" aria-hidden="true" />
+                          ) : (
+                            <Plus className="h-5 w-5" aria-hidden="true" />
+                          )}
+                        </span>
+                      </button>
+                      <div
+                        className={cn(
+                          "overflow-hidden transition-all duration-300 ease-in-out",
+                          isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+                        )}
+                      >
+                        <div className="px-5 pb-5">{section.content}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </section>
           </section>
         </div>

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/accordion";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -32,6 +32,7 @@ interface FilterSidebarProps {
   categoryOptions?: FilterOption[];
   btuOptions?: FilterOption[];
   brandOptions?: FilterOption[];
+  categorySlug?: string;
 }
 
 const CATEGORY_LABELS: Record<string, string> = {
@@ -53,13 +54,53 @@ const FilterSidebar = ({
   onClose,
   categoryOptions = [],
   btuOptions = [],
-  brandOptions = []
+  brandOptions = [],
+  categorySlug
 }: FilterSidebarProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [priceRange, setPriceRange] = useState([0, 50000]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const inStockOnly = searchParams.get("inStock") === "true";
+
+  // Set default BTU filters based on category on initial load
+  useEffect(() => {
+    if (isInitialized) return;
+    
+    const currentBtuFilters = searchParams.getAll("btu");
+    
+    // Only set defaults if no BTU filters are currently selected
+    if (currentBtuFilters.length === 0 && categorySlug && btuOptions.length > 0) {
+      const current = new URLSearchParams(searchParams.toString());
+      
+      if (categorySlug === "residential") {
+        // Default: 8,000 - 60,000 BTU
+        const defaultBtuValues = btuOptions
+          .filter(opt => {
+            const btu = parseInt(opt.value);
+            return btu >= 8000 && btu <= 60000;
+          })
+          .map(opt => opt.value);
+        
+        defaultBtuValues.forEach(value => current.append("btu", value));
+        router.push(`?${current.toString()}`, { scroll: false });
+      } else if (categorySlug === "commercial") {
+        // Default: 36,000 BTU and up (no upper cap)
+        const defaultBtuValues = btuOptions
+          .filter(opt => {
+            const btu = parseInt(opt.value);
+            return btu >= 36000;
+          })
+          .map(opt => opt.value);
+        
+        defaultBtuValues.forEach(value => current.append("btu", value));
+        router.push(`?${current.toString()}`, { scroll: false });
+      }
+    }
+    
+    setIsInitialized(true);
+  }, [searchParams, categorySlug, btuOptions, isInitialized, router]);
 
   // Get current filter values from URL
   const getFilterValues = (filterId: string): string[] => {

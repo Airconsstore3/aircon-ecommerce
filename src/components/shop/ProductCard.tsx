@@ -85,21 +85,34 @@ function getRoomCoverage(btuRange: number | null): string | null {
   return "Covers large commercial spaces";
 }
 
+function formatBtu(btuRange: number | null): string | null {
+  if (!btuRange) return null;
+  return `${btuRange.toLocaleString()} BTU`;
+}
+
+function isGenericFamilyDescription(bullet: string): boolean {
+  const lower = bullet.toLowerCase();
+  return /\bsky air\b/.test(lower) && /\b(inverter|cassette|mounted|suspended|concealed|ducted|wall|ceiling|mini)\b/.test(lower);
+}
+
 function getProductDescriptionBullets(product: AirconProduct, stockStatus: ReturnType<typeof getStockStatus>) {
+  const unitSizeBullet = formatBtu(product.btu_range);
+
   const descriptionBullets = product.description
     ?.split(/(?:\r?\n|\.\s+)/)
     .map((item) => item.trim().replace(/\.$/, ""))
     .filter(Boolean)
+    .filter((item) => !isGenericFamilyDescription(item))
     .slice(0, 4) ?? [];
 
   const fallbackBullets = [
-    product.brand ? `${product.brand} air conditioning system` : "Reliable air conditioning system",
+    unitSizeBullet ?? (product.brand ? `${product.brand} air conditioning system` : "Reliable air conditioning system"),
     getRoomCoverage(product.btu_range) ?? "Designed for efficient cooling comfort",
     product.is_enquiry_only ? "Quote-based pricing for tailored installation" : "Available for ordering and installation",
     stockStatus === "low_stock" ? `Low stock — ${product.stock.stock_count} left` : stockStatus === "sold_out" ? "Currently sold out" : "Installation support available",
   ];
 
-  return [...descriptionBullets, ...fallbackBullets].slice(0, 4);
+  return [unitSizeBullet, ...descriptionBullets, ...fallbackBullets].filter(Boolean).slice(0, 4);
 }
 
 // Countdown timer helper
