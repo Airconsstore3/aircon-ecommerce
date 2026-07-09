@@ -1,11 +1,19 @@
 -- Update Daikin products with new webp images
 UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 1.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 3.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) 5.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AS (Silver) condensert.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%FTXJ50AS%';
+
+UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White).webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White)4.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) remote.webp","/Hero Images/Product category pictures/Daikin Emura Split FTXJ25AW (White) 3.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%emura%';
+WHERE brand = 'Daikin' AND name ILIKE '%emura%' AND name NOT ILIKE '%FTXJ50AS%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
-WHERE brand = 'Daikin' AND name ILIKE '%perfera%';
+WHERE brand = 'Daikin' AND name ILIKE '%FTXM25A%';
+
+UPDATE products
+SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp"]'::jsonb
+WHERE brand = 'Daikin' AND name ILIKE '%perfera%' AND name NOT ILIKE '%FTXM25A%';
 
 UPDATE products
 SET images = '["/Hero Images/Product category pictures/Daikin Sensira Split 5.webp","/Hero Images/Product category pictures/Daikin Sensira Split 4.webp","/Hero Images/Product category pictures/Daikin Sensira Split 3.webp","/Hero Images/Product category pictures/Daikin Sensira Split 1.webp","/Hero Images/Product category pictures/Daikin Sensira Split 2.webp"]'::jsonb

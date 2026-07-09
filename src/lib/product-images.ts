@@ -351,12 +351,30 @@ const LG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
 
 const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
-    keywords: ["emura split", "emura"],
+    keywords: ["ftxj50as", "emura silver 50", "emura split ftxj50as"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxj50", "emura 50"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["emura silver", "emura ftxj silver", "emura split silver"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
     ],
   },
   {
@@ -368,12 +386,21 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
-    keywords: ["emura silver"],
+    keywords: ["emura split", "emura"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+    ],
+  },
+  {
+    keywords: ["ftxm25a", "perfera 25", "perfera split ftmx25a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  1.webp`,
+      `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
     ],
   },
   {
