@@ -60,7 +60,7 @@ SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.w
 WHERE brand = 'Daikin' AND name ILIKE '%FTXM35A%';
 
 UPDATE products
-SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp","/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp"]'::jsonb
+SET images = '["/Hero Images/Product category pictures/Daikin Perfera Split  1.webp","/Hero Images/Product category pictures/Daikin Perfera Split.webp","/Hero Images/Product category pictures/Daikin Perfera Split  2.webp","/Hero Images/Product category pictures/Daikin Perfera Split  family.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp","/Hero Images/Product category pictures/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp"]'::jsonb
 WHERE brand = 'Daikin' AND name ILIKE '%FTXM25A%';
 
 UPDATE products
