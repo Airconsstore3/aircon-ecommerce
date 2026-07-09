@@ -276,6 +276,79 @@ const HISENSE_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
 ];
 
+const LG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
+  {
+    keywords: ["art cool inverter", "art cool"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/LG Art Cool - Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Art Cool - Inverter front.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Art Cool - Inverter side.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Art Cool - Inverter 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Art Cool - Inverter4.webp`,
+    ],
+  },
+  {
+    keywords: ["ceiling cassette inverter", "ceiling cassette"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Ceiling Cassette - Inverter.webp`],
+  },
+  {
+    keywords: ["round flow cassette inverter", "round flow cassette"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Round Flow Cassette - Inverter.webp`],
+  },
+  {
+    keywords: ["cassette"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Ceiling Cassette - Inverter.webp`],
+  },
+  {
+    keywords: ["commercial rac inverter", "commercial rac"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/LG Commercial RAC - Inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Commercial RAC - Inverter  fromt.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Commercial RAC - Inverter condenser.webp`,
+    ],
+  },
+  {
+    keywords: ["dual cool inverter", "dual cool"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/LG Dual Cool - Inverter front.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Dual Cool - Inverter 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Dual Cool - Inverter 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Dual Cool - Inverter 4.webp`,
+    ],
+  },
+  {
+    keywords: ["ducted hide away inverter", "ducted hide away"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Ducted Hide Away - Inverter.webp`],
+  },
+  {
+    keywords: ["large capacity hide away inverter", "large capacity hide away"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Large Capacity Hide Away - Inverter.webp`],
+  },
+  {
+    keywords: ["ducted"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Ducted Hide Away - Inverter.webp`],
+  },
+  {
+    keywords: ["non-inverter r410a", "non inverter r410a", "r410a"],
+    images: [
+      `${PRODUCT_IMAGE_BASE}/LG Non-Inverter R410A - Non-Inverter 1.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Non-Inverter R410A - Non-Inverter 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Non-Inverter R410A - Non-Inverter 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Non-Inverter R410A - Non-Inverter 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Non-Inverter R410A - Non-Inverter back.webp`,
+      `${PRODUCT_IMAGE_BASE}/LG Non-Inverter R410A - Non-Inverter side front.webp`,
+    ],
+  },
+  {
+    keywords: ["rooftop package inverter", "rooftop package"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Rooftop Package - Inverter.webp`],
+  },
+  {
+    keywords: ["under ceiling inverter", "under ceiling"],
+    images: [`${PRODUCT_IMAGE_BASE}/LG Under Ceiling - Inverter.webp`],
+  },
+];
+
 const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["j-smart mirror"],
@@ -408,6 +481,15 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
 ];
 
+function getLgImages(name: string) {
+  const normalizedName = normalizeName(name);
+  const match = LG_MODEL_IMAGES.find(({ keywords }) =>
+    keywords.some((keyword) => normalizedName.includes(normalizeName(keyword)))
+  );
+
+  return match?.images ?? [];
+}
+
 function getHisenseImages(name: string) {
   const normalizedName = normalizeName(name);
   const match = HISENSE_MODEL_IMAGES.find(({ keywords }) =>
@@ -460,6 +542,10 @@ export function getProductImages(product: { name?: string; brand: string | null;
 
   if (brand === "hisense") {
     return getHisenseImages(product.name ?? "");
+  }
+
+  if (brand === "lg") {
+    return getLgImages(product.name ?? "");
   }
 
   // Only show database images for non-mapped brands if they are not Samsung-specific fallback images.
