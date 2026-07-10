@@ -211,10 +211,11 @@ const EcommerceFooter20 = ({
       <div className="w-full border-b border-white/10 overflow-hidden">
         <div className="px-4 py-6 md:px-8 lg:px-12">
           <a href={brandHref} className="block relative">
-            <span className="logo-text block text-[10rem] md:text-[clamp(4rem,15vw,12rem)] font-bold leading-[0.85] tracking-tight text-[#1C99D6] whitespace-nowrap">
-              {brandName}
-              <sup className="ml-1 text-[0.12em] font-normal align-super text-[#1C99D6]">TM</sup>
-            </span>
+            <img
+              src="/aircon store logo.svg"
+              alt="Aircons Store"
+              className="w-full h-auto max-h-[120px] md:max-h-[160px] object-contain"
+            />
           </a>
         </div>
       </div>
@@ -461,8 +462,12 @@ const EcommerceFooter20 = ({
 
         {/* Small logo icon at bottom */}
         <div className="flex justify-center">
-          <a href={brandHref} className="text-[#1C99D6] text-2xl font-bold">
-            {brandName}
+          <a href={brandHref}>
+            <img
+              src="/aircon store logo.svg"
+              alt="Aircons Store"
+              className="h-8 w-auto"
+            />
           </a>
         </div>
       </div>
