@@ -1,4 +1,6 @@
 import "photoswipe/style.css";
+import { Metadata } from "next";
+import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { ProductDetailClient } from "./ProductDetailClient";
 import { cookies } from "next/headers";
@@ -28,12 +30,74 @@ interface AirconProduct {
   };
 }
 
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+async function getBaseUrl() {
+  const headersList = await headers();
+  const protocol = headersList.get("x-forwarded-proto") || "https";
+  const host = headersList.get("host") || "airconsstore.co.za";
+  return `${protocol}://${host}`;
+}
+
+// ─── Metadata ─────────────────────────────────────────────────────────────────
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const baseUrl = await getBaseUrl();
+  const supabase = createClient(await cookies());
+
+  const { data: product } = await supabase
+    .from("products")
+    .select("name, description, brand, price_zar, sale_price_zar, images, slug, type, btu_range")
+    .eq("slug", slug)
+    .eq("is_published", true)
+    .single();
+
+  if (!product) {
+    return { title: "Product not found | Aircons Store" };
+  }
+
+  const title = `${product.name} | Aircons Store`;
+  const description =
+    product.description?.slice(0, 160) ||
+    `Buy ${product.name} at Aircons Store. ${product.btu_range ? product.btu_range.toLocaleString() + " BTU " : ""}${product.type.replace(/_/g, " ")} air conditioner.`;
+  const imageUrl = product.images?.[0]
+    ? product.images[0].startsWith("http")
+      ? product.images[0]
+      : `${baseUrl}${product.images[0]}`
+    : `${baseUrl}/opengraph-image.png`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${baseUrl}/products/${slug}`,
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${baseUrl}/products/${slug}`,
+      siteName: "Aircons Store",
+      locale: "en_ZA",
+      type: "website",
+      images: [{ url: imageUrl, alt: product.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const baseUrl = await getBaseUrl();
   const supabase = createClient(await cookies());
-  
+
   const { data: product } = await supabase
     .from('products')
     .select('*')
@@ -76,5 +140,34 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     },
   };
 
-  return <ProductDetailClient product={airconProduct} />;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: airconProduct.name,
+    image: airconProduct.images,
+    description: airconProduct.description,
+    brand: {
+      "@type": "Brand",
+      name: airconProduct.brand || "Aircons Store",
+    },
+    offers: {
+      "@type": "Offer",
+      url: `${baseUrl}/products/${slug}`,
+      priceCurrency: "ZAR",
+      price: (airconProduct.sale_price_zar ?? airconProduct.price_zar).toString(),
+      availability: airconProduct.stock.is_sold_out
+        ? "https://schema.org/OutOfStock"
+        : "https://schema.org/InStock",
+    },
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <ProductDetailClient product={airconProduct} />
+    </>
+  );
 }
