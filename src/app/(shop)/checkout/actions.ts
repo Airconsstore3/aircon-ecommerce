@@ -165,8 +165,12 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     await rateLimit();
     await verifyTurnstile(parsed.turnstileToken);
 
-    // Extract base UUIDs from composite cart IDs (format: uuid-variant1-variant2-...)
-    const productIds = parsed.items.map((item) => item.id.split("-")[0]);
+    // Extract base UUIDs from composite cart IDs (UUID is 36 chars, variants appended after)
+    const UUID_RE = /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/;
+    const productIds = parsed.items.map((item) => {
+      const match = item.id.match(UUID_RE);
+      return match ? match[1] : item.id;
+    });
     const { data: products, error: productsError } = await serviceRoleClient
       .from("products")
       .select("id, name, slug, price_zar, sale_price_zar, images, is_published")
@@ -182,7 +186,8 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     }
 
     const items = parsed.items.map((item) => {
-      const baseId = item.id.split("-")[0];
+      const match = item.id.match(UUID_RE);
+      const baseId = match ? match[1] : item.id;
       const product = products.find((candidate) => candidate.id === baseId);
 
       if (!product) {
@@ -245,6 +250,7 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
       whatsappUrl,
     };
   } catch (error) {
+    console.error("[checkout] submitCheckout error:", error);
     return {
       success: false,
       error: error instanceof Error ? error.message : "Checkout failed. Please try again.",
