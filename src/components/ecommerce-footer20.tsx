@@ -51,17 +51,8 @@ const FOOTER_LINKS: FooterLinksSection[] = [
       { text: "Shop Air Conditioners", link: "/shop" },
       { text: "Residential Units", link: "/categories/residential" },
       { text: "Commercial Units", link: "/categories/commercial" },
-      { text: "Accessories", link: "/categories/accessories" },
-    ],
-  },
-  {
-    title: "Services",
-    id: "services",
-    items: [
       { text: "Installation", link: "/installation" },
-      { text: "Maintenance Plans", link: "/maintenance" },
-      { text: "Repairs & Callouts", link: "/repairs" },
-      { text: "Track Order", link: "/account/orders" },
+      { text: "Accessories", link: "/categories/accessories" },
     ],
   },
   {
@@ -69,6 +60,7 @@ const FOOTER_LINKS: FooterLinksSection[] = [
     id: "company",
     items: [
       { text: "About Us", link: "/about" },
+      { text: "Our Mission", link: "/about" },
       { text: "Contact Us", link: "/about" },
       { text: "Warranty Policy", link: "/warranty" },
       { text: "Store Locator", link: "/store-locator" },
@@ -156,20 +148,20 @@ const NewsletterSection = ({ title }: NewsletterData) => {
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <InputGroup
-                className="rounded-none border-x-0 border-t-0 border-b border-white/30 bg-transparent shadow-none focus-within:border-[#1C99D6]"
+                className="rounded-none border border-white/30 bg-transparent shadow-none focus-within:border-white/60"
                 aria-invalid={fieldState.invalid}
               >
                 <InputGroupInput
                   {...field}
                   aria-invalid={fieldState.invalid}
                   placeholder="YOUR EMAIL"
-                  className="bg-transparent text-white placeholder:text-white/40 focus-visible:ring-0"
+                  className="bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/40 focus-visible:ring-0"
                 />
                 <InputGroupAddon align="inline-end">
                   <InputGroupButton
                     type="submit"
                     size="icon-xs"
-                    className="bg-[#1C99D6] text-white hover:bg-[#1C99D6]/90"
+                    className="rounded-none bg-[#1C99D6] text-white hover:bg-[#1C99D6]/90"
                   >
                     <ArrowRight className="size-4" />
                   </InputGroupButton>
@@ -205,7 +197,7 @@ const EcommerceFooter20 = ({
   return (
     <footer
       className={cn(
-        "bg-[#0A2540] text-white antialiased",
+        "bg-[#0033A0] text-white antialiased",
         className
       )}
     >
@@ -222,18 +214,18 @@ const EcommerceFooter20 = ({
       {/* Main footer content */}
       <div className="grid grid-cols-1 gap-12 px-6 py-12 md:px-12 lg:grid-cols-2 lg:px-20 lg:py-16">
         {/* Link columns */}
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-8">
           {footerLinks.map((section) => (
             <div key={section.id}>
               <h3 className="mb-5 text-xs font-semibold uppercase tracking-wider text-[#1C99D6]">
                 {section.title}
               </h3>
-              <ul className="space-y-2.5">
+              <ul className="space-y-2">
                 {section.items.map((item) => (
                   <li key={item.text}>
                     <a
                       href={item.link}
-                      className="text-sm text-white/80 transition-colors hover:text-white hover:underline"
+                      className="text-sm text-white/90 transition-colors hover:text-white hover:underline"
                     >
                       {item.text}
                     </a>
@@ -302,7 +294,7 @@ const EcommerceFooter20 = ({
 
         <button
           type="button"
-          className="flex items-center gap-1.5 rounded-sm border border-white/30 px-3 py-1.5 text-white/80 transition-colors hover:border-white/60 hover:text-white"
+          className="flex items-center gap-1.5 rounded-full border border-white/40 px-4 py-1.5 text-white/90 transition-colors hover:border-white hover:text-white"
         >
           {regionLabel}
           <Plus className="size-3" />

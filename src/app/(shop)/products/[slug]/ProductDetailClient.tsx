@@ -1248,7 +1248,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
           <section className="mt-16" aria-labelledby="related-products-title">
             <h2
               id="related-products-title"
-              className="mb-6 text-center text-[28px] font-normal leading-[1.1] text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)] md:text-[48px]"
+              className="mb-6 text-[28px] font-normal leading-[1.1] text-black -tracking-[0.6px] font-[var(--font-google-sans-flex)] md:text-[48px]"
             >
               Shop other products
             </h2>
