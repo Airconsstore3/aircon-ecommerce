@@ -1092,11 +1092,11 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                 <span>Download Brochure</span>
               </Link>
 
-              <div className="border border-gray-200">
+              <div className="w-full border border-gray-200">
                 {[
                   {
                     id: "description",
-                    title: "Product information",
+                    title: "Ingredients",
                     content: descriptionPoints.length > 0 ? (
                       <ul className="space-y-2">
                         {descriptionPoints.map((point, index) => (
@@ -1120,7 +1120,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   },
                   {
                     id: "specifications",
-                    title: "Specifications",
+                    title: "How to Use",
                     content: product.specs ? (
                       <dl className="grid grid-cols-1 gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
                         {Object.entries(product.specs).map(([key, value]) => (
@@ -1138,7 +1138,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   },
                   {
                     id: "installation-warranty",
-                    title: "Installation & Warranty",
+                    title: "Oceanworks",
                     content: (
                       <div className="space-y-3 text-sm leading-relaxed text-[#717172]">
                         <p>
@@ -1164,14 +1164,14 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                         aria-expanded={isOpen}
                         className="flex w-full items-stretch text-left transition-colors hover:bg-gray-50"
                       >
-                        <span className="flex flex-1 items-center px-5 py-5 text-base font-normal text-[#404040]">
+                        <span className="flex min-h-[52px] flex-1 items-center px-4 py-4 text-sm font-medium text-black sm:min-h-[64px] sm:px-5">
                           {section.title}
                         </span>
-                        <span className="flex w-16 items-center justify-center border-l border-gray-200 text-[#1C99D6]">
+                        <span className="flex w-12 items-center justify-center border-l border-gray-200 text-[#ff4b00] sm:w-16">
                           {isOpen ? (
-                            <Minus className="h-5 w-5" aria-hidden="true" />
+                            <Minus className="h-4 w-4" aria-hidden="true" />
                           ) : (
-                            <Plus className="h-5 w-5" aria-hidden="true" />
+                            <Plus className="h-4 w-4" aria-hidden="true" />
                           )}
                         </span>
                       </button>
