@@ -197,50 +197,55 @@ const EcommerceFooter20 = ({
   return (
     <footer
       className={cn(
-        "bg-[#0033A0] text-white antialiased",
+        "bg-[#0A2540] text-white antialiased",
         className
       )}
     >
-      {/* Large brand strip */}
-      <div className="border-b border-white/20 px-6 py-8 md:px-12 lg:px-20">
-        <a href={brandHref} className="block">
-          <span className="logo-text text-[clamp(2.5rem,9vw,7rem)] font-bold leading-[0.9] tracking-tight text-[#1C99D6]">
+      {/* Full-width logo row */}
+      <div className="w-full border-b border-white/10 px-4 py-6 md:px-8 lg:px-12">
+        <a href={brandHref} className="block relative">
+          <span className="logo-text block text-[clamp(3rem,12vw,10rem)] font-bold leading-[0.85] tracking-tight text-[#1C99D6]">
             {brandName}
-            <sup className="ml-1 text-[0.18em] font-normal align-super">TM</sup>
+            <sup className="absolute top-0 right-0 ml-2 text-[0.12em] font-normal align-super text-[#1C99D6]">TM</sup>
           </span>
         </a>
       </div>
 
-      {/* Main footer content */}
-      <div className="grid grid-cols-1 gap-12 px-6 py-12 md:px-12 lg:grid-cols-2 lg:px-20 lg:py-16">
-        {/* Link columns */}
-        <div className="grid grid-cols-2 gap-8">
-          {footerLinks.map((section) => (
-            <div key={section.id}>
-              <h3 className="mb-5 text-xs font-semibold uppercase tracking-wider text-[#1C99D6]">
-                {section.title}
-              </h3>
-              <ul className="space-y-2">
-                {section.items.map((item) => (
-                  <li key={item.text}>
-                    <a
-                      href={item.link}
-                      className="text-sm text-white/90 transition-colors hover:text-white hover:underline"
-                    >
-                      {item.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+      {/* Two-zone body with vertical divider */}
+      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
+        {/* Left zone: Link columns */}
+        <div className="px-4 py-12 md:px-8 lg:px-12 lg:py-16">
+          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
+            {footerLinks.map((section) => (
+              <div key={section.id}>
+                <h3 className="mb-6 text-sm font-semibold text-[#1C99D6] capitalize">
+                  {section.title}
+                </h3>
+                <ul className="space-y-3">
+                  {section.items.map((item) => (
+                    <li key={item.text}>
+                      <a
+                        href={item.link}
+                        className="text-sm text-white leading-relaxed transition-colors hover:text-white/80 hover:underline"
+                      >
+                        {item.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Newsletter and contact */}
-        <div className="space-y-8 lg:pl-12">
+        {/* Right zone: Newsletter and contact */}
+        <div className="px-4 py-12 md:px-8 lg:px-12 lg:py-16">
           <NewsletterSection {...newsletter} />
 
-          <div className="flex flex-wrap items-center gap-5">
+          <Separator className="my-8 bg-white/10" />
+
+          {/* Social icons and email row */}
+          <div className="flex items-center gap-6 mb-8">
             <a
               href="https://instagram.com/airconsstore"
               aria-label="Instagram"
@@ -255,19 +260,19 @@ const EcommerceFooter20 = ({
             >
               <TiktokIcon />
             </a>
+            <a
+              href={`mailto:${contactEmail}`}
+              className="text-sm text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
+            >
+              {contactEmail}
+            </a>
           </div>
 
-          <a
-            href={`mailto:${contactEmail}`}
-            className="block text-sm font-medium text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
-          >
-            {contactEmail}
-          </a>
-
-          <p className="max-w-md text-xs leading-relaxed text-white/50">
+          {/* Accessibility statement */}
+          <p className="max-w-md text-xs leading-relaxed text-white/40">
             Accessibility statement: if you are using a screen reader and having
             problems using this website, please e-mail{" "}
-            <a href={`mailto:${contactEmail}`} className="underline">
+            <a href={`mailto:${contactEmail}`} className="underline text-white/60 hover:text-white/80">
               {contactEmail}
             </a>{" "}
             for assistance.
@@ -275,40 +280,43 @@ const EcommerceFooter20 = ({
         </div>
       </div>
 
-      <Separator className="bg-white/20" />
-
       {/* Bottom bar */}
-      <div className="flex flex-col items-start justify-between gap-6 px-6 py-6 text-xs text-white/70 md:flex-row md:items-center md:px-12 lg:px-20">
-        <ul className="flex flex-wrap gap-x-6 gap-y-2">
-          {submenuLinks.map((item) => (
-            <li key={item.text}>
-              <a
-                href={item.link}
-                className="transition-colors hover:text-white hover:underline"
-              >
-                {item.text}
-              </a>
-            </li>
-          ))}
-        </ul>
+      <div className="border-t border-white/10 px-4 py-6 md:px-8 lg:px-12">
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          {/* Left: Legal links */}
+          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/70 md:justify-start">
+            {submenuLinks.map((item) => (
+              <li key={item.text}>
+                <a
+                  href={item.link}
+                  className="transition-colors hover:text-white hover:underline"
+                >
+                  {item.text}
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <button
-          type="button"
-          className="flex items-center gap-1.5 rounded-full border border-white/40 px-4 py-1.5 text-white/90 transition-colors hover:border-white hover:text-white"
-        >
-          {regionLabel}
-          <Plus className="size-3" />
-        </button>
-
-        <div className="flex items-center gap-4">
-          <span>{copyright}</span>
-          <a
-            href="https://facebook.com/airconsstore"
-            aria-label="Facebook"
-            className="text-white/70 transition-colors hover:text-white"
+          {/* Center: Region selector */}
+          <button
+            type="button"
+            className="flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-sm text-white/80 transition-colors hover:border-white/60 hover:text-white"
           >
-            <FacebookIcon />
-          </a>
+            {regionLabel}
+            <Plus className="size-3" />
+          </button>
+
+          {/* Right: Copyright and social */}
+          <div className="flex items-center gap-4 text-sm text-white/70">
+            <span>{copyright}</span>
+            <a
+              href="https://facebook.com/airconsstore"
+              aria-label="Facebook"
+              className="text-white/70 transition-colors hover:text-white"
+            >
+              <FacebookIcon />
+            </a>
+          </div>
         </div>
       </div>
     </footer>
