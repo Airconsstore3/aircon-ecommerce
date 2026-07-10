@@ -2,8 +2,13 @@
 
 import { headers } from "next/headers";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
 
 import { serviceRoleClient } from "@/lib/supabase-service";
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+const anonClient = createClient((supabaseUrl || "").trim(), (supabaseAnonKey || "").trim());
 
 const itemSchema = z.object({
   id: z.string(), // Accept composite IDs, will extract base UUID later
@@ -211,7 +216,7 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     const whatsappNumber = parsed.channel === "email" ? null : await getWhatsAppNumber();
     const baseUrl = await getBaseUrl();
 
-    const { data: order, error: orderError } = await serviceRoleClient
+    const { data: order, error: orderError } = await anonClient
       .from("orders")
       .insert({
         name: parsed.name,
