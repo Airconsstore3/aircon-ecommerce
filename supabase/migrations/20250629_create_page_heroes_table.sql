@@ -1,5 +1,4 @@
--- Create page_heroes table for hero/content management
-CREATE TABLE page_heroes (
+-CREATE TABLE IF NOT EXISTS page_heroes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   page_key TEXT NOT NULL UNIQUE,
   heading TEXT NOT NULL,

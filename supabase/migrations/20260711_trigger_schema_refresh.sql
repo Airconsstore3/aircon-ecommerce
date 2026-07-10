@@ -1,0 +1,1 @@
+-- Trigger schema refresh for PostgREST

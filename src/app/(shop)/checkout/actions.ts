@@ -216,18 +216,22 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     const whatsappNumber = parsed.channel === "email" ? null : await getWhatsAppNumber();
     const baseUrl = await getBaseUrl();
 
-    const { data: order, error: orderError } = await anonClient
+    const orderPayload = {
+      name: parsed.name,
+      phone,
+      email: parsed.email || null,
+      notes: parsed.notes || null,
+      items,
+      total_zar: totalZar,
+      channel: parsed.channel,
+      consent_accepted: true,
+    } as const;
+
+    console.log("[checkout] order payload", orderPayload);
+
+    const { data: order, error: orderError } = await serviceRoleClient
       .from("orders")
-      .insert({
-        name: parsed.name,
-        phone,
-        email: parsed.email || null,
-        notes: parsed.notes || null,
-        items,
-        total_zar: totalZar,
-        channel: parsed.channel,
-        consent_accepted: true,
-      })
+      .insert(orderPayload)
       .select("id, name, phone, email, notes, total_zar")
       .single();
 
