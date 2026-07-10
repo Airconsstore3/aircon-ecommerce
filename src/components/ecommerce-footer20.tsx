@@ -137,48 +137,54 @@ const NewsletterSection = ({ title }: NewsletterData) => {
   };
 
   return (
-    <div className="space-y-5">
-      <p className="max-w-md text-base font-light leading-snug text-white/90">
-        {title}
-      </p>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <Controller
-          name="email"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <InputGroup
-                className="rounded-none border border-white/30 bg-transparent shadow-none focus-within:border-white/60"
-                aria-invalid={fieldState.invalid}
-              >
-                <InputGroupInput
-                  {...field}
-                  aria-invalid={fieldState.invalid}
-                  placeholder="YOUR EMAIL"
-                  className="bg-transparent px-3 py-2 text-sm text-white placeholder:text-white/40 focus-visible:ring-0"
-                />
-                <InputGroupAddon align="inline-end">
-                  <InputGroupButton
-                    type="submit"
-                    size="icon-xs"
-                    className="rounded-none bg-[#1C99D6] text-white hover:bg-[#1C99D6]/90"
-                  >
-                    <ArrowRight className="size-4" />
-                  </InputGroupButton>
-                </InputGroupAddon>
-              </InputGroup>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-      </form>
-      <p className="text-[10px] text-white/60">
-        By signing up, you agree to our{" "}
-        <a href="/privacy" className="underline hover:text-white">
-          Privacy Policy
-        </a>
-        .
-      </p>
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+        {/* Heading */}
+        <p className="text-base font-light leading-snug text-white/90 max-w-[280px]">
+          {title}
+        </p>
+
+        {/* Input + button */}
+        <div className="space-y-2">
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <Controller
+              name="email"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <div className="flex">
+                    <InputGroup
+                      className="rounded-none border border-white/30 bg-transparent shadow-none focus-within:border-white/60 flex-1"
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <InputGroupInput
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="YOUR EMAIL"
+                        className="h-[65px] bg-transparent px-4 text-lg text-white placeholder:text-white/40 focus-visible:ring-0"
+                      />
+                    </InputGroup>
+                    <button
+                      type="submit"
+                      className="h-[65px] w-[65px] flex items-center justify-center bg-[#1C99D6] text-white hover:bg-[#1C99D6]/90 transition-colors"
+                    >
+                      <ArrowRight className="size-6" />
+                    </button>
+                  </div>
+                  {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+          </form>
+          <p className="text-xs text-white/60">
+            By signing up, you agree to our{" "}
+            <a href="/privacy" className="underline hover:text-white">
+              Privacy Policy
+            </a>
+            .
+          </p>
+        </div>
+      </div>
     </div>
   );
 };
@@ -201,103 +207,244 @@ const EcommerceFooter20 = ({
         className
       )}
     >
-      {/* Full-width logo row */}
-      <div className="w-full border-b border-white/10 px-4 py-6 md:px-8 lg:px-12">
-        <a href={brandHref} className="block relative">
-          <span className="logo-text block text-[clamp(3rem,12vw,10rem)] font-bold leading-[0.85] tracking-tight text-[#1C99D6]">
-            {brandName}
-            <sup className="absolute top-0 right-0 ml-2 text-[0.12em] font-normal align-super text-[#1C99D6]">TM</sup>
-          </span>
-        </a>
+      {/* Full-width logo row - Desktop: spans full width, Mobile: marquee overflow */}
+      <div className="w-full border-b border-white/10 overflow-hidden">
+        <div className="px-4 py-6 md:px-8 lg:px-12">
+          <a href={brandHref} className="block relative">
+            <span className="logo-text block text-[10rem] md:text-[clamp(4rem,15vw,12rem)] font-bold leading-[0.85] tracking-tight text-[#1C99D6] whitespace-nowrap">
+              {brandName}
+              <sup className="ml-1 text-[0.12em] font-normal align-super text-[#1C99D6]">TM</sup>
+            </span>
+          </a>
+        </div>
       </div>
 
-      {/* Two-zone body with vertical divider */}
-      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-white/10">
-        {/* Left zone: Link columns */}
-        <div className="px-4 py-12 md:px-8 lg:px-12 lg:py-16">
-          <div className="grid grid-cols-2 gap-x-12 gap-y-8">
-            {footerLinks.map((section) => (
-              <div key={section.id}>
-                <h3 className="mb-6 text-sm font-semibold text-[#1C99D6] capitalize">
-                  {section.title}
-                </h3>
-                <ul className="space-y-3">
-                  {section.items.map((item) => (
-                    <li key={item.text}>
-                      <a
-                        href={item.link}
-                        className="text-sm text-white leading-relaxed transition-colors hover:text-white/80 hover:underline"
-                      >
-                        {item.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+      {/* Desktop layout */}
+      <div className="hidden md:block">
+        {/* Two-zone body with vertical divider */}
+        <div className="grid grid-cols-2 divide-x divide-white/10">
+          {/* Left zone: Link columns */}
+          <div className="px-8 lg:px-12 py-16">
+            <div className="grid grid-cols-2 gap-x-12 gap-y-8">
+              {footerLinks.map((section) => (
+                <div key={section.id}>
+                  <h3 className="mb-6 text-sm font-semibold text-[#1C99D6] capitalize">
+                    {section.title}
+                  </h3>
+                  <ul className="space-y-3">
+                    {section.items.map((item) => (
+                      <li key={item.text}>
+                        <a
+                          href={item.link}
+                          className="text-sm text-white leading-relaxed transition-colors hover:text-white/80 hover:underline"
+                        >
+                          {item.text}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right zone: Newsletter and contact */}
+          <div className="px-8 lg:px-12 py-16">
+            <NewsletterSection {...newsletter} />
+
+            <Separator className="my-8 bg-white/10" />
+
+            {/* Social icons and email row */}
+            <div className="flex items-center gap-6 mb-8">
+              <a
+                href="https://instagram.com/airconsstore"
+                aria-label="Instagram"
+                className="text-white/70 transition-colors hover:text-white"
+              >
+                <InstagramIcon />
+              </a>
+              <a
+                href="https://tiktok.com/@airconsstore"
+                aria-label="TikTok"
+                className="text-white/70 transition-colors hover:text-white"
+              >
+                <TiktokIcon />
+              </a>
+              <a
+                href={`mailto:${contactEmail}`}
+                className="text-sm text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
+              >
+                {contactEmail}
+              </a>
+            </div>
+
+            {/* Accessibility statement */}
+            <p className="max-w-md text-xs leading-relaxed text-white/40">
+              Accessibility statement: if you are using a screen reader and having
+              problems using this website, please e-mail{" "}
+              <a href={`mailto:${contactEmail}`} className="underline text-white/60 hover:text-white/80">
+                {contactEmail}
+              </a>{" "}
+              for assistance.
+            </p>
           </div>
         </div>
 
-        {/* Right zone: Newsletter and contact */}
-        <div className="px-4 py-12 md:px-8 lg:px-12 lg:py-16">
-          <NewsletterSection {...newsletter} />
+        {/* Bottom bar */}
+        <div className="border-t border-white/10 px-8 lg:px-12 py-6">
+          <div className="flex items-center justify-between">
+            {/* Left: Legal links */}
+            <ul className="flex gap-x-6 text-sm text-white/70">
+              {submenuLinks.map((item) => (
+                <li key={item.text}>
+                  <a
+                    href={item.link}
+                    className="transition-colors hover:text-white hover:underline"
+                  >
+                    {item.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
 
-          <Separator className="my-8 bg-white/10" />
+            {/* Center: Region selector */}
+            <button
+              type="button"
+              className="flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-sm text-white/80 transition-colors hover:border-white/60 hover:text-white"
+            >
+              {regionLabel}
+              <Plus className="size-3" />
+            </button>
 
-          {/* Social icons and email row */}
-          <div className="flex items-center gap-6 mb-8">
-            <a
-              href="https://instagram.com/airconsstore"
-              aria-label="Instagram"
-              className="text-white/70 transition-colors hover:text-white"
-            >
-              <InstagramIcon />
-            </a>
-            <a
-              href="https://tiktok.com/@airconsstore"
-              aria-label="TikTok"
-              className="text-white/70 transition-colors hover:text-white"
-            >
-              <TiktokIcon />
-            </a>
-            <a
-              href={`mailto:${contactEmail}`}
-              className="text-sm text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
-            >
-              {contactEmail}
-            </a>
+            {/* Right: Copyright and social */}
+            <div className="flex items-center gap-4 text-sm text-white/70">
+              <span>{copyright}</span>
+              <a
+                href="https://facebook.com/airconsstore"
+                aria-label="Facebook"
+                className="text-white/70 transition-colors hover:text-white"
+              >
+                <FacebookIcon />
+              </a>
+            </div>
           </div>
+        </div>
+      </div>
 
-          {/* Accessibility statement */}
-          <p className="max-w-md text-xs leading-relaxed text-white/40">
-            Accessibility statement: if you are using a screen reader and having
-            problems using this website, please e-mail{" "}
-            <a href={`mailto:${contactEmail}`} className="underline text-white/60 hover:text-white/80">
-              {contactEmail}
-            </a>{" "}
-            for assistance.
+      {/* Mobile layout */}
+      <div className="md:hidden px-4 py-8 space-y-8">
+        {/* Two link columns */}
+        <div className="grid grid-cols-2 gap-8">
+          {footerLinks.map((section) => (
+            <div key={section.id}>
+              <h3 className="mb-4 text-sm font-semibold text-[#1C99D6] capitalize">
+                {section.title}
+              </h3>
+              <ul className="space-y-2">
+                {section.items.map((item) => (
+                  <li key={item.text}>
+                    <a
+                      href={item.link}
+                      className="text-sm text-white leading-relaxed transition-colors hover:text-white/80 hover:underline"
+                    >
+                      {item.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <Separator className="bg-white/10" />
+
+        {/* Newsletter */}
+        <div className="space-y-4">
+          <p className="text-base font-light leading-snug text-white/90">
+            {newsletter.title}
+          </p>
+          <form onSubmit={(e) => e.preventDefault()}>
+            <div className="flex">
+              <input
+                type="email"
+                placeholder="YOUR EMAIL"
+                className="flex-1 h-[65px] bg-transparent border border-white/30 px-4 text-lg text-white placeholder:text-white/40 focus:outline-none focus:border-white/60"
+              />
+              <button
+                type="submit"
+                className="h-[65px] w-[65px] flex items-center justify-center bg-[#1C99D6] text-white hover:bg-[#1C99D6]/90 transition-colors"
+              >
+                <ArrowRight className="size-6" />
+              </button>
+            </div>
+          </form>
+          <p className="text-xs text-white/60">
+            By signing up, you agree to our{" "}
+            <a href="/privacy" className="underline hover:text-white">
+              Privacy Policy
+            </a>
+            .
           </p>
         </div>
-      </div>
 
-      {/* Bottom bar */}
-      <div className="border-t border-white/10 px-4 py-6 md:px-8 lg:px-12">
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          {/* Left: Legal links */}
-          <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/70 md:justify-start">
-            {submenuLinks.map((item) => (
-              <li key={item.text}>
-                <a
-                  href={item.link}
-                  className="transition-colors hover:text-white hover:underline"
-                >
-                  {item.text}
-                </a>
-              </li>
-            ))}
-          </ul>
+        <Separator className="bg-white/10" />
 
-          {/* Center: Region selector */}
+        {/* Social icons */}
+        <div className="flex justify-center gap-6">
+          <a
+            href="https://instagram.com/airconsstore"
+            aria-label="Instagram"
+            className="text-white/70 transition-colors hover:text-white"
+          >
+            <InstagramIcon />
+          </a>
+          <a
+            href="https://tiktok.com/@airconsstore"
+            aria-label="TikTok"
+            className="text-white/70 transition-colors hover:text-white"
+          >
+            <TiktokIcon />
+          </a>
+        </div>
+
+        {/* Contact email */}
+        <div className="text-center">
+          <a
+            href={`mailto:${contactEmail}`}
+            className="text-sm text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
+          >
+            {contactEmail}
+          </a>
+        </div>
+
+        {/* Accessibility statement */}
+        <p className="text-xs leading-relaxed text-white/40 text-center">
+          Accessibility statement: if you are using a screen reader and having
+          problems using this website, please e-mail{" "}
+          <a href={`mailto:${contactEmail}`} className="underline text-white/60 hover:text-white/80">
+            {contactEmail}
+          </a>{" "}
+          for assistance.
+        </p>
+
+        <Separator className="bg-white/10" />
+
+        {/* Legal links */}
+        <ul className="flex justify-center gap-x-6 gap-y-2 text-sm text-white/70">
+          {submenuLinks.map((item) => (
+            <li key={item.text}>
+              <a
+                href={item.link}
+                className="transition-colors hover:text-white hover:underline"
+              >
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* Currency selector */}
+        <div className="flex justify-center">
           <button
             type="button"
             className="flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-sm text-white/80 transition-colors hover:border-white/60 hover:text-white"
@@ -305,18 +452,18 @@ const EcommerceFooter20 = ({
             {regionLabel}
             <Plus className="size-3" />
           </button>
+        </div>
 
-          {/* Right: Copyright and social */}
-          <div className="flex items-center gap-4 text-sm text-white/70">
-            <span>{copyright}</span>
-            <a
-              href="https://facebook.com/airconsstore"
-              aria-label="Facebook"
-              className="text-white/70 transition-colors hover:text-white"
-            >
-              <FacebookIcon />
-            </a>
-          </div>
+        {/* Copyright */}
+        <p className="text-center text-sm text-white/70">
+          {copyright}
+        </p>
+
+        {/* Small logo icon at bottom */}
+        <div className="flex justify-center">
+          <a href={brandHref} className="text-[#1C99D6] text-2xl font-bold">
+            {brandName}
+          </a>
         </div>
       </div>
     </footer>
