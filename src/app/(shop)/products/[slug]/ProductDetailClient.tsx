@@ -1250,7 +1250,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
               id="related-products-title"
               className="mb-6 text-center text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]"
             >
-              Other options
+              Shop other products
             </h2>
             <div className="grid grid-cols-1 divide-y divide-gray-200 border border-gray-200 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x">
               {relatedProducts.slice(0, 4).map((related) => {
