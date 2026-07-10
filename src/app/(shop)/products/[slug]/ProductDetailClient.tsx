@@ -442,7 +442,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
             {descriptionPoints.length > 0 && (
               <div className="mb-6 space-y-3">
-                <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
+                <h2 className="border-b border-black pb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
                   Description
                 </h2>
                 <ul className="space-y-2.5">
