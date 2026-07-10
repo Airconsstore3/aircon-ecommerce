@@ -348,6 +348,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
   const [openInfo, setOpenInfo] = useState<string | null>(null);
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const productImageUrls = useMemo(() => getProductImages(product), [product]);
 
@@ -409,6 +410,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
   const handleQuantityChange = (val: number) => {
     if (val < 1) return;
     setQuantity(val);
+    setAddedToCart(false);
   };
 
   const handleAddToCart = () => {
@@ -423,6 +425,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
       type: product.type,
       is_enquiry_only: product.is_enquiry_only,
     });
+    setAddedToCart(true);
     toast.success(`${product.name} added to cart`);
   };
 
@@ -1087,6 +1090,13 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                     className="h-[42px] w-full bg-gray-200 px-8 font-medium uppercase tracking-wider text-gray-400 sm:w-auto sm:flex-1"
                   >
                     Sold Out
+                  </Button>
+                ) : addedToCart ? (
+                  <Button
+                    asChild
+                    className="h-[42px] w-full bg-[#1E3A5F] px-8 font-medium uppercase tracking-wider text-white transition-colors hover:bg-[#152d4a] sm:w-auto sm:flex-1"
+                  >
+                    <Link href="/checkout">Go to basket</Link>
                   </Button>
                 ) : (
                   <button
