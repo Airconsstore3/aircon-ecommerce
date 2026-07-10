@@ -2,7 +2,6 @@
 
 import {
   ChevronRight,
-  FileText,
   Minus,
   Plus,
   Search,
@@ -443,6 +442,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
             {descriptionPoints.length > 0 && (
               <div className="mb-6 space-y-3">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
+                  Description
+                </h2>
                 <ul className="space-y-2.5">
                   {descriptionPoints.map((point, index) => (
                     <li key={index} className="flex items-start gap-3 text-[16px] leading-relaxed text-[#717172]">
@@ -1083,15 +1085,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               </div>
             </div>
 
-            <section className="mt-10 space-y-6" aria-labelledby="product-description-title">
-              <Link
-                href="#"
-                className="inline-flex items-center gap-2 text-sm font-medium uppercase italic tracking-wider text-[#1C99D6] transition-transform hover:translate-x-1"
-              >
-                <FileText className="h-4 w-4" aria-hidden="true" />
-                <span>Download Brochure</span>
-              </Link>
-
+            <section className="mt-10" aria-label="Product information">
               <div className="w-full border border-gray-200">
                 {[
                   {
@@ -1167,7 +1161,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                         <span className="flex min-h-[52px] flex-1 items-center px-4 py-4 text-sm font-medium text-black sm:min-h-[64px] sm:px-5">
                           {section.title}
                         </span>
-                        <span className="flex w-12 items-center justify-center border-l border-gray-200 text-[#ff4b00] sm:w-16">
+                        <span className="flex w-12 items-center justify-center border-l border-gray-200 text-[#1C99D6] sm:w-16">
                           {isOpen ? (
                             <Minus className="h-4 w-4" aria-hidden="true" />
                           ) : (
