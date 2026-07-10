@@ -58,8 +58,22 @@ interface AirconProduct {
   };
 }
 
+interface RelatedProduct {
+  id: string;
+  name: string;
+  slug: string;
+  brand: string | null;
+  type: string;
+  price_zar: number;
+  sale_price_zar: number | null;
+  images: string[];
+  description?: string;
+  is_enquiry_only: boolean;
+}
+
 interface ProductDetailClientProps {
   product: AirconProduct;
+  relatedProducts: RelatedProduct[];
 }
 
 interface ProductImage {
@@ -310,7 +324,7 @@ const Gallery = ({
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function ProductDetailClient({ product }: ProductDetailClientProps) {
+export function ProductDetailClient({ product, relatedProducts }: ProductDetailClientProps) {
   const { addItem } = useCart();
   const stockStatus = getStockStatus(product);
   const isEnquiryOnly =
@@ -458,7 +472,9 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
             <div className="mb-10 space-y-8">
               <div className="space-y-3">
-                <label className="block font-medium text-[#58585A]">Size available</label>
+                <label className="block border-b border-black pb-2 text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
+                  Size available
+                </label>
                 <div className="flex flex-wrap gap-2">
                   {product.available_btu_sizes && product.available_btu_sizes.length > 0 ? (
                     product.available_btu_sizes.map((btu) => {
@@ -1217,6 +1233,86 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </section>
           </section>
         </div>
+
+        {relatedProducts.length > 0 && (
+          <section className="mt-16" aria-labelledby="related-products-title">
+            <h2
+              id="related-products-title"
+              className="mb-6 text-center text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]"
+            >
+              Other options
+            </h2>
+            <div className="grid grid-cols-1 gap-0 border border-gray-200 md:grid-cols-2">
+              {relatedProducts.slice(0, 2).map((related) => {
+                const relatedPoints = getDescriptionPoints(related.description);
+                const relatedPrice = related.sale_price_zar ?? related.price_zar;
+                return (
+                  <div
+                    key={related.id}
+                    className="flex flex-col border-b border-gray-200 p-6 last:border-b-0 md:border-b-0 md:[&:not(:last-child)]:border-r"
+                  >
+                    <Link href={`/products/${related.slug}`} className="mb-6 flex flex-1 items-center justify-center">
+                      <img
+                        src={related.images?.[0] || "/placeholder.svg"}
+                        alt={related.name}
+                        className="max-h-[220px] w-auto object-contain"
+                      />
+                    </Link>
+                    <Link href={`/products/${related.slug}`}>
+                      <h3 className="mb-3 text-lg font-medium uppercase tracking-wide text-[#404040] transition-colors hover:text-[#1C99D6]">
+                        {related.name}
+                      </h3>
+                    </Link>
+                    {relatedPoints.length > 0 && (
+                      <ul className="mb-6 space-y-1.5">
+                        {relatedPoints.slice(0, 3).map((point, index) => (
+                          <li key={index} className="text-sm text-[#717172]">
+                            - {point}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <div className="mt-auto">
+                      {related.is_enquiry_only ? (
+                        <Link
+                          href="/enquire"
+                          className="flex h-[48px] w-full items-center justify-center bg-[#1E3A5F] px-6 font-medium uppercase tracking-wider text-white transition-colors hover:bg-[#152d4a]"
+                        >
+                          Request Quote
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() =>
+                            addItem({
+                              id: related.id,
+                              name: related.name,
+                              slug: related.slug,
+                              price_zar: relatedPrice,
+                              sale_price_zar: undefined,
+                              images: related.images,
+                              type: related.type,
+                              is_enquiry_only: related.is_enquiry_only,
+                            })
+                          }
+                          className="flex h-[48px] w-full items-center justify-center gap-2 bg-[#1C99D6] px-6 font-medium uppercase tracking-wider text-white transition-colors hover:bg-[#1597c6]"
+                        >
+                          <span>ADD</span>
+                          <span>{formatPrice(relatedPrice)}</span>
+                          {related.sale_price_zar && (
+                            <span className="ml-1 text-xs line-through opacity-80">
+                              {formatPrice(related.price_zar)}
+                            </span>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );

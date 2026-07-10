@@ -30,6 +30,19 @@ interface AirconProduct {
   };
 }
 
+interface RelatedProduct {
+  id: string;
+  name: string;
+  slug: string;
+  brand: string | null;
+  type: string;
+  price_zar: number;
+  sale_price_zar: number | null;
+  images: string[];
+  description?: string;
+  is_enquiry_only: boolean;
+}
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 async function getBaseUrl() {
@@ -140,6 +153,29 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     },
   };
 
+  // Fetch related products (same type, excluding current)
+  const { data: relatedRaw } = await supabase
+    .from("products")
+    .select("id, name, slug, brand, type, price_zar, sale_price_zar, images, description, is_enquiry_only")
+    .eq("type", product.type)
+    .eq("is_published", true)
+    .neq("id", product.id)
+    .order("is_featured", { ascending: false })
+    .limit(4);
+
+  const relatedProducts: RelatedProduct[] = (relatedRaw || []).map((item) => ({
+    id: item.id,
+    name: item.name,
+    slug: item.slug,
+    brand: item.brand,
+    type: item.type,
+    price_zar: item.price_zar,
+    sale_price_zar: item.sale_price_zar || null,
+    images: item.images,
+    description: item.description,
+    is_enquiry_only: item.is_enquiry_only,
+  }));
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -167,7 +203,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ProductDetailClient product={airconProduct} />
+      <ProductDetailClient product={airconProduct} relatedProducts={relatedProducts} />
     </>
   );
 }
