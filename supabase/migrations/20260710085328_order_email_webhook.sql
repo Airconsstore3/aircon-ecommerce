@@ -5,8 +5,8 @@ security definer
 as $$
 begin
   perform net.http_extension_post(
-    url := 'https://[PROJECT-REF].supabase.co/functions/v1/order-email',
-    headers := jsonb_build_object('x-webhook-secret', '[ORDER_WEBHOOK_SECRET]'),
+    url := 'https://mrufsvbnxysgpjpnpuhb.supabase.co/functions/v1/order-email',
+    headers := jsonb_build_object('x-webhook-secret', '78bb4e3f3d295eef30add42f9092f0118b8466f7ccfb84e585e45a9769ad50f8'),
     body := jsonb_build_object('type', 'INSERT', 'table', 'orders', 'record', to_jsonb(new))
   );
   return new;

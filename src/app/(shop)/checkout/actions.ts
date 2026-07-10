@@ -6,7 +6,7 @@ import { z } from "zod";
 import { serviceRoleClient } from "@/lib/supabase-service";
 
 const itemSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(), // Accept composite IDs, will extract base UUID later
   quantity: z.coerce.number().int().min(1).max(99),
 });
 
@@ -165,7 +165,8 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     await rateLimit();
     await verifyTurnstile(parsed.turnstileToken);
 
-    const productIds = parsed.items.map((item) => item.id);
+    // Extract base UUIDs from composite cart IDs (format: uuid-variant1-variant2-...)
+    const productIds = parsed.items.map((item) => item.id.split("-")[0]);
     const { data: products, error: productsError } = await serviceRoleClient
       .from("products")
       .select("id, name, slug, price_zar, sale_price_zar, images, is_published")
@@ -181,7 +182,8 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     }
 
     const items = parsed.items.map((item) => {
-      const product = products.find((candidate) => candidate.id === item.id);
+      const baseId = item.id.split("-")[0];
+      const product = products.find((candidate) => candidate.id === baseId);
 
       if (!product) {
         throw new Error("One or more cart items are no longer available.");

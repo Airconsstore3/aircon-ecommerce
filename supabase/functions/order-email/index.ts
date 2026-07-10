@@ -65,7 +65,7 @@ async function sendEmail(payload: { to: string; subject: string; html: string })
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: Deno.env.get("RESEND_FROM") || "Aircons Store <info@airconsstore.co.za>",
+      from: Deno.env.get("RESEND_FROM") || "Aircons Store <orders@aircons-store.co.za>",
       ...payload,
     }),
   });

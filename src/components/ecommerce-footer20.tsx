@@ -5,14 +5,7 @@ import { ArrowRight, Plus } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-import { Button } from "@/components/ui/button";
 import { Field, FieldError } from "@/components/ui/field";
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
@@ -140,7 +133,7 @@ const NewsletterSection = ({ title }: NewsletterData) => {
     <div className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
         {/* Heading */}
-        <p className="text-base font-light leading-snug text-white/90 max-w-[280px]">
+        <p className="text-base font-light leading-snug text-[#0A2540]/90 max-w-[280px]">
           {title}
         </p>
 
@@ -153,17 +146,13 @@ const NewsletterSection = ({ title }: NewsletterData) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <div className="flex">
-                    <InputGroup
-                      className="rounded-none border border-white/30 bg-transparent shadow-none focus-within:border-white/60 flex-1"
+                    <input
+                      {...field}
+                      type="email"
                       aria-invalid={fieldState.invalid}
-                    >
-                      <InputGroupInput
-                        {...field}
-                        aria-invalid={fieldState.invalid}
-                        placeholder="YOUR EMAIL"
-                        className="h-[65px] bg-transparent px-4 text-lg text-white placeholder:text-white/40 focus-visible:ring-0"
-                      />
-                    </InputGroup>
+                      placeholder="YOUR EMAIL"
+                      className="flex-1 h-[65px] bg-transparent border border-r-0 border-white/30 px-4 text-lg text-white placeholder:text-white/40 focus:outline-none focus:border-white/60"
+                    />
                     <button
                       type="submit"
                       className="h-[65px] w-[65px] flex items-center justify-center bg-[#1C99D6] text-white hover:bg-[#1C99D6]/90 transition-colors"
@@ -203,12 +192,12 @@ const EcommerceFooter20 = ({
   return (
     <footer
       className={cn(
-        "bg-[#0A2540] text-white antialiased",
+        "bg-white text-[#0A2540] antialiased",
         className
       )}
     >
       {/* Full-width logo row - Desktop: spans full width, Mobile: marquee overflow */}
-      <div className="w-full border-b border-white/10 overflow-hidden">
+      <div className="w-full border-b border-[#0A2540]/10 overflow-hidden">
         <div className="px-4 py-6 md:px-8 lg:px-12">
           <a href={brandHref} className="block relative">
             <img
@@ -223,7 +212,7 @@ const EcommerceFooter20 = ({
       {/* Desktop layout */}
       <div className="hidden md:block">
         {/* Two-zone body with vertical divider */}
-        <div className="grid grid-cols-2 divide-x divide-white/10">
+        <div className="grid grid-cols-2 divide-x divide-[#0A2540]/10">
           {/* Left zone: Link columns */}
           <div className="px-8 lg:px-12 py-16">
             <div className="grid grid-cols-2 gap-x-12 gap-y-8">
@@ -237,7 +226,7 @@ const EcommerceFooter20 = ({
                       <li key={item.text}>
                         <a
                           href={item.link}
-                          className="text-sm text-white leading-relaxed transition-colors hover:text-white/80 hover:underline"
+                          className="text-sm text-[#0A2540] leading-relaxed transition-colors hover:text-[#1C99D6] hover:underline"
                         >
                           {item.text}
                         </a>
@@ -253,37 +242,37 @@ const EcommerceFooter20 = ({
           <div className="px-8 lg:px-12 py-16">
             <NewsletterSection {...newsletter} />
 
-            <Separator className="my-8 bg-white/10" />
+            <Separator className="my-8 bg-[#0A2540]/10" />
 
             {/* Social icons and email row */}
             <div className="flex items-center gap-6 mb-8">
               <a
                 href="https://instagram.com/airconsstore"
                 aria-label="Instagram"
-                className="text-white/70 transition-colors hover:text-white"
+                className="text-[#0A2540]/70 transition-colors hover:text-[#0A2540]"
               >
                 <InstagramIcon />
               </a>
               <a
                 href="https://tiktok.com/@airconsstore"
                 aria-label="TikTok"
-                className="text-white/70 transition-colors hover:text-white"
+                className="text-[#0A2540]/70 transition-colors hover:text-[#0A2540]"
               >
                 <TiktokIcon />
               </a>
               <a
                 href={`mailto:${contactEmail}`}
-                className="text-sm text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
+                className="text-sm text-[#0A2540] underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
               >
                 {contactEmail}
               </a>
             </div>
 
             {/* Accessibility statement */}
-            <p className="max-w-md text-xs leading-relaxed text-white/40">
+            <p className="max-w-md text-xs leading-relaxed text-[#0A2540]/40">
               Accessibility statement: if you are using a screen reader and having
               problems using this website, please e-mail{" "}
-              <a href={`mailto:${contactEmail}`} className="underline text-white/60 hover:text-white/80">
+              <a href={`mailto:${contactEmail}`} className="underline text-[#0A2540]/60 hover:text-[#0A2540]/80">
                 {contactEmail}
               </a>{" "}
               for assistance.
@@ -292,15 +281,15 @@ const EcommerceFooter20 = ({
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/10 px-8 lg:px-12 py-6">
+        <div className="border-t border-[#0A2540]/10 px-8 lg:px-12 py-6">
           <div className="flex items-center justify-between">
             {/* Left: Legal links */}
-            <ul className="flex gap-x-6 text-sm text-white/70">
+            <ul className="flex gap-x-6 text-sm text-[#0A2540]/70">
               {submenuLinks.map((item) => (
                 <li key={item.text}>
                   <a
                     href={item.link}
-                    className="transition-colors hover:text-white hover:underline"
+                    className="transition-colors hover:text-[#0A2540] hover:underline"
                   >
                     {item.text}
                   </a>
@@ -311,19 +300,19 @@ const EcommerceFooter20 = ({
             {/* Center: Region selector */}
             <button
               type="button"
-              className="flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-sm text-white/80 transition-colors hover:border-white/60 hover:text-white"
+              className="flex items-center gap-2 rounded-full border border-[#0A2540]/30 px-4 py-2 text-sm text-[#0A2540]/80 transition-colors hover:border-[#0A2540]/60 hover:text-[#0A2540]"
             >
               {regionLabel}
               <Plus className="size-3" />
             </button>
 
             {/* Right: Copyright and social */}
-            <div className="flex items-center gap-4 text-sm text-white/70">
+            <div className="flex items-center gap-4 text-sm text-[#0A2540]/70">
               <span>{copyright}</span>
               <a
                 href="https://facebook.com/airconsstore"
                 aria-label="Facebook"
-                className="text-white/70 transition-colors hover:text-white"
+                className="text-[#0A2540]/70 transition-colors hover:text-[#0A2540]"
               >
                 <FacebookIcon />
               </a>
@@ -346,7 +335,7 @@ const EcommerceFooter20 = ({
                   <li key={item.text}>
                     <a
                       href={item.link}
-                      className="text-sm text-white leading-relaxed transition-colors hover:text-white/80 hover:underline"
+                      className="text-sm text-[#0A2540] leading-relaxed transition-colors hover:text-[#1C99D6] hover:underline"
                     >
                       {item.text}
                     </a>
@@ -357,11 +346,11 @@ const EcommerceFooter20 = ({
           ))}
         </div>
 
-        <Separator className="bg-white/10" />
+        <Separator className="bg-[#0A2540]/10" />
 
         {/* Newsletter */}
         <div className="space-y-4">
-          <p className="text-base font-light leading-snug text-white/90">
+          <p className="text-base font-light leading-snug text-[#0A2540]/90">
             {newsletter.title}
           </p>
           <form onSubmit={(e) => e.preventDefault()}>
@@ -369,7 +358,7 @@ const EcommerceFooter20 = ({
               <input
                 type="email"
                 placeholder="YOUR EMAIL"
-                className="flex-1 h-[65px] bg-transparent border border-white/30 px-4 text-lg text-white placeholder:text-white/40 focus:outline-none focus:border-white/60"
+                className="flex-1 h-[65px] bg-transparent border border-r-0 border-[#0A2540]/30 px-4 text-lg text-[#0A2540] placeholder:text-[#0A2540]/40 focus:outline-none focus:border-[#0A2540]/60"
               />
               <button
                 type="submit"
@@ -379,30 +368,30 @@ const EcommerceFooter20 = ({
               </button>
             </div>
           </form>
-          <p className="text-xs text-white/60">
+          <p className="text-xs text-[#0A2540]/60">
             By signing up, you agree to our{" "}
-            <a href="/privacy" className="underline hover:text-white">
+            <a href="/privacy" className="underline hover:text-[#0A2540]">
               Privacy Policy
             </a>
             .
           </p>
         </div>
 
-        <Separator className="bg-white/10" />
+        <Separator className="bg-[#0A2540]/10" />
 
         {/* Social icons */}
         <div className="flex justify-center gap-6">
           <a
             href="https://instagram.com/airconsstore"
             aria-label="Instagram"
-            className="text-white/70 transition-colors hover:text-white"
+            className="text-[#0A2540]/70 transition-colors hover:text-[#0A2540]"
           >
             <InstagramIcon />
           </a>
           <a
             href="https://tiktok.com/@airconsstore"
             aria-label="TikTok"
-            className="text-white/70 transition-colors hover:text-white"
+            className="text-[#0A2540]/70 transition-colors hover:text-[#0A2540]"
           >
             <TiktokIcon />
           </a>
@@ -412,31 +401,31 @@ const EcommerceFooter20 = ({
         <div className="text-center">
           <a
             href={`mailto:${contactEmail}`}
-            className="text-sm text-white underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
+            className="text-sm text-[#0A2540] underline underline-offset-4 transition-colors hover:text-[#1C99D6]"
           >
             {contactEmail}
           </a>
         </div>
 
         {/* Accessibility statement */}
-        <p className="text-xs leading-relaxed text-white/40 text-center">
+        <p className="text-xs leading-relaxed text-[#0A2540]/40 text-center">
           Accessibility statement: if you are using a screen reader and having
           problems using this website, please e-mail{" "}
-          <a href={`mailto:${contactEmail}`} className="underline text-white/60 hover:text-white/80">
+          <a href={`mailto:${contactEmail}`} className="underline text-[#0A2540]/60 hover:text-[#0A2540]/80">
             {contactEmail}
           </a>{" "}
           for assistance.
         </p>
 
-        <Separator className="bg-white/10" />
+        <Separator className="bg-[#0A2540]/10" />
 
         {/* Legal links */}
-        <ul className="flex justify-center gap-x-6 gap-y-2 text-sm text-white/70">
+        <ul className="flex justify-center gap-x-6 gap-y-2 text-sm text-[#0A2540]/70">
           {submenuLinks.map((item) => (
             <li key={item.text}>
               <a
                 href={item.link}
-                className="transition-colors hover:text-white hover:underline"
+                className="transition-colors hover:text-[#0A2540] hover:underline"
               >
                 {item.text}
               </a>
@@ -448,7 +437,7 @@ const EcommerceFooter20 = ({
         <div className="flex justify-center">
           <button
             type="button"
-            className="flex items-center gap-2 rounded-full border border-white/30 px-4 py-2 text-sm text-white/80 transition-colors hover:border-white/60 hover:text-white"
+            className="flex items-center gap-2 rounded-full border border-[#0A2540]/30 px-4 py-2 text-sm text-[#0A2540]/80 transition-colors hover:border-[#0A2540]/60 hover:text-[#0A2540]"
           >
             {regionLabel}
             <Plus className="size-3" />
@@ -456,7 +445,7 @@ const EcommerceFooter20 = ({
         </div>
 
         {/* Copyright */}
-        <p className="text-center text-sm text-white/70">
+        <p className="text-center text-sm text-[#0A2540]/70">
           {copyright}
         </p>
 
