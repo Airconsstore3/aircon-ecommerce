@@ -1086,64 +1086,97 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
             </div>
 
             <section className="mt-10" aria-label="Product information">
+              <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#58585A]">
+                Product description
+              </h2>
               <div className="w-full border border-gray-200">
                 {[
                   {
                     id: "description",
-                    title: "Ingredients",
-                    content: descriptionPoints.length > 0 ? (
-                      <ul className="space-y-2">
-                        {descriptionPoints.map((point, index) => (
-                          <li
-                            key={index}
-                            className="flex items-start gap-2 text-sm leading-relaxed text-[#717172]"
-                          >
-                            <span
-                              className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 bg-[#1C99D6]"
-                              aria-hidden="true"
-                            />
-                            <span>{point}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <p className="text-sm text-[#717172]">
-                        No additional product information available.
-                      </p>
+                    title: "Description",
+                    content: (
+                      <div className="space-y-4 text-sm leading-relaxed text-[#717172]">
+                        {descriptionPoints.length > 0 && (
+                          <ul className="space-y-2">
+                            {descriptionPoints.map((point, index) => (
+                              <li key={index} className="flex items-start gap-2">
+                                <span
+                                  className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 bg-[#1C99D6]"
+                                  aria-hidden="true"
+                                />
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        <dl className="grid grid-cols-1 gap-x-4 gap-y-3 border-t border-gray-200 pt-4 sm:grid-cols-2">
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">Brand</dt>
+                            <dd className="text-[#404040]">{product.brand ?? "—"}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">Type</dt>
+                            <dd className="capitalize text-[#404040]">{product.type.replace(/_/g, " ")}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">BTU</dt>
+                            <dd className="text-[#404040]">{product.btu_range?.toLocaleString() ?? "—"}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">Room coverage</dt>
+                            <dd className="text-[#404040]">{roomCoverage ?? "—"}</dd>
+                          </div>
+                        </dl>
+                      </div>
                     ),
                   },
                   {
                     id: "specifications",
-                    title: "How to Use",
-                    content: product.specs ? (
-                      <dl className="grid grid-cols-1 gap-x-4 gap-y-3 text-sm sm:grid-cols-2">
-                        {Object.entries(product.specs).map(([key, value]) => (
-                          <div key={key}>
-                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">
-                              {key}
-                            </dt>
-                            <dd className="text-[#404040]">{value}</dd>
+                    title: "Specifications",
+                    content: (
+                      <div className="space-y-4 text-sm">
+                        <dl className="grid grid-cols-1 gap-x-4 gap-y-3 sm:grid-cols-2">
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">Model code</dt>
+                            <dd className="text-[#404040]">{product.name}</dd>
                           </div>
-                        ))}
-                      </dl>
-                    ) : (
-                      <p className="text-sm text-[#717172]">No specifications available.</p>
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">Unit description</dt>
+                            <dd className="capitalize text-[#404040]">{product.type.replace(/_/g, " ")}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">BTU rating</dt>
+                            <dd className="text-[#404040]">{product.btu_range?.toLocaleString() ?? "—"}</dd>
+                          </div>
+                          {product.specs &&
+                            Object.entries(product.specs).map(([key, value]) => (
+                              <div key={key}>
+                                <dt className="text-xs font-medium uppercase tracking-wide text-[#717172]">{key}</dt>
+                                <dd className="text-[#404040]">{value}</dd>
+                              </div>
+                            ))}
+                        </dl>
+                        {!product.specs && (
+                          <p className="text-[#717172]">No additional specifications available.</p>
+                        )}
+                      </div>
                     ),
                   },
                   {
                     id: "installation-warranty",
-                    title: "Oceanworks",
+                    title: "Installation & Warranty",
                     content: (
                       <div className="space-y-3 text-sm leading-relaxed text-[#717172]">
                         <p>
-                          Professional back-to-back installation includes up to 3m piping, bracket
-                          and commissioning. Extended warranties and maintenance plans are
-                          available at checkout.
+                          Professional back-to-back installation includes up to 3m piping, outdoor
+                          mounting bracket and commissioning. Extended pipe runs, electrical
+                          isolators and trunking are quoted on-site.
                         </p>
                         <ul className="list-disc space-y-1 pl-5">
                           <li>Manufacturer warranty included</li>
                           <li>Optional extended protection plan</li>
                           <li>Installation available in selected areas</li>
+                          <li>Inverter technology for efficient cooling and heating</li>
                         </ul>
                       </div>
                     ),
