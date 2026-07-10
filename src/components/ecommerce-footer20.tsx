@@ -151,7 +151,7 @@ const NewsletterSection = ({ title }: NewsletterData) => {
                       type="email"
                       aria-invalid={fieldState.invalid}
                       placeholder="YOUR EMAIL"
-                      className="flex-1 h-[65px] bg-transparent border border-r-0 border-white/30 px-4 text-lg text-white placeholder:text-white/40 focus:outline-none focus:border-white/60"
+                      className="flex-1 h-[65px] bg-[#F3F4F6] border border-r-0 border-[#0A2540]/20 px-4 text-lg text-[#0A2540] placeholder:text-[#0A2540]/40 focus:outline-none focus:border-[#1C99D6]"
                     />
                     <button
                       type="submit"
@@ -205,6 +205,9 @@ const EcommerceFooter20 = ({
               alt="Aircons Store"
               className="w-full h-auto max-h-[120px] md:max-h-[160px] object-contain"
             />
+            <sup className="absolute top-0 right-0 text-[0.6rem] md:text-[0.8rem] font-medium text-[#1C99D6]">
+              TM
+            </sup>
           </a>
         </div>
       </div>
@@ -358,7 +361,7 @@ const EcommerceFooter20 = ({
               <input
                 type="email"
                 placeholder="YOUR EMAIL"
-                className="flex-1 h-[65px] bg-transparent border border-r-0 border-[#0A2540]/30 px-4 text-lg text-[#0A2540] placeholder:text-[#0A2540]/40 focus:outline-none focus:border-[#0A2540]/60"
+                className="flex-1 h-[65px] bg-[#F3F4F6] border border-r-0 border-[#0A2540]/20 px-4 text-lg text-[#0A2540] placeholder:text-[#0A2540]/40 focus:outline-none focus:border-[#1C99D6]"
               />
               <button
                 type="submit"
