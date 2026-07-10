@@ -3,6 +3,28 @@
 import { serviceRoleClient } from "@/lib/supabase-service";
 import { revalidatePath } from "next/cache";
 
+function normalizePhone(value: string) {
+  const compact = value.replace(/[\s()-]/g, "");
+
+  if (!compact) {
+    return "";
+  }
+
+  if (/^\+27[0-9]{9}$/.test(compact)) {
+    return compact;
+  }
+
+  if (/^0[0-9]{9}$/.test(compact)) {
+    return `+27${compact.slice(1)}`;
+  }
+
+  if (/^27[0-9]{9}$/.test(compact)) {
+    return `+${compact}`;
+  }
+
+  throw new Error("WhatsApp number must be a valid South African E.164 number, for example +27821234567");
+}
+
 export async function getSettings() {
   try {
     const { data, error } = await serviceRoleClient
@@ -26,7 +48,7 @@ export async function updateSettings(formData: FormData) {
         store_name: formData.get("store_name") as string,
         contact_email: formData.get("contact_email") as string,
         contact_phone: formData.get("contact_phone") as string,
-        whatsapp_number: formData.get("whatsapp_number") as string,
+        whatsapp_number: normalizePhone(formData.get("whatsapp_number") as string),
         free_shipping_threshold_zar: formData.get("free_shipping_threshold_zar") 
           ? parseFloat(formData.get("free_shipping_threshold_zar") as string) 
           : null,

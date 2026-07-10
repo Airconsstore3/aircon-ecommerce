@@ -74,7 +74,7 @@ export default function DealsClient({ deals }: DealsClientProps) {
                 variant="ghost"
                 className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
               >
-                <a href="/enquire">Get a Quote</a>
+                <a href="/checkout">Get a Quote</a>
               </Button>
             </div>
           </div>

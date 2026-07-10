@@ -42,7 +42,7 @@ export default function InstallationPage() {
                 variant="ghost"
                 className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
               >
-                <Link href="/enquire">Get a Quote</Link>
+                <Link href="/checkout">Get a Quote</Link>
               </Button>
             </div>
             <div className="aircon-angled-button-wrap">
@@ -105,7 +105,7 @@ export default function InstallationPage() {
                   className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                   asChild
                 >
-                  <Link href="/enquire">Get Quote</Link>
+                  <Link href="/checkout">Get Quote</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -153,7 +153,7 @@ export default function InstallationPage() {
                   className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                   asChild
                 >
-                  <Link href="/enquire">Request Survey</Link>
+                  <Link href="/checkout">Request Survey</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -385,7 +385,7 @@ export default function InstallationPage() {
             className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             asChild
           >
-            <Link href="/enquire">Book Now</Link>
+            <Link href="/checkout">Book Now</Link>
           </Button>
         </div>
       </section>

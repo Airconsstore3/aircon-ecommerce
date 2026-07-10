@@ -210,7 +210,7 @@ const OrderHistory = ({
                         )}
                       </div>
                     ) : (
-                      <Link href={`/track/${order.orderNumber}`}>
+                      <Link href="/account/orders">
                         <Button
                           variant="outline"
                           size="sm"

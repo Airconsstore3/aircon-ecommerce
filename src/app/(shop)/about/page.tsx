@@ -137,7 +137,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Shield className="size-5" />
-              <span>PayFast Secured</span>
+              <span>Secure Requests</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Award className="size-5" />
@@ -178,7 +178,7 @@ export default function AboutPage() {
                 className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                 asChild
               >
-                <Link href="/enquire">Get a Free Quote</Link>
+                <Link href="/checkout">Get a Free Quote</Link>
               </Button>
             </div>
           </div>

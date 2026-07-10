@@ -125,7 +125,7 @@ export function CartDrawer() {
               className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
               asChild
             >
-              <Link href="/enquire" onClick={() => setOpen(false)}>
+              <Link href="/checkout" onClick={() => setOpen(false)}>
                 Request Quote
               </Link>
             </Button>

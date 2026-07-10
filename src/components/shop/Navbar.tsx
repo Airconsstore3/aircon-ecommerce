@@ -1,6 +1,6 @@
 "use client";
 
-import { ShoppingCart, Search, User, Menu, HeartHandshake, HelpCircle, Heart, LogOut, History, CreditCard, Settings, FileQuestion, LifeBuoy, Bookmark, Bell, Star, MessageCircleHeart, ThumbsUp, Bug } from "lucide-react";
+import { ShoppingCart, Search, User, Menu, HeartHandshake, HelpCircle, Heart, LogOut, History, Settings, FileQuestion, LifeBuoy, Bookmark, Bell, Star, MessageCircleHeart, ThumbsUp, Bug } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,6 @@ const sideMenu = [
   [
     { label: "Account", href: "/account", icon: User },
     { label: "Purchase History", href: "/account/orders", icon: History },
-    { label: "Payment Methods", href: "/account/payment", icon: CreditCard },
     { label: "Account Settings", href: "/account/settings", icon: Settings },
     { label: "Sign Out", href: "/auth/logout", icon: LogOut },
   ],

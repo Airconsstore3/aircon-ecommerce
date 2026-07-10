@@ -219,31 +219,13 @@ export default function CartPage() {
           </CardContent>
         </Card>
 
-        {/* Payment Methods */}
-        <div className="text-center mb-8">
-          <p className="text-sm text-muted-foreground mb-3">We accept:</p>
-          <div className="flex flex-wrap justify-center gap-4 text-xs text-muted-foreground">
-            <span>Visa</span>
-            <span>•</span>
-            <span>Mastercard</span>
-            <span>•</span>
-            <span>Ozow</span>
-            <span>•</span>
-            <span>SnapScan</span>
-            <span>•</span>
-            <span>Mobicred</span>
-            <span>•</span>
-            <span>Yoco</span>
-          </div>
-        </div>
-
         {/* CTA Buttons */}
         <div className="space-y-3">
           <Button
             className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
             asChild
           >
-            <Link href="/enquire">Request Quote</Link>
+            <Link href="/checkout">Request Quote</Link>
           </Button>
           <Button
             variant="outline"

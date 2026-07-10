@@ -64,7 +64,6 @@ interface EcommerceFooter20Props {
   newsletter?: NewsletterData;
   socialLinks?: SocialLink[];
   footerLinks?: FooterLinksSection[];
-  paymentMethods?: string[];
   submenuLinks?: {
     text: string;
     link: string;
@@ -236,20 +235,10 @@ const FOOTER_DATA = {
     "We provide top-quality air conditioning solutions for residential and commercial spaces, with professional installation, maintenance, and repair services.",
 };
 
-const PAYMENT_METHODS = [
-  "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/payment-methods/amazonpay.svg",
-  "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/payment-methods/applepay.svg",
-  "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/payment-methods/mastercard.svg",
-  "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/payment-methods/paypal.svg",
-  "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/payment-methods/visa.svg",
-  "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/payment-methods/discover.svg",
-];
-
 const EcommerceFooter20 = ({
   newsletter = NEWSLETTER_DATA,
   socialLinks = SOCIAL_MEDIA_LINKS,
   footerLinks = FOOTER_LINKS,
-  paymentMethods = PAYMENT_METHODS,
   submenuLinks = SUBMENU,
   footerData = FOOTER_DATA,
   className,
@@ -300,8 +289,6 @@ const EcommerceFooter20 = ({
               <Separator className="max-lg:hidden" />
               <FooterLinksSection sections={footerLinks} />
               <Separator className="max-lg:hidden" />
-              <PaymentMethods cards={paymentMethods} />
-              <Separator />
               <div className="space-y-8">
                 <FooterSubMenu links={submenuLinks} />
                 <p className="text-sm font-light">© 2025 Aircons Store</p>
@@ -473,18 +460,6 @@ const AccordionItems = ({ sections }: { sections: FooterLinksSection[] }) => {
         </AccordionItem>
       ))}
     </Fragment>
-  );
-};
-
-const PaymentMethods = ({ cards }: { cards: string[] }) => {
-  return (
-    <ul className="flex flex-wrap items-center gap-3">
-      {cards.map((card) => (
-        <li key={crypto.randomUUID()}>
-          <img className="w-9.5" src={card} alt="card" />
-        </li>
-      ))}
-    </ul>
   );
 };
 

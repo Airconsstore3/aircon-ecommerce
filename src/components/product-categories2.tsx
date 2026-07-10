@@ -121,7 +121,7 @@ const SolutionCard = ({
         <div className="absolute bottom-[15px] left-0 md:left-[42px] right-0">
           <ul className="flex items-center space-x-10 list-none p-0 m-0">
             <li>
-              <Link href="/enquire">
+              <Link href="/checkout">
                 <div className="aircon-angled-button-wrap">
                   <button className="aircon-angled-button">
                     Enquire

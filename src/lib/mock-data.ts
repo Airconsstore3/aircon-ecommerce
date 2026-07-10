@@ -524,15 +524,15 @@ export const mockOrderTracking: OrderTracking[] = [
     order_id: 'order-1',
     status: 'payment_sent',
     note: 'Payment link sent to customer',
-    internal_note: 'PayFast payment initiated',
+    internal_note: 'Checkout request submitted',
     created_at: '2025-02-01T10:30:00Z',
   },
   {
     id: 'track-2',
     order_id: 'order-1',
     status: 'paid',
-    note: 'Payment received via PayFast',
-    internal_note: 'ITN webhook verified - payment successful',
+    note: 'Request confirmed by customer',
+    internal_note: 'Customer confirmation completed',
     created_at: '2025-02-01T14:22:00Z',
   },
   {

@@ -1079,7 +1079,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                     asChild
                     className="h-[42px] w-full bg-[#1E3A5F] px-8 font-medium uppercase tracking-wider text-white transition-colors hover:bg-[#152d4a] sm:w-auto sm:flex-1"
                   >
-                    <Link href="/enquire">Request Quote</Link>
+                    <Link href="/checkout">Request Quote</Link>
                   </Button>
                 ) : stockStatus === "sold_out" ? (
                   <Button
@@ -1242,14 +1242,14 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
             >
               Other options
             </h2>
-            <div className="grid grid-cols-1 gap-0 border border-gray-200 md:grid-cols-2">
-              {relatedProducts.slice(0, 2).map((related) => {
+            <div className="grid grid-cols-1 divide-y divide-gray-200 border border-gray-200 sm:grid-cols-2 lg:grid-cols-4 lg:divide-x">
+              {relatedProducts.slice(0, 4).map((related) => {
                 const relatedPoints = getDescriptionPoints(related.description);
                 const relatedPrice = related.sale_price_zar ?? related.price_zar;
                 return (
                   <div
                     key={related.id}
-                    className="flex flex-col border-b border-gray-200 p-6 last:border-b-0 md:border-b-0 md:[&:not(:last-child)]:border-r"
+                    className="flex flex-col p-6"
                   >
                     <Link href={`/products/${related.slug}`} className="mb-6 flex flex-1 items-center justify-center">
                       <img
@@ -1275,7 +1275,7 @@ export function ProductDetailClient({ product, relatedProducts }: ProductDetailC
                     <div className="mt-auto">
                       {related.is_enquiry_only ? (
                         <Link
-                          href="/enquire"
+                          href="/checkout"
                           className="flex h-[48px] w-full items-center justify-center bg-[#1E3A5F] px-6 font-medium uppercase tracking-wider text-white transition-colors hover:bg-[#152d4a]"
                         >
                           Request Quote

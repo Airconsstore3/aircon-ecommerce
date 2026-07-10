@@ -102,7 +102,7 @@ export default function MaintenancePage() {
                 variant="ghost"
                 className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
               >
-                <Link href="/enquire">Get a Quote</Link>
+                <Link href="/checkout">Get a Quote</Link>
               </Button>
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function MaintenancePage() {
                     className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                     asChild
                   >
-                    <Link href="/enquire">Get Started</Link>
+                    <Link href="/checkout">Get Started</Link>
                   </Button>
                 </div>
               </div>

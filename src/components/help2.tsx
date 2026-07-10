@@ -143,7 +143,7 @@ const Help2 = ({
                   variant="ghost"
                   className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent flex-1"
                 >
-                  <Link href="/enquire" className="flex items-center justify-center">
+                  <Link href="/checkout" className="flex items-center justify-center">
                     <MessageSquare className="mr-2 size-4" />
                     Live Chat
                   </Link>

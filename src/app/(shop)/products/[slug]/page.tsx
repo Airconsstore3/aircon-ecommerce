@@ -153,11 +153,11 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     },
   };
 
-  // Fetch related products (same type, excluding current)
+  // Fetch related products (same BTU range, excluding current)
   const { data: relatedRaw } = await supabase
     .from("products")
     .select("id, name, slug, brand, type, price_zar, sale_price_zar, images, description, is_enquiry_only")
-    .eq("type", product.type)
+    .eq("btu_range", product.btu_range)
     .eq("is_published", true)
     .neq("id", product.id)
     .order("is_featured", { ascending: false })

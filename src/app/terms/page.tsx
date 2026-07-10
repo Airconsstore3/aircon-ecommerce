@@ -33,7 +33,7 @@ export default function TermsPage() {
               2. Payment Terms
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              All payments are processed through PayFast, a PCI-compliant payment gateway. We do not store credit card information on our servers.
+              Payment details are confirmed after we review your request. We do not collect or store card details through this checkout request flow.
             </p>
             <h3 className="text-lg font-normal text-[#1E3A5F] mt-4 mb-2">
               Deposit Requirement

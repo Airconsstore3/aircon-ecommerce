@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/components/shop/CartProvider";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -36,6 +38,10 @@ export default function RootLayout({
         <CartProvider>
           <main className="min-h-screen">{children}</main>
         </CartProvider>
+        {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
+          <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />
+        )}
+        <CookieConsentBanner />
         <Toaster position="bottom-right" richColors />
       </body>
     </html>

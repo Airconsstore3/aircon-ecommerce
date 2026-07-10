@@ -37,10 +37,28 @@ export async function middleware(request: NextRequest) {
     return response;
   }
   
+  if (pathname.startsWith('/order-confirmed/')) {
+    response.headers.set('Referrer-Policy', 'no-referrer');
+    response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+  }
+
   // Protect admin routes (except admin login)
   if (isAdminRoute && !isAdminLoginRoute && !user) {
     const redirectUrl = new URL('/admin/login', request.url);
     return NextResponse.redirect(redirectUrl);
+  }
+
+  if (isAdminRoute && !isAdminLoginRoute && user) {
+    const { data: admin } = await supabase
+      .from('admins')
+      .select('user_id')
+      .eq('user_id', user.id)
+      .maybeSingle();
+
+    if (!admin) {
+      const redirectUrl = new URL('/admin/login', request.url);
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   // Redirect authenticated admin users from admin login to admin dashboard
