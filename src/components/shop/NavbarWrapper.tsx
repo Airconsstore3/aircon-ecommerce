@@ -7,6 +7,8 @@ import {
   LogOut,
 } from "lucide-react";
 
+import { signOut } from "@/app/(auth)/actions";
+
 export function NavbarWrapper() {
   return (
     <Navbar
@@ -18,17 +20,17 @@ export function NavbarWrapper() {
         },
       }}
       menu={[
-        { label: "Latest Deals", href: "/products?sale=true" },
+        { label: "Latest Deals", href: "/deals" },
         { label: "All Aircons", href: "/products" },
         { label: "Residential", href: "/categories/residential" },
         { label: "Commercial", href: "/categories/commercial" },
         { label: "Installation", href: "/installation" },
         { label: "Maintenance", href: "/maintenance" },
         { label: "Repairs", href: "/repairs" },
-        { label: "Warranty", href: "/categories/warranty" },
+        { label: "Warranty", href: "/warranty" },
         { label: "Accessories", href: "/categories/accessories" },
         { label: "About Us", href: "/about" },
-        { label: "Sale", href: "/products?sale=true" },
+        { label: "Return Policy", href: "/return-policy" },
       ]}
       sideMenu={[
         [
@@ -36,7 +38,7 @@ export function NavbarWrapper() {
           { label: "My Warranties", href: "/account/warranties", icon: User },
           { label: "My Subscriptions", href: "/account/subscriptions", icon: User },
           { label: "My Profile", href: "/account/profile", icon: User },
-          { label: "Sign Out", href: "#", icon: LogOut },
+          { label: "Sign Out", icon: LogOut, onClick: () => signOut() },
         ],
       ]}
     />

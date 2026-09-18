@@ -1,21 +1,13 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
+import { ResetPasswordForm } from "./reset-password-form";
 
-export default async function AccountLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function ResetPasswordPage() {
   const supabase = createClient(await cookies());
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    redirect("/login");
-  }
-
-  return <>{children}</>;
+  return <ResetPasswordForm hasSession={Boolean(user)} />;
 }

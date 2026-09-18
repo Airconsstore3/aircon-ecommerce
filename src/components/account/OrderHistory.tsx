@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Calendar, CheckCircle, CreditCard, MessageSquare, Package, Search, Star, Truck, Wrench } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle, CreditCard, MessageSquare, Package, Search, Star, Truck, Wrench, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
-type OrderStatus = "enquiry" | "confirmed" | "paid" | "scheduled" | "in_progress" | "completed";
+type OrderStatus = "enquiry" | "confirmed" | "paid" | "scheduled" | "in_progress" | "completed" | "cancelled";
 
 interface OrderItem {
   name: string;
@@ -20,7 +20,7 @@ interface OrderItem {
   itemType: "unit" | "installation" | "kit" | "service";
 }
 
-interface Order {
+export interface Order {
   id: string;
   orderNumber: string;
   orderDate: string;
@@ -33,65 +33,7 @@ interface Order {
   completionDate?: string;
 }
 
-const DEFAULT_ORDERS: Order[] = [
-  {
-    id: "1",
-    orderNumber: "ENQ-2025-00847",
-    orderDate: "January 15, 2025",
-    orderType: "installation",
-    status: "in_progress",
-    total: 8799.0,
-    estimatedDelivery: "January 20-22, 2025",
-    items: [
-      {
-        name: "Samsung 9000BTU Inverter Split Wall",
-        image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/clothes/stylish-maroon-sneaker.png",
-        price: 6999.0,
-        itemType: "unit",
-      },
-      {
-        name: "Standard Installation",
-        price: 1800.0,
-        itemType: "installation",
-      },
-    ],
-  },
-  {
-    id: "2",
-    orderNumber: "ENQ-2025-00831",
-    orderDate: "January 8, 2025",
-    orderType: "delivery",
-    status: "scheduled",
-    total: 8999.0,
-    estimatedDelivery: "January 25-27, 2025",
-    items: [
-      {
-        name: "LG 12000BTU Inverter Split",
-        image: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/ecommerce/clothes/bicolor-crewneck-sweatshirt-with-embroidered-logo.png",
-        price: 8999.0,
-        itemType: "unit",
-      },
-    ],
-  },
-  {
-    id: "3",
-    orderNumber: "ENQ-2024-00798",
-    orderDate: "December 28, 2024",
-    orderType: "installation",
-    status: "completed",
-    total: 2499.0,
-    completionDate: "January 5, 2025",
-    items: [
-      {
-        name: "Annual Maintenance Plan",
-        price: 2499.0,
-        itemType: "service",
-      },
-    ],
-  },
-];
-
-const statusSteps: { key: OrderStatus; label: string; icon: any }[] = [
+const statusSteps: { key: OrderStatus; label: string; icon: LucideIcon }[] = [
   { key: "enquiry", label: "Enquiry", icon: MessageSquare },
   { key: "confirmed", label: "Confirmed", icon: CheckCircle },
   { key: "paid", label: "Paid", icon: CreditCard },
@@ -110,7 +52,7 @@ interface OrderHistoryProps {
 }
 
 const OrderHistory = ({
-  orders = DEFAULT_ORDERS,
+  orders = [],
   className,
 }: OrderHistoryProps) => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -195,7 +137,14 @@ const OrderHistory = ({
                     </div>
 
                   <div className="flex items-center gap-4">
-                    {order.status === "completed" ? (
+                    {order.status === "cancelled" ? (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-none bg-red-50 px-3 py-1 text-xs font-medium tracking-wide text-red-700 uppercase dark:bg-red-950 dark:text-red-300"
+                      >
+                        Cancelled
+                      </Badge>
+                    ) : order.status === "completed" ? (
                       <div className="flex items-center gap-2">
                         <Badge
                           variant="secondary"
@@ -224,8 +173,8 @@ const OrderHistory = ({
                   </div>
                 </div>
 
-                {/* Status Timeline - Only show for non-completed */}
-                {order.status !== "completed" && (
+                {/* Status Timeline - Only show for non-completed, non-cancelled */}
+                {order.status !== "completed" && order.status !== "cancelled" && (
                   <div className="mb-10">
                     <div className="flex items-center justify-between gap-2 overflow-x-auto pb-2 -mx-2 px-2">
                       {statusSteps.map((step, index) => {
@@ -358,9 +307,26 @@ const OrderHistory = ({
         {/* Empty State */}
         {filteredOrders.length === 0 && (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <p className="text-sm text-muted-foreground">
-              No orders found matching &quot;{searchQuery}&quot;
-            </p>
+            {orders.length === 0 ? (
+              <>
+                <p className="text-sm text-muted-foreground">
+                  You haven&apos;t placed any orders yet.
+                </p>
+                <Link href="/products" className="mt-4">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 rounded-none text-xs tracking-wide uppercase"
+                  >
+                    Browse products
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No orders found matching &quot;{searchQuery}&quot;
+              </p>
+            )}
           </div>
         )}
       </div>

@@ -4,15 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, CheckCircle, ArrowLeft } from "lucide-react";
-import { useActionState, useState } from "react";
+import { Lock } from "lucide-react";
+import { useActionState } from "react";
 import Link from "next/link";
 
-import { requestPasswordReset } from "../actions";
+import { updatePassword } from "../actions";
 
-export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
-  const [state, formAction, isPending] = useActionState(requestPasswordReset, {
+export function ResetPasswordForm({ hasSession }: { hasSession: boolean }) {
+  const [state, formAction, isPending] = useActionState(updatePassword, {
     error: null,
     success: false,
   });
@@ -29,42 +28,44 @@ export default function ForgotPasswordPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {!state.success ? (
+            {hasSession ? (
               <div className="space-y-6">
-                {/* Back Link */}
-                <Link
-                  href="/login"
-                  className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-                >
-                  <ArrowLeft className="size-4 mr-1" />
-                  Back to login
-                </Link>
-
-                {/* Lock Icon */}
                 <div className="flex justify-center">
                   <Lock className="size-12 text-[#1E3A5F]" />
                 </div>
 
                 <div className="text-center space-y-2">
                   <h1 className="text-2xl font-normal text-[#1E3A5F]">
-                    Reset your password
+                    Choose a new password
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    Enter your email and we will send you a reset link
+                    Enter and confirm your new password below
                   </p>
                 </div>
 
                 <form action={formAction} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="password">New password</Label>
                     <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="m@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      id="password"
+                      name="password"
+                      type="password"
+                      placeholder="At least 8 characters"
                       required
+                      minLength={8}
+                      className="rounded-lg"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm new password</Label>
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      placeholder="Repeat your new password"
+                      required
+                      minLength={8}
                       className="rounded-lg"
                     />
                   </div>
@@ -80,35 +81,31 @@ export default function ForgotPasswordPage() {
                     disabled={isPending}
                     className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                   >
-                    {isPending ? "Sending..." : "Send Reset Link"}
+                    {isPending ? "Updating..." : "Update Password"}
                   </Button>
                 </form>
               </div>
             ) : (
-              /* Success State */
               <div className="space-y-6 text-center">
                 <div className="flex justify-center">
-                  <div className="bg-emerald-100 rounded-full p-4">
-                    <CheckCircle className="size-12 text-emerald-600" />
-                  </div>
+                  <Lock className="size-12 text-[#1E3A5F]" />
                 </div>
 
                 <div className="space-y-2">
                   <h1 className="text-2xl font-normal text-[#1E3A5F]">
-                    Check your email
+                    Reset link expired
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    If an account exists for{" "}
-                    <span className="font-medium text-foreground">{email}</span>
-                    , we sent a reset link to it.
+                    This password reset link is invalid or has expired. Please
+                    request a new one.
                   </p>
                 </div>
 
                 <Link
-                  href="/login"
+                  href="/forgot-password"
                   className="inline-flex items-center text-sm text-[#1E3A5F] hover:underline font-medium"
                 >
-                  Back to login
+                  Request a new reset link
                 </Link>
               </div>
             )}

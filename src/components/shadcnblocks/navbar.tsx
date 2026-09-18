@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import {
   ChevronDown,
   History,
@@ -74,8 +74,10 @@ type Link = {
   href: string;
 };
 
-interface SideMenuItem extends Link {
+interface SideMenuItem extends Omit<Link, "href"> {
+  href?: string;
   icon: LucideIcon;
+  onClick?: () => void;
 }
 
 type HelpfullLinkGroup = {
@@ -182,7 +184,7 @@ const MENU = [
           { label: "Installation", href: "/installation" },
           { label: "Maintenance Plans", href: "/maintenance" },
           { label: "Repairs & Callouts", href: "/repairs" },
-          { label: "Extended Warranty", href: "/categories/warranty" },
+          { label: "Extended Warranty", href: "/warranty" },
         ],
       },
       {
@@ -197,7 +199,7 @@ const MENU = [
     ],
   },
   { label: "About Us", href: "/about" },
-  { label: "Sale", href: "/products?sale=true" },
+  { label: "Sale", href: "/deals" },
 ];
 
 const SIDE_MENU = [
@@ -245,7 +247,7 @@ const Navbar = ({
   }, []);
 
   return (
-    <header className={cn("fixed inset-x-0 top-0 z-[60]", className)}>
+    <header className={cn("sticky top-0 z-[60] w-full", className)}>
       <div className="h-[var(--secondary-nav-height)]">
         <SecondaryMenu menu={menu} home={home} sideMenu={sideMenu} />
       </div>
@@ -265,7 +267,7 @@ const SearchForm = () => {
   );
 };
 
-const MobileMenu = ({ menu, navMenu }: MobileMenuProps) => {
+const MobileMenu = ({ menu, navMenu, homeLink }: MobileMenuProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -277,41 +279,100 @@ const MobileMenu = ({ menu, navMenu }: MobileMenuProps) => {
           <Menu />
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="hide-scrollbar w-full overflow-auto border-none bg-[#0A2540]/95 p-0 text-white backdrop-blur-md sm:max-w-full">
-        <div className="px-3 py-4">
-          <SheetHeader>
-            <SheetTitle className="sr-only">Menu</SheetTitle>
-          </SheetHeader>
-          <div className="mb-6 flex items-center gap-3 border border-white px-3 py-3">
-            <input
-              aria-label="Search"
-              placeholder="Search"
-              className="min-w-0 flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/70"
-            />
-            <Search className="size-5" />
-          </div>
-          <div>
-            {navMenu.map(({ href, label }, index) => (
-              <a
-                key={`mobile-nav-${index}`}
-                href={href}
-                className="block border-b border-white/20 py-4 font-[var(--font-google-sans-flex)] text-sm font-medium uppercase tracking-wider text-white first:border-t"
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-          {menu.map((group, index) => (
-            <div key={index}>
-              {group.map(({ href, label }, index) => (
-                <a
-                  href={href}
-                  className="block border-b border-white/20 py-4 font-[var(--font-google-sans-flex)] text-sm font-medium uppercase tracking-wider text-white"
-                  key={`side-menu-item-${index}`}
-                >
-                  {label}
-                </a>
-              ))}
+      <SheetContent
+        side="right"
+        className="mobile-drawer hide-scrollbar w-[85vw] overflow-hidden border-none bg-[#16324F] p-0 text-white sm:max-w-[85vw]"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          paddingBottom: "calc(32px + env(safe-area-inset-bottom))",
+        }}
+      >
+        <SheetHeader className="sr-only">
+          <SheetTitle>Menu</SheetTitle>
+        </SheetHeader>
+
+        {/* Drawer header — logo + thin divider */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4">
+          <span className="font-[var(--font-google-sans-flex)] text-[15px] font-semibold uppercase tracking-[0.15em] text-white/90">
+            Aircons Store
+          </span>
+          {/* Close button — 24px icon, top right, rotation animation */}
+          <SheetTrigger asChild>
+            <button
+              aria-label="Close menu"
+              className="mobile-drawer-close flex size-10 items-center justify-center text-white/70 transition-all duration-200 hover:text-white active:scale-95"
+            >
+              <svg className="size-6 transition-transform duration-300 ease-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+          </SheetTrigger>
+        </div>
+        <div className="h-px w-full bg-white/10" />
+
+        {/* Navigation items — 60px height, 20px font, 600 weight, white.
+            1px dividers at rgba(255,255,255,.10). Touch feedback on tap.
+            Active state: 3px brand blue bar on the left. */}
+        <nav className="flex flex-col">
+          {navMenu.map(({ href, label }, index) => (
+            <a
+              key={`mobile-nav-${index}`}
+              href={href}
+              className="mobile-nav-item group relative flex h-[60px] items-center px-6 font-[var(--font-google-sans-flex)] text-[20px] font-semibold leading-none tracking-[0.01em] text-white transition-colors duration-200 hover:bg-white/5 active:bg-white/5"
+            >
+              {/* Active indicator — 3px brand blue bar, 24px tall, left edge */}
+              <span className="absolute left-0 top-1/2 h-6 w-0 -translate-y-1/2 bg-[#1C99D6] transition-all duration-300 ease-out group-hover:w-[3px]" />
+              {label}
+              {/* Divider — only between items, not above first or below last */}
+              {index < navMenu.length - 1 && (
+                <span className="absolute bottom-0 left-6 right-6 h-px bg-white/10" />
+              )}
+            </a>
+          ))}
+        </nav>
+
+        {/* Account section — separated by 40px gap from navigation.
+            Smaller font (18px), weight 500. */}
+        <div className="mt-10">
+          <div className="h-px w-full bg-white/10" />
+          {menu.map((group, groupIndex) => (
+            <div key={`side-group-${groupIndex}`}>
+              {group.map(({ href, label, icon: Icon, onClick }, index) => {
+                const itemClass =
+                  "mobile-nav-item group relative flex h-[52px] w-full items-center gap-3 px-6 text-left font-[var(--font-google-sans-flex)] text-[18px] font-medium leading-none tracking-[0.01em] text-white/80 transition-colors duration-200 hover:bg-white/5 hover:text-white active:bg-white/5";
+                const contents = (
+                  <>
+                    {/* Active indicator */}
+                    <span className="absolute left-0 top-1/2 h-6 w-0 -translate-y-1/2 bg-[#1C99D6] transition-all duration-300 ease-out group-hover:w-[3px]" />
+                    {Icon && <Icon className="size-4 text-white/50" strokeWidth={1.5} />}
+                    {label}
+                    {/* Divider */}
+                    {index < group.length - 1 && (
+                      <span className="absolute bottom-0 left-6 right-6 h-px bg-white/10" />
+                    )}
+                  </>
+                );
+                return onClick ? (
+                  <button
+                    type="button"
+                    onClick={onClick}
+                    className={itemClass}
+                    key={`side-menu-item-${index}`}
+                  >
+                    {contents}
+                  </button>
+                ) : (
+                  <a
+                    href={href}
+                    className={itemClass}
+                    key={`side-menu-item-${index}`}
+                  >
+                    {contents}
+                  </a>
+                );
+              })}
             </div>
           ))}
         </div>
@@ -325,8 +386,8 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
   const { itemCount } = useCart();
 
   return (
-    <div className="border-b border-[#1C99D6]/15 bg-white px-4 py-1 shadow-sm md:px-6">
-      <div className="relative flex h-full flex-col items-center justify-center gap-0 md:justify-start md:gap-1">
+    <div className="h-full border-b border-[#1C99D6]/15 bg-white px-4 py-1 shadow-sm md:px-6">
+      <div className="relative flex h-full flex-col items-center justify-center gap-0 md:justify-start md:gap-1 md:pb-[6px]">
         <Logo url={home.href} className="min-w-0 shrink-0">
           {home.logo.src && (
             <LogoImage
@@ -371,7 +432,7 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
             )}
           </div>
         </div>
-        <div className="hidden w-full justify-center overflow-x-auto lg:flex">
+        <div className="hidden w-full flex-nowrap items-center justify-center overflow-visible whitespace-nowrap lg:flex">
           <NavigationMenu
             className="[&_a]:bg-transparent [&_a]:hover:bg-accent-foreground/10 [&_button]:bg-transparent [&_button]:hover:bg-accent-foreground/10"
             viewport={isMobile}
@@ -386,10 +447,12 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
                       asChild
                       className={cn(
                         navigationMenuTriggerStyle(),
-                        "h-auto rounded-none border border-transparent bg-transparent px-2.5 py-1 font-[var(--font-google-sans-flex)] text-[10px] font-medium uppercase tracking-wider text-[#0A2540] transition-colors hover:border-[#2599d4] hover:bg-[#2599d4]/10 hover:text-[#2599d4] xl:text-xs",
+                        "h-auto -translate-y-[4px] rounded-none border border-transparent bg-transparent px-2.5 py-1 font-[var(--font-google-sans-flex)] text-[10px] font-medium uppercase tracking-wider text-[#0A2540] transition-colors hover:border-[#2599d4] hover:bg-[#2599d4]/10 hover:text-[#2599d4] xl:text-xs",
                       )}
                     >
-                      <a href={item.href}>{item.label}</a>
+                      <a href={item.href}>
+                        <span className="inline-block">{item.label}</span>
+                      </a>
                     </NavigationMenuLink>
                   )}
                 </NavigationMenuItem>
@@ -447,9 +510,9 @@ const SecondaryMenuMobile = ({ menu, home }: SecondaryMenuMobileProps) => {
           <div className="p-6">
             {menu.map(({ sections, label, href }, index) => (
               <div key={index}>
-                <h2 className="border-b py-4 text-lg leading-normal font-normal">
+                <div className="border-b py-4 text-lg leading-normal font-normal">
                   {href ? <a href={href}>{label}</a> : <span>{label}</span>}
-                </h2>
+                </div>
                 {sections && (
                   <Accordion type="multiple">
                     {sections.map(({ id, label, items }) => (
@@ -490,7 +553,7 @@ const DesktopMenuDropdownItem = ({
 }: DesktopMenuDropdownItemProps) => {
   const [activeSectionId, setActiveSectionId] = useState<string>();
 
-  const sharedClasses = "h-full space-y-2 overflow-auto pt-6 pb-2";
+  const sharedClasses = "h-full space-y-2 overflow-visible pt-6 pb-2";
 
   const MenuItemClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const selectedSectionId =
@@ -515,7 +578,7 @@ const DesktopMenuDropdownItem = ({
 
   return (
     <Fragment>
-      <NavigationMenuTrigger>{label}</NavigationMenuTrigger>
+      <NavigationMenuTrigger className="-translate-y-[4px]"><span className="inline-block">{label}</span></NavigationMenuTrigger>
       <NavigationMenuContent className="p-0 bg-white">
         <div
           style={
@@ -527,9 +590,9 @@ const DesktopMenuDropdownItem = ({
         >
           <div>
             <div className={cn("w-60", sharedClasses)}>
-              <h2 className="px-6 text-sm font-normal">
+              <div className="px-6 text-sm font-normal">
                 <a href={href}>{label}</a>
-              </h2>
+              </div>
               <ol>
                 {sections.map((section, index) => (
                   <li key={index}>
@@ -557,9 +620,9 @@ const DesktopMenuDropdownItem = ({
           {activeSectionData && (
             <div>
               <div className={cn("w-50 bg-accent", sharedClasses)}>
-                <h2 className="px-6 text-sm font-normal">
+                <div className="px-6 text-sm font-normal">
                   {activeSectionData.label}
-                </h2>
+                </div>
                 <ol>
                   {activeSectionData.items.map((item, index) => (
                     <li key={index}>

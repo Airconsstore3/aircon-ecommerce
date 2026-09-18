@@ -4,18 +4,57 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Lock, CheckCircle, ArrowLeft } from "lucide-react";
-import { useActionState, useState } from "react";
+import { AlertTriangle, CheckCircle } from "lucide-react";
+import { useActionState, useMemo, useSyncExternalStore } from "react";
 import Link from "next/link";
 
-import { requestPasswordReset } from "../actions";
+import { requestPasswordReset } from "@/app/(auth)/actions";
 
-export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("");
+// location.search + location.hash via useSyncExternalStore — reads URL
+// params and the #error fragment client-side without setState-in-effect
+// or hydration mismatch (server snapshot is empty).
+function useLocationParts() {
+  return useSyncExternalStore(
+    (onChange) => {
+      window.addEventListener("hashchange", onChange);
+      window.addEventListener("popstate", onChange);
+      return () => {
+        window.removeEventListener("hashchange", onChange);
+        window.removeEventListener("popstate", onChange);
+      };
+    },
+    () => `${window.location.search}${window.location.hash.replace(/^#/, "?")}`,
+    () => "",
+  );
+}
+
+const ERROR_MESSAGES: Record<string, string> = {
+  otp_expired:
+    "This link has expired or was already used. Reset links are single-use — request a new one below.",
+  access_denied: "This link is invalid or has expired. Please request a new one.",
+  auth_callback_failed:
+    "We couldn't verify that link. It may have expired — request a new one below.",
+};
+
+export default function AuthErrorPage() {
+  const locationParts = useLocationParts();
   const [state, formAction, isPending] = useActionState(requestPasswordReset, {
     error: null,
     success: false,
   });
+
+  const { code, description } = useMemo(() => {
+    const params = new URLSearchParams(locationParts);
+    return {
+      code: params.get("error_code") || params.get("error") || "",
+      description: params.get("error_description") || "",
+    };
+  }, [locationParts]);
+
+  const message =
+    ERROR_MESSAGES[code] ||
+    description ||
+    "Something went wrong with that link. Please request a new one.";
 
   return (
     <section className="min-h-screen bg-[#FAFAF9] flex items-center justify-center pt-[220px] pb-12 px-4 md:pt-[180px]">
@@ -31,27 +70,17 @@ export default function ForgotPasswordPage() {
           <CardContent>
             {!state.success ? (
               <div className="space-y-6">
-                {/* Back Link */}
-                <Link
-                  href="/login"
-                  className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-                >
-                  <ArrowLeft className="size-4 mr-1" />
-                  Back to login
-                </Link>
-
-                {/* Lock Icon */}
                 <div className="flex justify-center">
-                  <Lock className="size-12 text-[#1E3A5F]" />
+                  <div className="bg-amber-100 rounded-full p-4">
+                    <AlertTriangle className="size-12 text-amber-600" />
+                  </div>
                 </div>
 
                 <div className="text-center space-y-2">
                   <h1 className="text-2xl font-normal text-[#1E3A5F]">
-                    Reset your password
+                    Link expired or invalid
                   </h1>
-                  <p className="text-sm text-muted-foreground">
-                    Enter your email and we will send you a reset link
-                  </p>
+                  <p className="text-sm text-muted-foreground">{message}</p>
                 </div>
 
                 <form action={formAction} className="space-y-4">
@@ -62,8 +91,6 @@ export default function ForgotPasswordPage() {
                       name="email"
                       type="email"
                       placeholder="m@example.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
                       required
                       className="rounded-lg"
                     />
@@ -80,12 +107,18 @@ export default function ForgotPasswordPage() {
                     disabled={isPending}
                     className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
                   >
-                    {isPending ? "Sending..." : "Send Reset Link"}
+                    {isPending ? "Sending..." : "Send a New Reset Link"}
                   </Button>
                 </form>
+
+                <Link
+                  href="/login"
+                  className="inline-flex w-full justify-center text-sm text-[#1E3A5F] hover:underline font-medium"
+                >
+                  Back to login
+                </Link>
               </div>
             ) : (
-              /* Success State */
               <div className="space-y-6 text-center">
                 <div className="flex justify-center">
                   <div className="bg-emerald-100 rounded-full p-4">
@@ -98,9 +131,8 @@ export default function ForgotPasswordPage() {
                     Check your email
                   </h1>
                   <p className="text-sm text-muted-foreground">
-                    If an account exists for{" "}
-                    <span className="font-medium text-foreground">{email}</span>
-                    , we sent a reset link to it.
+                    If an account exists for that address, we sent a new reset
+                    link to it.
                   </p>
                 </div>
 
