@@ -10,7 +10,8 @@ export async function filterProducts(
   let query = supabase
     .from('products')
     .select('*')
-    .eq('is_published', true);
+    .eq('is_published', true)
+    .eq('is_parent_product', true);
 
   switch (filterType) {
     case 'deals':
@@ -27,11 +28,11 @@ export async function filterProducts(
       break;
 
     case 'commercial':
-      // Show aircons with BTU >= 32000
+      // Show aircons with BTU >= 40000
       query = query
         .eq('type', 'aircon')
         .not('btu_range', 'is', null)
-        .gte('btu_range', 32000);
+        .gte('btu_range', 40000);
       break;
 
     case 'all-aircon':
@@ -61,6 +62,7 @@ export async function filterProducts(
           )
         `)
         .eq('is_published', true)
+        .eq('is_parent_product', true)
         .eq('categories.slug', categorySlug);
       break;
 
@@ -71,7 +73,14 @@ export async function filterProducts(
   const { data, error } = await query;
   
   if (error) {
-    console.error('Error filtering products:', error);
+    console.error('Error filtering products:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+      filterType,
+      categorySlug,
+    });
     return [];
   }
 

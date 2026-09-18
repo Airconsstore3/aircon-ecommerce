@@ -24,6 +24,52 @@ interface FilterOption {
   count: number;
 }
 
+interface FilterGroupProps {
+  groupId: string;
+  title: string;
+  options: FilterOption[];
+  fontClass: string;
+  getFilterValues: (groupId: string) => string[];
+  updateFilter: (groupId: string, value: string, checked: boolean) => void;
+}
+
+function FilterGroup({ groupId, title, options, fontClass, getFilterValues, updateFilter }: FilterGroupProps) {
+  return (
+    <AccordionItem value={groupId}>
+      <AccordionTrigger className={`text-sm font-normal hover:no-underline ${fontClass}`}>
+        {title}
+      </AccordionTrigger>
+      <AccordionContent>
+        <div className="space-y-2 pt-1">
+          {options.map((option) => {
+            const isChecked = getFilterValues(groupId).includes(option.value);
+            return (
+              <div key={option.value} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`${groupId}-${option.value}`}
+                  checked={isChecked}
+                  onCheckedChange={(checked) =>
+                    updateFilter(groupId, option.value, checked === true)
+                  }
+                />
+                <Label
+                  htmlFor={`${groupId}-${option.value}`}
+                  className={`flex-1 cursor-pointer text-sm font-normal ${fontClass}`}
+                >
+                  {option.label}
+                </Label>
+                <span className={`text-xs text-muted-foreground ${fontClass}`}>
+                  ({option.count})
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </AccordionContent>
+    </AccordionItem>
+  );
+}
+
 interface FilterSidebarProps {
   className?: string;
   isMobile?: boolean;
@@ -151,49 +197,6 @@ const FilterSidebar = ({
     router.push(`?${current.toString()}`, { scroll: false });
   };
 
-  const FilterGroup = ({
-    groupId,
-    title,
-    options,
-  }: {
-    groupId: string;
-    title: string;
-    options: { value: string; label: string; count: number }[];
-  }) => (
-    <AccordionItem value={groupId}>
-      <AccordionTrigger className={`text-sm font-normal hover:no-underline ${fontClass}`}>
-        {title}
-      </AccordionTrigger>
-      <AccordionContent>
-        <div className="space-y-2 pt-1">
-          {options.map((option) => {
-            const isChecked = getFilterValues(groupId).includes(option.value);
-            return (
-              <div key={option.value} className="flex items-center space-x-2">
-                <Checkbox
-                  id={`${groupId}-${option.value}`}
-                  checked={isChecked}
-                  onCheckedChange={(checked) =>
-                    updateFilter(groupId, option.value, checked === true)
-                  }
-                />
-                <Label
-                  htmlFor={`${groupId}-${option.value}`}
-                  className={`flex-1 cursor-pointer text-sm font-normal ${fontClass}`}
-                >
-                  {option.label}
-                </Label>
-                <span className={`text-xs text-muted-foreground ${fontClass}`}>
-                  ({option.count})
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </AccordionContent>
-    </AccordionItem>
-  );
-
   const sidebarContent = (
     <div className={cn("space-y-6", className)}>
       {/* Header */}
@@ -213,9 +216,9 @@ const FilterSidebar = ({
 
       {/* Accordion Filter Groups */}
       <Accordion type="multiple" defaultValue={[]} className="w-full">
-        <FilterGroup groupId="category" title="Category" options={categoryOptions} />
-        <FilterGroup groupId="btu" title="BTU Capacity" options={btuOptions} />
-        <FilterGroup groupId="brand" title="Brand" options={brandOptions} />
+        <FilterGroup groupId="category" title="Category" options={categoryOptions} fontClass={fontClass} getFilterValues={getFilterValues} updateFilter={updateFilter} />
+        <FilterGroup groupId="btu" title="BTU Capacity" options={btuOptions} fontClass={fontClass} getFilterValues={getFilterValues} updateFilter={updateFilter} />
+        <FilterGroup groupId="brand" title="Brand" options={brandOptions} fontClass={fontClass} getFilterValues={getFilterValues} updateFilter={updateFilter} />
       </Accordion>
 
       <Separator />
@@ -232,8 +235,8 @@ const FilterSidebar = ({
           className="w-full"
         />
         <div className={`flex items-center justify-between text-sm ${fontClass}`}>
-          <span>R {priceRange[0].toLocaleString()}</span>
-          <span>R {priceRange[1].toLocaleString()}</span>
+          <span>R {priceRange[0].toLocaleString("en-ZA")}</span>
+          <span>R {priceRange[1].toLocaleString("en-ZA")}</span>
         </div>
       </div>
 

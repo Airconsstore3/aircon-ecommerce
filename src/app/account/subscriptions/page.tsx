@@ -161,7 +161,7 @@ export default function SubscriptionsPage() {
               No active subscriptions
             </h3>
             <p className="text-muted-foreground mb-6">
-              You don't have any active maintenance plan subscriptions.
+              You don&apos;t have any active maintenance plan subscriptions.
             </p>
             <Button
               variant="outline"

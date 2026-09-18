@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
 import { CartProvider } from "@/components/shop/CartProvider";
+import { CartDrawer } from "@/components/shop/CartDrawer";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { Toaster } from "sonner";
 
@@ -34,9 +35,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} ${googleSansFlex.variable} ${poppins.variable}`}>
+      <body className={`${inter.className} ${googleSansFlex.variable} ${poppins.variable} bg-white`}>
         <CartProvider>
-          <main className="min-h-screen">{children}</main>
+          <main className="min-h-screen bg-white">{children}</main>
+          <CartDrawer />
         </CartProvider>
         {process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY && (
           <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" strategy="afterInteractive" />

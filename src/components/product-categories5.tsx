@@ -100,7 +100,7 @@ const ProductCategories5 = ({
                     variant="ghost"
                     className="aircon-angled-button h-auto rounded-none hover:bg-transparent text-white"
                   >
-                    <Link href={category1.link}>Buy Now</Link>
+                    <Link href={category1.link}>Add to Cart</Link>
                   </Button>
                 </div>
               </div>

@@ -75,7 +75,7 @@ export default function TermsPage() {
               4. Warranty Terms
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              We provide warranty coverage on our workmanship and installed units according to the manufacturer's warranty terms.
+              We provide warranty coverage on our workmanship and installed units according to the manufacturer&apos;s warranty terms.
             </p>
             <h3 className="text-lg font-normal text-[#1E3A5F] mt-4 mb-2">
               What is Covered

@@ -155,7 +155,7 @@ export default function WarrantiesPage() {
               No warranties found
             </h3>
             <p className="text-muted-foreground mb-6">
-              You don't have any active warranty plans yet.
+              You don&apos;t have any active warranty plans yet.
             </p>
             <Button
               variant="outline"

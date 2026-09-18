@@ -98,7 +98,7 @@ const SAMSUNG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     ],
   },
   {
-    keywords: ["9000btu", "complete package", "inverter split wall unit"],
+    keywords: ["9000btu", "inverter split wall unit"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Samsung AR80 WindFree front.webp`,
       `${PRODUCT_IMAGE_BASE}/Samsung AR80 WindFree open.webp`,
@@ -497,9 +497,6 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  2.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Perfera Split  family.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp`,
     ],
   },
   {

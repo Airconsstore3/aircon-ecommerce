@@ -16,7 +16,7 @@ export function CookieConsentBanner() {
     }
 
     window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function gtag(){window.dataLayer.push(arguments);};
+    window.gtag = window.gtag || function gtag(...args: unknown[]){window.dataLayer.push(args);};
     window.gtag("consent", "default", {
       ad_storage: "denied",
       ad_user_data: "denied",
@@ -61,14 +61,24 @@ export function CookieConsentBanner() {
       )}
 
       {consent === null && (
-        <div className="fixed bottom-4 left-4 right-4 z-[100] mx-auto max-w-3xl rounded-xl border bg-white p-4 shadow-lg">
+        <div className="fixed bottom-4 left-4 right-4 z-[100] mx-auto max-w-3xl rounded-xl border border-slate-200 bg-white p-4 shadow-lg">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-slate-700">
               We use optional analytics and advertising cookies only with your consent. Essential security cookies remain active.
             </p>
             <div className="flex gap-2">
-              <button onClick={decline} className="rounded-lg border px-4 py-2 text-sm">Decline</button>
-              <button onClick={accept} className="rounded-lg bg-[#1C99D6] px-4 py-2 text-sm text-white">Accept</button>
+              <button 
+                onClick={decline} 
+                className="rounded-lg border border-slate-300 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 transition-colors"
+              >
+                Decline
+              </button>
+              <button 
+                onClick={accept} 
+                className="rounded-lg bg-[#1C99D6] px-4 py-2 text-sm text-white hover:bg-[#1a8ac4] transition-colors"
+              >
+                Accept
+              </button>
             </div>
           </div>
         </div>

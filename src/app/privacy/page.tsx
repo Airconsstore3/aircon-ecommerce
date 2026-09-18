@@ -10,7 +10,7 @@ export default function PrivacyPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">1. Introduction</h2>
             <p className="text-muted-foreground leading-relaxed">
-              This Privacy Policy explains how Aircons Store collects, uses, stores, and protects personal information in line with South Africa's Protection of Personal Information Act (POPIA).
+              This Privacy Policy explains how Aircons Store collects, uses, stores, and protects personal information in line with South Africa&apos;s Protection of Personal Information Act (POPIA).
             </p>
           </section>
 

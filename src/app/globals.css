@@ -46,6 +46,22 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --radius: var(--radius);
+
+  /* Relume UI tokens (from @relume_io/relume-tailwind) */
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #eeeeee;
+  --color-background-tertiary: #666666;
+  --color-background-alternative: #000000;
+  --color-border-primary: #000000;
+  --color-border-secondary: #aaaaaa;
+  --color-border-tertiary: #444444;
+  --color-border-alternative: #ffffff;
+  --color-text-primary: #000000;
+  --color-text-secondary: #aaaaaa;
+  --color-text-alternative: #ffffff;
+  --color-link-primary: #000000;
+  --color-link-secondary: #666666;
+  --color-link-alternative: #ffffff;
 }
 
 body {
@@ -57,6 +73,143 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+}
+
+/* ─── Global Typography Standards ──────────────────────────────────────────
+   Standard sizes applied across ALL pages for brand consistency.
+   H1: 72px desktop / 40px mobile
+   H2: 56px desktop / 32px mobile
+   H3: 24px desktop / 20px mobile
+   Paragraph: 16px (base default, Tailwind utilities can override)
+   Button text: 14px (base default, size variants can override)
+   Badge text: 14px (base default)
+   Only font-size uses !important to override inline Tailwind utility classes.
+   Other properties (font-weight, line-height, letter-spacing) keep their
+   Tailwind utility classes for context-specific flexibility.
+   Scoped to main content; footer/nav headings are excluded.
+─────────────────────────────────────────────────────────────────────────── */
+
+/* H1 — 72px desktop, 40px mobile */
+main h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem) !important; /* 40px → 72px */
+}
+
+/* H2 — 56px desktop, 32px mobile */
+main h2 {
+  font-size: clamp(2rem, 4vw, 3.5rem) !important; /* 32px → 56px */
+}
+
+/* H3 — 24px desktop, 20px mobile */
+main h3 {
+  font-size: clamp(1.25rem, 1.5vw, 1.5rem) !important; /* 20px → 24px */
+}
+
+/* Footer headings keep their own smaller font-size */
+footer h1,
+footer h2,
+footer h3,
+footer h4 {
+  font-size: 1.125rem !important; /* 18px — matches existing footer heading size */
+}
+
+/* Accordion headers (rendered as h3 by Radix) keep their own font-size */
+h3:has([data-slot="accordion-trigger"]) {
+  font-size: revert !important;
+}
+
+/* Paragraphs — 16px base default (Tailwind utilities can override) */
+p {
+  font-size: 1rem; /* 16px */
+  line-height: 1.6;
+}
+
+/* Buttons — 14px base default (size variants can override) */
+button,
+a[role="button"],
+[data-slot="button"] {
+  font-size: 0.875rem; /* 14px */
+}
+
+/* Badges — 14px base default */
+[data-slot="badge"],
+.badge {
+  font-size: 0.875rem; /* 14px */
+}
+
+/* Homepage type system: one display family with a clear, responsive scale. */
+.homepage-typography {
+  --homepage-font-display: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+  --homepage-font-body: var(--font-google-sans-flex), Inter, system-ui, sans-serif;
+  font-family: var(--homepage-font-body);
+}
+
+.homepage-typography > header h1,
+.homepage-typography > section h1 {
+  font-family: var(--homepage-font-display) !important;
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem) !important;
+  font-weight: 500 !important;
+  line-height: 0.98 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.homepage-typography > section h2,
+.homepage-typography > main h2 {
+  font-family: var(--homepage-font-display) !important;
+  font-size: clamp(2.125rem, 4.5vw, 3.5rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.05 !important;
+  letter-spacing: -0.035em !important;
+}
+
+.homepage-typography > section h3,
+.homepage-typography > main h3 {
+  font-family: var(--homepage-font-display) !important;
+  font-size: clamp(1.25rem, 2vw, 1.5rem) !important;
+  font-weight: 500 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+}
+
+.homepage-typography > header p,
+.homepage-typography > section p,
+.homepage-typography > main p {
+  font-family: var(--homepage-font-body) !important;
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+  line-height: 1.6 !important;
+  letter-spacing: -0.005em;
+}
+
+.homepage-typography > header button,
+.homepage-typography > header a[role="button"],
+.homepage-typography > header .aircon-angled-button,
+.homepage-typography > section button,
+.homepage-typography > section a[role="button"],
+.homepage-typography > main button,
+.homepage-typography > main a[role="button"] {
+  font-family: var(--homepage-font-body) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+  letter-spacing: 0.04em;
+}
+
+.homepage-typography > footer {
+  font-family: var(--homepage-font-body);
+}
+
+.homepage-typography > footer h3 {
+  font-family: var(--homepage-font-display) !important;
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  line-height: 1.2 !important;
+}
+
+.homepage-typography > footer p,
+.homepage-typography > footer a,
+.homepage-typography > footer input,
+.homepage-typography > footer button {
+  font-family: var(--homepage-font-body) !important;
 }
 
 .font-semibold {
@@ -267,4 +420,115 @@ h1, h2, h3, h4, h5, h6 {
 .aircon-angled-nav:hover::before,
 .aircon-angled-nav:hover::after {
   background-color: #ffffff;
+}
+
+/* Hide scrollbar for carousel scroll containers (used by category carousel on tablet/desktop) */
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Premium horizontal navigation - hide all scrollbars */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+  -webkit-appearance: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Thin scrollbar for filter sidebar scroll container */
+.filter-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+
+.filter-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.filter-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 2px;
+}
+
+.filter-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* Sticky sidebar for commercial category page */
+@media (min-width: 1024px) {
+  .commercial-sidebar {
+    position: sticky;
+    top: calc(var(--secondary-nav-height) + 2rem);
+    height: calc(100vh - var(--secondary-nav-height) - 2rem);
+    align-self: flex-start;
+    overflow: hidden;
+    z-index: 10;
+    background: #ffffff;
+  }
+}
+
+/* Hero secondary CTA — subtle text link with underline + arrow hover */
+.hero-secondary-link {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  transition: background-size 0.2s ease-out, color 0.2s ease-out;
+}
+.hero-secondary-link:hover {
+  background-size: 100% 1px;
+}
+.hero-secondary-arrow {
+  transition: transform 0.2s ease-out;
+}
+.hero-secondary-link:hover .hero-secondary-arrow {
+  transform: translateX(4px);
+}
+
+/* Support WhatsApp link — underline + arrow hover */
+.support-whatsapp-link {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  background-repeat: no-repeat;
+  transition: background-size 0.2s ease-out, color 0.2s ease-out;
+}
+.support-whatsapp-link:hover {
+  background-size: 100% 1px;
+}
+.support-whatsapp-arrow {
+  transition: transform 0.2s ease-out;
+}
+.support-whatsapp-link:hover .support-whatsapp-arrow {
+  transform: translateX(4px);
+}
+
+/* Mobile drawer — hide scrollbar completely */
+.mobile-drawer::-webkit-scrollbar {
+  display: none;
+}
+.mobile-drawer {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

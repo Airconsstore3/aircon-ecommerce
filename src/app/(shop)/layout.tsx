@@ -6,9 +6,9 @@ export default function ShopLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="shop-layout">
+    <div className="shop-layout bg-white">
       <NavbarWrapper />
-      <main className="min-h-screen pt-[var(--secondary-nav-height)]">
+      <main className="min-h-screen bg-white">
         {children}
       </main>
     </div>

@@ -135,9 +135,9 @@ const OrderHistory4 = ({
   const [searchQuery, setSearchQuery] = useState("");
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-ZA", {
       style: "currency",
-      currency: "USD",
+      currency: "ZAR",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(price);

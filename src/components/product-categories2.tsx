@@ -48,24 +48,15 @@ const SOLUTIONS_DATA: SolutionItem[] = [{
 }, {
   id: '4',
   index: '04',
-  title: 'Installation Packages',
-  description: 'Get your aircon installed by professionals. Add installation to your purchase or book it separately. Our technicians handle the complete setup including mounting and electrical work. We offer standard, premium and custom options.',
-  mobileDescription: 'Get your aircon installed by professionals. Add installation to your purchase or book it separately.',
-  image1: '/Hero Images/Product category pictures/Installation packages 1.png',
-  image2: '/Hero Images/Product category pictures/Installation packages 2.png',
-  link: '/categories/kits'
-}, {
-  id: '5',
-  index: '05',
   title: 'Extended Warranty Packages',
   description: 'Protect your aircon with extended warranty cover. We offer bronze, silver, gold and platinum plans with different protection periods. Our warranties cover parts, labour and callouts for full peace of mind.',
   mobileDescription: 'Protect your aircon with extended warranty cover. We offer bronze, silver, gold and platinum plans.',
   image1: '/Hero Images/Product category pictures/extended warrant 1.png',
   image2: '/Hero Images/Product category pictures/extended waranty 2.png',
-  link: '/categories/warranty'
+  link: '/warranty'
 }, {
-  id: '6',
-  index: '06',
+  id: '5',
+  index: '05',
   title: 'Maintenance Packages',
   description: 'Keep your aircon running smoothly with regular servicing. We provide annual service plans, quarterly check-ups and one-off maintenance visits. Our team handles cleaning, filter changes and system checks to maximise efficiency.',
   mobileDescription: 'Keep your aircon running smoothly with regular servicing. We provide annual service plans and quarterly check-ups.',

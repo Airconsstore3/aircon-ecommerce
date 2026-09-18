@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import Autoplay from "embla-carousel-autoplay";
 import { Check, ChevronLeft, ChevronRight, Heart } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   Price,
@@ -54,6 +55,7 @@ interface HeroCarouselItem {
     type: "image" | "video";
     src: string;
     alt?: string;
+    objectPosition?: string;
   };
   title?: string;
   description?: string;
@@ -72,10 +74,11 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
   {
     title: "Summer or Winter",
     description:
-      "Cool in Summer. Warm in Winter.\nReverse cycle aircons for homes, offices and warehouses.\nOne system, all year round.",
+      "Cool in summer. Warm in winter.\nReverse-cycle aircons for every season.",
     media: {
       type: "image",
       src: "/Hero Images/hero summer winter.webp",
+      objectPosition: "center 75%",
     },
     cta: {
       label: "Shop Now",
@@ -108,7 +111,7 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
             "(min-width: 1920px) 1920px, (min-width: 1280px) 1280px, 100vw",
         },
       ],
-      link: "/products/samsung-9000btu-windfree",
+      link: "/products/samsung-9000btu-inverter-split-wall",
       price: {
         regular: 18599.0,
         currency: "ZAR",
@@ -118,10 +121,11 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
   {
     title: "Types for Every Space",
     description:
-      "Split, Ducted, Multi-Head\nWe Match the Unit to the Building.\nResidential or commercial aircons, sized right for apartments, shops and warehouses.",
+      "Split, ducted and multi-head.\nAircons for every home and business.",
     media: {
       type: "image",
       src: "/Hero Images/Hero 2.webp",
+      objectPosition: "center center",
     },
     cta: {
       label: "Shop Now",
@@ -154,10 +158,11 @@ const HERO_CAROUSEL: HeroCarouselItem[] = [
   {
     title: "All Brands, No Guesswork",
     description:
-      "Every Major Brand. Full Warranty. Licensed Install.\nGenuine aircons, proper backup, installed by techs who know the gear inside out.",
+      "Every major brand. Licensed installation.\nFull manufacturer warranty.",
     media: {
       type: "image",
       src: "/Hero Images/Hero 3.webp",
+      objectPosition: "center 25%",
     },
     cta: {
       label: "Shop Now",
@@ -195,14 +200,16 @@ const HeroSection = ({
 }: HeroSectionProps) => {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(1);
-  const autoplay = useRef(
-    Autoplay({
-      delay: 5000,
-      playOnInit: true,
-      stopOnInteraction: false,
-      stopOnMouseEnter: false,
-      stopOnFocusIn: false,
-    }),
+  const autoplay = useMemo(
+    () =>
+      Autoplay({
+        delay: 5000,
+        playOnInit: true,
+        stopOnInteraction: false,
+        stopOnMouseEnter: false,
+        stopOnFocusIn: false,
+      }),
+    [],
   );
 
   useEffect(() => {
@@ -221,47 +228,58 @@ const HeroSection = ({
 
   return (
     <header className={cn("", className)}>
-      <div className="relative">
+      <div className="group/hero relative">
         <Carousel
           opts={{
             loop: true,
           }}
-          plugins={[autoplay.current]}
+          plugins={[autoplay]}
           setApi={setApi}
         >
           <CarouselContent className="m-0">
             {carouselItems.map(
               ({ title, description, media, product, cta }, index) => (
-                <CarouselItem className="group h-dvh min-h-170 p-0" key={index}>
-                  <div className="relative flex size-full flex-col items-center justify-end px-4 py-25 after:absolute after:inset-0 after:block after:bg-black/60 lg:px-40">
+                <CarouselItem className="group h-[62vh] min-h-[500px] max-h-[540px] p-0 lg:h-dvh lg:min-h-170 lg:max-h-none" key={index}>
+                  <div className="relative flex size-full flex-col items-center justify-end px-4 pt-16 pb-32 after:absolute after:inset-0 after:block after:bg-black/40 lg:px-40 lg:py-25 lg:after:bg-black/60">
                     <div
                       className={cn(
                         "relative z-10 w-full",
-                        "flex flex-col gap-13 md:flex-row",
+                        "flex flex-col gap-13 md:flex-row md:gap-10 lg:gap-13",
                         "md:items-end md:group-odd:flex-row-reverse",
                       )}
                     >
-                      <div className="flex flex-1 flex-col gap-4 md:group-even:items-end md:group-even:justify-end">
-                        <h1 className="font-[var(--font-google-sans-flex)] text-5xl font-normal tracking-tight leading-tight text-white md:text-6xl md:group-even:text-right lg:text-7xl">
+                      <div className="flex flex-1 flex-col md:group-even:items-end md:group-even:justify-end">
+                        <h1 className="mb-4 max-w-[280px] font-[var(--font-google-sans-flex)] text-[32px] font-normal tracking-tight leading-[0.98] text-white min-[400px]:text-[36px] sm:max-w-none md:mb-4 md:text-[52px] md:leading-[1.05] md:group-even:text-right lg:text-[64px] xl:text-[72px]">
                           {title}
                         </h1>
-                        <p className="max-w-130 font-[var(--font-google-sans-flex)] text-base md:text-lg font-normal leading-relaxed text-white/90 md:group-even:text-right">
+                        <p className="max-w-130 whitespace-pre-line font-[var(--font-google-sans-flex)] text-base leading-[1.5] font-normal text-white/90 sm:text-lg md:text-xl md:leading-[1.6] md:group-even:text-right lg:text-2xl lg:leading-[1.5]">
                           {description}
                         </p>
                         {cta && (
-                          <div className="aircon-angled-button-wrap mt-1 self-start md:group-even:self-end">
+                          <div className="aircon-angled-button-wrap mt-4 self-start md:mt-6 md:group-even:self-end">
                             <Button
                               asChild
                               variant="ghost"
-                              className="aircon-angled-button h-auto rounded-none hover:bg-transparent"
+                              className="aircon-angled-button !h-12 !rounded-none !px-[30px] !py-0 !text-[15px] !leading-none hover:!bg-transparent md:!text-base"
                             >
                               <a href={cta.href}>{cta.label}</a>
                             </Button>
                           </div>
                         )}
+                        {/* Secondary CTA — subtle text link, not a button.
+                            Sentence case, no underline by default, underline +
+                            4px arrow translation on hover. 28px above on mobile,
+                            32px on desktop. Left-aligned with hero content. */}
+                        <Link
+                          href="/products"
+                          className="hero-secondary-link mt-7 self-start font-[var(--font-google-sans-flex)] text-[16px] font-medium leading-none text-white/90 transition-colors duration-200 hover:text-white md:mt-8 md:text-[17px] lg:text-[18px] md:group-even:self-end"
+                        >
+                          Browse all air conditioners
+                          <span className="hero-secondary-arrow inline-block ml-1.5 transition-transform duration-200 group-hover:translate-x-1">&rarr;</span>
+                        </Link>
                       </div>
                       {product && (
-                        <div className="md:basis-80">
+                        <div className="hidden md:block md:w-[clamp(220px,25vw,240px)] md:shrink-0 lg:w-80">
                           <ProductCard {...product} />
                         </div>
                       )}
@@ -271,7 +289,8 @@ const HeroSection = ({
                         <img
                           src={media.src}
                           alt={media.alt}
-                          className="block size-full object-cover object-center"
+                          style={{ objectPosition: media.objectPosition ?? "center" }}
+                          className="block size-full object-cover lg:[object-position:center]"
                         />
                       ) : (
                         <video
@@ -279,7 +298,8 @@ const HeroSection = ({
                           muted
                           autoPlay
                           src={media.src}
-                          className="block size-full object-cover object-center"
+                          style={{ objectPosition: media.objectPosition ?? "center" }}
+                          className="block size-full object-cover lg:[object-position:center]"
                         ></video>
                       )}
                     </div>
@@ -288,26 +308,26 @@ const HeroSection = ({
               ),
             )}
           </CarouselContent>
-          <div className="pointer-events-none absolute bottom-12.5 contents flex w-full translate-y-1/2 items-center justify-between px-2 lg:top-1/2 lg:-translate-y-1/2 lg:px-12">
+          <div className="pointer-events-none absolute inset-x-0 top-1/2 hidden -translate-y-1/2 items-center justify-between px-2 opacity-0 transition-opacity duration-300 group-hover/hero:opacity-100 group-focus-within/hero:opacity-100 lg:flex lg:px-12">
             <Button
               size="icon"
               variant="ghost"
-              className="pointer-events-auto size-12 rounded-full text-white"
+              className="pointer-events-auto size-14 rounded-full bg-white/90 text-[#0A2540] shadow-md backdrop-blur-sm lg:size-12 lg:bg-transparent lg:text-white lg:shadow-none lg:backdrop-blur-none"
               onClick={() => api?.scrollPrev()}
             >
-              <ChevronLeft className="size-11 stroke-1" />
+              <ChevronLeft className="size-7 stroke-1 lg:size-11" />
             </Button>
             <Button
               size="icon"
               variant="ghost"
               onClick={() => api?.scrollNext()}
-              className="pointer-events-auto size-12 rounded-full text-white"
+              className="pointer-events-auto size-14 rounded-full bg-white/90 text-[#0A2540] shadow-md backdrop-blur-sm lg:size-12 lg:bg-transparent lg:text-white lg:shadow-none lg:backdrop-blur-none"
             >
-              <ChevronRight className="size-11 stroke-1" />
+              <ChevronRight className="size-7 stroke-1 lg:size-11" />
             </Button>
           </div>
         </Carousel>
-        <div className="absolute inset-x-0 bottom-12.5 translate-y-1/2">
+        <div className="absolute inset-x-0 bottom-6 md:bottom-8 lg:bottom-12.5">
           <ol className="flex items-center justify-center gap-3">
             {api?.scrollSnapList().map((_, index) => (
               <button
@@ -355,7 +375,7 @@ const ProductCard = ({
               </ul>
             )}
           </div>
-          <div className="size-full overflow-hidden md:aspect-[0.8]">
+          <div className="size-full overflow-hidden md:aspect-[0.92] lg:aspect-[0.8]">
             {images.map((img, index) => (
               <img
                 key={`product-list-13-card-img-${index}`}
@@ -368,7 +388,7 @@ const ProductCard = ({
             ))}
           </div>
         </div>
-        <div className="px-2 py-4">
+        <div className="px-2 py-4 md:px-3 md:py-5 lg:px-2 lg:py-4">
           {category && (
             <a
               href={category.link}

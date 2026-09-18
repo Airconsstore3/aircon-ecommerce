@@ -1,23 +1,30 @@
 import { HeroSection } from "@/components/hero-section";
-import { LogoCarousel } from "@/components/logo-carousel";
-import { AirconCategories } from "@/components/product-categories2";
+import { CategoryCarousel } from "@/components/category-carousel";
+import { AccreditedBrands } from "@/components/accredited-brands";
+import { AirconsShowcase } from "@/components/AirconsShowcase";
 import { ProductList9 } from "@/components/product-list9";
-import { ProductList6 } from "@/components/product-list6";
-import { ProductCategories5 } from "@/components/product-categories5";
+import EditorialSection from "@/components/EditorialSection";
+import { ServiceInfoSection } from "@/components/ServiceInfoSection";
+import { CustomerReviewsCarousel } from "@/components/customer-reviews-carousel";
 import { Help2 } from "@/components/help2";
-import { EcommerceFooter20 } from "@/components/ecommerce-footer20";
+import { PremiumFooter } from "@/components/premium-footer";
+import { fetchFeaturedProducts } from "@/lib/fetch-featured-products";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await fetchFeaturedProducts();
+
   return (
-    <div className="min-h-screen bg-white">
+    <div className="homepage-typography min-h-screen bg-white">
       <HeroSection />
-      <LogoCarousel />
-      <AirconCategories />
-      <ProductList9 />
-      <ProductList6 />
-      <ProductCategories5 />
+      <CategoryCarousel />
+      <ServiceInfoSection />
+      <AccreditedBrands />
+      <AirconsShowcase />
+      <ProductList9 products={products} />
+      <EditorialSection />
+      <CustomerReviewsCarousel />
       <Help2 />
-      <EcommerceFooter20 />
+      <PremiumFooter />
     </div>
   );
 }

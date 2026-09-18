@@ -217,8 +217,8 @@ const EcommerceFooter20 = ({
         {/* Two-zone body with vertical divider */}
         <div className="grid grid-cols-2 divide-x divide-[#0A2540]/10">
           {/* Left zone: Link columns */}
-          <div className="px-8 lg:px-12 py-16">
-            <div className="grid grid-cols-2 gap-x-12 gap-y-8">
+          <div className="px-8 lg:px-12 py-20">
+            <div className="grid grid-cols-2 gap-x-16 gap-y-10">
               {footerLinks.map((section) => (
                 <div key={section.id}>
                   <h3 className="mb-6 text-sm font-semibold text-[#1C99D6] capitalize">
@@ -242,10 +242,10 @@ const EcommerceFooter20 = ({
           </div>
 
           {/* Right zone: Newsletter and contact */}
-          <div className="px-8 lg:px-12 py-16">
+          <div className="px-8 lg:px-12 py-20">
             <NewsletterSection {...newsletter} />
 
-            <Separator className="my-8 bg-[#0A2540]/10" />
+            <Separator className="my-10 bg-[#0A2540]/10" />
 
             {/* Social icons and email row */}
             <div className="flex items-center gap-6 mb-8">
@@ -310,7 +310,7 @@ const EcommerceFooter20 = ({
             </button>
 
             {/* Right: Copyright and social */}
-            <div className="flex items-center gap-4 text-sm text-[#0A2540]/70">
+            <div className="flex items-center gap-4 text-sm text-[#0A2540]/50">
               <span>{copyright}</span>
               <a
                 href="https://facebook.com/airconsstore"
@@ -325,7 +325,7 @@ const EcommerceFooter20 = ({
       </div>
 
       {/* Mobile layout */}
-      <div className="md:hidden px-4 py-8 space-y-8">
+      <div className="md:hidden px-4 py-12 space-y-10">
         {/* Two link columns */}
         <div className="grid grid-cols-2 gap-8">
           {footerLinks.map((section) => (
@@ -448,7 +448,7 @@ const EcommerceFooter20 = ({
         </div>
 
         {/* Copyright */}
-        <p className="text-center text-sm text-[#0A2540]/70">
+        <p className="text-center text-sm text-[#0A2540]/50">
           {copyright}
         </p>
 

@@ -3,10 +3,17 @@
 import { Button } from "@/components/ui/button";
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "@/components/shop/CartProvider";
-import { toast } from "sonner";
 
 interface DealAddToCartButtonProps {
-  deal: any;
+  deal: {
+    id: string;
+    name: string;
+    slug: string;
+    original_price_zar: number;
+    sale_price_zar: number;
+    images: string[];
+    deal_type: string;
+  };
 }
 
 export default function DealAddToCartButton({ deal }: DealAddToCartButtonProps) {
@@ -23,7 +30,6 @@ export default function DealAddToCartButton({ deal }: DealAddToCartButtonProps) 
       type: deal.deal_type,
       is_enquiry_only: false,
     });
-    toast.success(`${deal.name} added to cart`);
   };
 
   return (

@@ -37,4 +37,4 @@ USING (is_active = true AND (starts_at IS NULL OR starts_at <= NOW()) AND (expir
 CREATE TRIGGER promotions_updated_at
   BEFORE UPDATE ON promotions
   FOR EACH ROW
-  EXECUTE FUNCTION set_updated_at();
+  EXECUTE FUNCTION set_updated_at()

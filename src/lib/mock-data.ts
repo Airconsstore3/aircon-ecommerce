@@ -427,42 +427,6 @@ export const mockProducts: Product[] = [
     created_at: '2025-01-01T00:00:00Z',
     updated_at: '2025-01-01T00:00:00Z',
   },
-  // 8. Supply & Install Bundle
-  {
-    id: 'prod-8',
-    name: 'Samsung 9000BTU Complete Package',
-    slug: 'samsung-9000btu-complete-package',
-    description: 'Complete package including Samsung 9000BTU inverter unit + standard installation. Save R500 compared to buying separately.',
-    category_id: 'cat-3',
-    type: 'kit',
-    brand: 'Samsung',
-    btu_range: null,
-    images: [
-      '/Hero Images/Product category pictures/Samsung AR80 WindFree front.webp',
-      '/Hero Images/Product category pictures/Samsung AR80 WindFree open.webp',
-    ],
-    price_zar: 10499,
-    sale_price_zar: 9999,
-    is_published: true,
-    is_enquiry_only: true,
-    is_featured: true,
-    is_sale: true,
-    is_deal: true,
-    sort_order: 8,
-    specs: {
-      includes: 'Samsung 9000BTU unit, standard installation, 3m pipe kit',
-      savings: 'R500',
-      property_type: 'Residential',
-    },
-    documents: [
-      '/documents/bundle-terms.pdf',
-    ],
-    stock_count: 10,
-    is_sold_out: false,
-    low_stock_threshold: 3,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
 ];
 
 // Promotions - 2 promotions
@@ -555,33 +519,6 @@ export const mockOrderTracking: OrderTracking[] = [
 
 // Deals - Winter Specials for Cape Town (June timing)
 export const mockDeals: Deal[] = [
-  // Hero Deal - Supply + Install Bundle
-  {
-    id: 'deal-1',
-    name: 'Samsung 9000BTU Complete Package',
-    slug: 'samsung-9000btu-winter-special',
-    description: 'Complete package including Samsung 9000BTU inverter unit + standard installation. Perfect for small to medium rooms. Winter special - limited stock available.',
-    original_price_zar: 11498,
-    sale_price_zar: 9999,
-    ends_at: '2025-08-31T23:59:59Z',
-    deal_type: 'bundle',
-    stock_remaining: 5,
-    is_hero: true,
-    product_id: 'prod-1',
-    images: [
-      '/Hero Images/Product category pictures/Samsung AR80 WindFree front.webp',
-      '/Hero Images/Product category pictures/Samsung AR80 WindFree open.webp',
-    ],
-    includes: [
-      'Samsung 9000BTU Inverter Unit',
-      'Standard Installation',
-      '3m Copper Pipe Kit',
-      'Electrical Connection',
-      'Testing & Commissioning',
-    ],
-    created_at: '2025-06-01T00:00:00Z',
-    updated_at: '2025-06-01T00:00:00Z',
-  },
   // Residential Deal
   {
     id: 'deal-2',

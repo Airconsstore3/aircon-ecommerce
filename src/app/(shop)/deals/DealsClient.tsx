@@ -9,9 +9,27 @@ import { Mail, ChevronRight } from "lucide-react";
 // ─── Types ───────────────────────────────────────────────────────────────────
 
 type DealFilter = 'all' | 'residential' | 'commercial' | 'bundle' | 'clearance';
+type DealType = 'residential' | 'commercial' | 'bundle' | 'clearance';
+
+interface Deal {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  original_price_zar: number;
+  sale_price_zar: number;
+  ends_at: string;
+  deal_type: DealType;
+  stock_remaining: number;
+  is_hero: boolean;
+  product_id?: string;
+  images: string[];
+  includes?: string[];
+  productSlug?: string;
+}
 
 interface DealsClientProps {
-  deals: any[];
+  deals: Deal[];
 }
 
 // ─── Deals Page Component ───────────────────────────────────────────────────────
@@ -21,7 +39,7 @@ export default function DealsClient({ deals }: DealsClientProps) {
   const [email, setEmail] = useState('');
 
   // Filter deals
-  const filteredDeals = deals.filter((deal: any) => {
+  const filteredDeals = deals.filter((deal: Deal) => {
     if (activeFilter === 'all') return true;
     return deal.deal_type === activeFilter;
   });
@@ -114,7 +132,7 @@ export default function DealsClient({ deals }: DealsClientProps) {
         {filteredDeals.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[24px]">
-              {filteredDeals.map((deal: any) => (
+              {filteredDeals.map((deal: Deal) => (
                 <DealCard key={deal.id} deal={deal} productSlug={deal.productSlug} />
               ))}
             </div>

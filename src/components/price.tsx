@@ -30,12 +30,17 @@ export type PriceType = {
 const formatterCache = new Map<string, Intl.NumberFormat>();
 
 function formatCurrency(value: number, currency = "USD", locale?: string) {
-  const resolvedLocale = locale ?? (currency === "ZAR" ? "af-ZA" : "en-US");
+  const resolvedLocale = locale ?? (currency === "ZAR" ? "en-ZA" : "en-US");
   const key = `${resolvedLocale}-${currency}`;
   if (!formatterCache.has(key)) {
     formatterCache.set(
       key,
-      new Intl.NumberFormat(resolvedLocale, { style: "currency", currency }),
+      new Intl.NumberFormat(resolvedLocale, {
+        style: "currency",
+        currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }),
     );
   }
   return formatterCache.get(key)!.format(value);

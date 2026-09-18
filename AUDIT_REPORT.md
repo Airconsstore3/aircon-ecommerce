@@ -338,7 +338,6 @@ All main mock entities are in `src/lib/mock-data.ts`.
 - `annual-maintenance-plan`
 - `copper-pipe-kit-3m`
 - `1-year-extended-warranty`
-- `samsung-9000btu-complete-package`
 
 ### Slug mismatches / route risks
 

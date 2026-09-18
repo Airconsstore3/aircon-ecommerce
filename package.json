@@ -6,11 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
     "@radix-ui/react-dialog": "^1.1.17",
+    "@relume_io/relume-tailwind": "^1.3.0",
+    "@relume_io/relume-ui": "^1.3.1",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
     "class-variance-authority": "^0.7.1",
@@ -26,6 +30,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.77.0",
+    "react-icons": "^5.7.0",
     "shadcn": "^4.9.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
@@ -40,6 +45,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   }
 }

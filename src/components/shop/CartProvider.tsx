@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { toast } from 'sonner';
 
 export interface CartItem {
   id: string;
@@ -13,6 +12,17 @@ export interface CartItem {
   quantity: number;
   type: string;
   is_enquiry_only: boolean;
+  variant?: string;
+  // Configuration breakdown (display only — server re-resolves pricing)
+  has_installation?: boolean;
+  installation_tier_id?: string;
+  installation_price_zar?: number;
+  kit_configuration?: Record<string, unknown> | null;
+  kit_price_zar?: number;
+  maintenance_plan_id?: string | null;
+  maintenance_price_zar?: number;
+  warranty_option_id?: string | null;
+  warranty_price_zar?: number;
 }
 
 interface CartContextType {
@@ -23,6 +33,8 @@ interface CartContextType {
   clearCart: () => void;
   itemCount: number;
   total: number;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -30,6 +42,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem('cart');
@@ -53,20 +66,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
-        toast.success("Added to cart", {
-          description: item.name,
-          duration: 2000,
-        });
         return prev.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
-      toast.success("Added to cart", {
-        description: item.name,
-        duration: 2000,
-      });
       return [...prev, { ...item, quantity: 1 }];
     });
+    setIsOpen(true);
   };
 
   const removeItem = (id: string) => {
@@ -95,17 +101,29 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQty, clearCart, itemCount, total }}
+      value={{ items, addItem, removeItem, updateQty, clearCart, itemCount, total, isOpen, setIsOpen }}
     >
       {children}
     </CartContext.Provider>
   );
 }
 
+const NOOP_CART: CartContextType = {
+  items: [],
+  addItem: () => {},
+  removeItem: () => {},
+  updateQty: () => {},
+  clearCart: () => {},
+  itemCount: 0,
+  total: 0,
+  isOpen: false,
+  setIsOpen: () => {},
+};
+
 export function useCart() {
   const context = useContext(CartContext);
   if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
+    return NOOP_CART;
   }
   return context;
 }

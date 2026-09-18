@@ -166,7 +166,7 @@ export default async function DealDetailPage({ params }: { params: Promise<{ slu
             {deal.includes && deal.includes.length > 0 && (
               <Card className="border-0 shadow-sm">
                 <CardContent className="p-6">
-                  <h3 className="text-lg font-normal text-[#0A2540] mb-4 font-[var(--font-google-sans-flex)]">What's Included</h3>
+                  <h3 className="text-lg font-normal text-[#0A2540] mb-4 font-[var(--font-google-sans-flex)]">What&apos;s Included</h3>
                   <ul className="space-y-2">
                     {deal.includes.map((item: string, index: number) => (
                       <li key={index} className="flex items-start gap-2 text-sm">

@@ -1,13 +1,13 @@
 "use client";
 
-import { ShoppingCart, Search, User, Menu, HeartHandshake, HelpCircle, Heart, LogOut, History, Settings, FileQuestion, LifeBuoy, Bookmark, Bell, Star, MessageCircleHeart, ThumbsUp, Bug } from "lucide-react";
+import { ShoppingCart, Search, User, HeartHandshake, HelpCircle, Heart, LogOut, History, Settings, FileQuestion, LifeBuoy, Bookmark, Bell, Star, MessageCircleHeart, ThumbsUp, Bug } from "lucide-react";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "@/components/ui/sheet";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { CartDrawer } from "./CartDrawer";
 import { useCart } from "./CartProvider";
+import { Badge } from "@/components/ui/badge";
+import { MobileMenu, MobileCategoriesDropdown } from "./MobileMenu";
 
 const navLinks = [
   { href: '/products', label: 'Products' },
@@ -39,22 +39,14 @@ const sideMenu = [
 ];
 
 export function Navbar() {
-  const { itemCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
-  const [badgeAnimate, setBadgeAnimate] = useState(false);
+  const { itemCount, setIsOpen } = useCart();
 
   useEffect(() => {
     document.documentElement.style.setProperty("--primary-nav-height", "4rem");
     document.documentElement.style.setProperty("--secondary-nav-height", "3rem");
   }, []);
-
-  useEffect(() => {
-    if (itemCount > 0) {
-      setBadgeAnimate(true);
-      setTimeout(() => setBadgeAnimate(false), 300);
-    }
-  }, [itemCount]);
 
   return (
     <header className="sticky top-0 z-50 w-full">
@@ -114,65 +106,30 @@ export function Navbar() {
             <Button
               size="icon"
               variant="ghost"
-              className="text-white hover:bg-white/10 hover:text-white"
-              asChild
+              className="text-white hover:bg-white/10 hover:text-white relative"
+              onClick={() => setIsOpen(true)}
             >
-              <Link href="/cart">
-                <ShoppingCart className="h-5 w-5" />
-              </Link>
+              <ShoppingCart className="h-5 w-5" />
+              {itemCount > 0 && (
+                <Badge className="absolute -top-1 -right-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1C99D6] px-1 text-[0.625rem] font-medium text-white">
+                  {itemCount}
+                </Badge>
+              )}
             </Button>
-            {itemCount > 0 && (
-              <Badge className={`absolute -top-1 -right-1 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#1C99D6] px-1 text-[0.625rem] font-medium text-white transition-transform ${badgeAnimate ? 'scale-125' : ''}`}>
-                {itemCount}
-              </Badge>
-            )}
           </div>
 
           {/* Mobile Menu */}
-          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-            <SheetTrigger asChild className="lg:hidden">
-              <Button
-                size="icon"
-                variant="ghost"
-                className="text-white hover:bg-white/10 hover:text-white"
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="overflow-auto">
-              <div className="px-4">
-                <SheetHeader>
-                  <Link href="/" className="text-2xl font-bold text-black logo-text" onClick={() => setMobileMenuOpen(false)}>
-                    Aircons Store
-                  </Link>
-                </SheetHeader>
-                {sideMenu.map((group, index) => (
-                  <div key={index} className="py-6 border-b last:border-0">
-                    {group.map(({ href, label, icon: Icon }, idx) => (
-                      <Button
-                        asChild
-                        variant="ghost"
-                        className="w-full justify-start text-left"
-                        key={`side-menu-item-${idx}`}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        <Link href={href}>
-                          <Icon className="h-4 w-4 mr-2" />
-                          {label}
-                        </Link>
-                      </Button>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+          <MobileMenu
+            sideMenu={sideMenu}
+            open={mobileMenuOpen}
+            setOpen={setMobileMenuOpen}
+          />
         </div>
       </div>
 
       {/* Secondary Nav */}
       <div className="h-[var(--secondary-nav-height)] bg-white border-b">
-        <div className="hidden lg:flex items-center h-full px-6 gap-6">
+        <div className="hidden lg:flex items-center h-full px-6 gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -184,28 +141,11 @@ export function Navbar() {
           ))}
         </div>
         <div className="lg:hidden flex items-center h-full px-6">
-          <Sheet open={categoriesOpen} onOpenChange={setCategoriesOpen}>
-            <SheetTrigger asChild>
-              <Button variant="secondary">
-                <Menu className="h-4 w-4 mr-2" />
-                Categories
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="top" className="!top-[calc(var(--primary-nav-height)+var(--secondary-nav-height))] z-40 !h-[calc(100dvh-var(--primary-nav-height)-var(--secondary-nav-height))] overflow-hidden [&>button]:hidden">
-              <div className="min-h-0 flex-1 overflow-y-auto p-6">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setCategoriesOpen(false)}
-                    className="block py-4 text-lg font-bold text-black border-b"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
+          <MobileCategoriesDropdown
+            navLinks={navLinks}
+            open={categoriesOpen}
+            setOpen={setCategoriesOpen}
+          />
         </div>
       </div>
     </header>

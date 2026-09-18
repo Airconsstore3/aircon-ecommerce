@@ -7,21 +7,39 @@ import { FilterSidebar } from "@/components/shop/FilterSidebar";
 import { createClient } from "@/utils/supabase/server";
 import { filterProducts } from "@/lib/filterProducts";
 import ProductsClient from "./ProductsClient";
+import type { SupabaseProduct } from "@/lib/fetch-featured-products";
 import { cookies } from "next/headers";
 
 export const dynamic = 'force-dynamic';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
+// Extended Supabase product with optional catalog display fields
+type CatalogProduct = SupabaseProduct & {
+  display_name?: string | null;
+  has_variants?: boolean;
+  min_variant_price?: number | null;
+};
+
+// Active promotion row from the promotions table
+interface Promotion {
+  id?: string;
+  name?: string;
+  code?: string | null;
+  starts_at?: string | null;
+  expires_at?: string | null;
+  is_active?: boolean;
+}
+
 // Adapt Supabase product to AirconProduct with stock info
-function convertToAirconProduct(product: any): AirconProduct {
+function convertToAirconProduct(product: CatalogProduct): AirconProduct {
   return {
     id: product.id,
-    name: product.name,
+    name: product.display_name || product.name,
     slug: product.slug,
-    brand: product.brand,
+    brand: product.brand ?? null,
     btu_size: product.btu_range ? `${product.btu_range}BTU` : null,
-    btu_range: product.btu_range,
+    btu_range: product.btu_range ?? null,
     type: product.type,
     price_zar: product.price_zar,
     sale_price_zar: product.sale_price_zar || null,
@@ -29,6 +47,8 @@ function convertToAirconProduct(product: any): AirconProduct {
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
     description: product.description,
+    has_variants: product.has_variants ?? false,
+    min_variant_price: product.min_variant_price ?? null,
     stock: {
       stock_count: product.stock_count,
       is_sold_out: product.is_sold_out,
@@ -46,14 +66,14 @@ const CATEGORY_LABELS: Record<string, string> = {
   accessory: "Accessories & Services",
 };
 
-function buildCategoryFilters(products: any[]) {
+function buildCategoryFilters(products: SupabaseProduct[]) {
   const counts = new Map<string, number>();
   products.forEach((p) => {
     // Base type count
     counts.set(p.type, (counts.get(p.type) || 0) + 1);
 
     // Derived residential/commercial counts
-    if (p.type === "aircon" && p.btu_range !== null) {
+    if (p.type === "aircon" && p.btu_range != null) {
       if (p.btu_range <= 32000) {
         counts.set("residential", (counts.get("residential") || 0) + 1);
       }
@@ -80,10 +100,10 @@ function buildCategoryFilters(products: any[]) {
     });
 }
 
-function buildBtuFilters(products: any[]) {
+function buildBtuFilters(products: SupabaseProduct[]) {
   const counts = new Map<number, number>();
   products.forEach((p) => {
-    if (p.btu_range !== null) {
+    if (p.btu_range != null) {
       counts.set(p.btu_range, (counts.get(p.btu_range) || 0) + 1);
     }
   });
@@ -96,7 +116,7 @@ function buildBtuFilters(products: any[]) {
     }));
 }
 
-function buildBrandFilters(products: any[]) {
+function buildBrandFilters(products: SupabaseProduct[]) {
   const counts = new Map<string, number>();
   products.forEach((p) => {
     if (p.brand) {
@@ -124,7 +144,7 @@ async function getActivePromotion() {
   
   const now = new Date();
   return data?.find(
-    (promo: any) =>
+    (promo: Promotion) =>
       (!promo.starts_at || new Date(promo.starts_at) <= now) &&
       (!promo.expires_at || new Date(promo.expires_at) >= now)
   );
@@ -135,7 +155,8 @@ async function getProducts() {
   const { data } = await supabase
     .from('products')
     .select('*')
-    .eq('is_published', true);
+    .eq('is_published', true)
+    .eq('is_parent_product', true);
   
   return data || [];
 }
@@ -154,7 +175,45 @@ export default async function ProductsPage({
 
   const saleParam = params.sale === 'true' ? 'sale' : 'all-aircon';
   const filtered = await filterProducts(supabase, saleParam);
-  const airconProducts = filtered.map(convertToAirconProduct);
+
+  // Fetch variant data for all parent products to compute "From R..." pricing
+  const parentIds = filtered.map((p: SupabaseProduct) => p.id);
+  const variantPriceMap: Record<string, { minPrice: number; hasVariants: boolean }> = {};
+
+  if (parentIds.length > 0) {
+    const { data: variants } = await supabase
+      .from('products')
+      .select('parent_product_id, price_zar, sale_price_zar')
+      .in('parent_product_id', parentIds)
+      .eq('is_published', true);
+
+    if (variants && variants.length > 0) {
+      const priceMap: Record<string, number[]> = {};
+      for (const v of variants) {
+        const pid = v.parent_product_id;
+        if (!pid) continue;
+        if (!priceMap[pid]) priceMap[pid] = [];
+        const effectivePrice = v.sale_price_zar ?? v.price_zar;
+        priceMap[pid].push(effectivePrice);
+      }
+      for (const [pid, prices] of Object.entries(priceMap)) {
+        variantPriceMap[pid] = {
+          minPrice: Math.min(...prices),
+          hasVariants: true,
+        };
+      }
+    }
+  }
+
+  const airconProducts = filtered.map((p: CatalogProduct) => {
+    const converted = convertToAirconProduct(p);
+    const variantInfo = variantPriceMap[p.id];
+    if (variantInfo) {
+      converted.has_variants = true;
+      converted.min_variant_price = variantInfo.minPrice;
+    }
+    return converted;
+  });
 
   // Build filter options from Supabase data
   const categoryOptions = buildCategoryFilters(products);

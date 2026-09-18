@@ -7,10 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { getCssImageUrl, getProductImages } from "@/lib/product-images";
+import { getCssImageUrl } from "@/lib/product-images";
 import { useState, useEffect } from "react";
 import { useCart } from "@/components/shop/CartProvider";
-import { toast } from "sonner";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -28,6 +27,12 @@ interface AirconProduct {
   is_enquiry_only: boolean;
   is_featured: boolean;
   description?: string | null;
+  ac_type?: string | null;
+  is_inverter?: boolean;
+  specs?: Record<string, unknown>;
+  sort_order?: number;
+  has_variants?: boolean;
+  min_variant_price?: number | null;
   stock: {
     stock_count: number;
     is_sold_out: boolean;
@@ -97,22 +102,20 @@ function isGenericFamilyDescription(bullet: string): boolean {
 
 function getProductDescriptionBullets(product: AirconProduct, stockStatus: ReturnType<typeof getStockStatus>) {
   const unitSizeBullet = formatBtu(product.btu_range);
+  const coverageBullet = getRoomCoverage(product.btu_range);
+  const inverterBullet =
+    product.type === "aircon"
+      ? product.name.toLowerCase().includes("inverter")
+        ? "Inverter"
+        : "Non-Inverter"
+      : null;
+  const brandBullet = product.brand ?? null;
 
-  const descriptionBullets = product.description
-    ?.split(/(?:\r?\n|\.\s+)/)
-    .map((item) => item.trim().replace(/\.$/, ""))
-    .filter(Boolean)
-    .filter((item) => !isGenericFamilyDescription(item))
-    .slice(0, 4) ?? [];
+  // Only show the 4 most important specs: BTU, Coverage, Inverter, Brand
+  const allBullets = [unitSizeBullet, coverageBullet, inverterBullet, brandBullet].filter(Boolean);
+  const uniqueBullets = Array.from(new Set(allBullets));
 
-  const fallbackBullets = [
-    unitSizeBullet ?? (product.brand ? `${product.brand} air conditioning system` : "Reliable air conditioning system"),
-    getRoomCoverage(product.btu_range) ?? "Designed for efficient cooling comfort",
-    product.is_enquiry_only ? "Quote-based pricing for tailored installation" : "Available for ordering and installation",
-    stockStatus === "low_stock" ? `Low stock — ${product.stock.stock_count} left` : stockStatus === "sold_out" ? "Currently sold out" : "Installation support available",
-  ];
-
-  return [unitSizeBullet, ...descriptionBullets, ...fallbackBullets].filter(Boolean).slice(0, 4);
+  return uniqueBullets.slice(0, 4);
 }
 
 // Countdown timer helper
@@ -150,7 +153,7 @@ function calculatePercentSaved(original: number, sale: number): number {
 
 const AirconProductCard = ({ product }: AirconProductCardProps) => {
   const stockStatus = getStockStatus(product);
-  const productImages = getProductImages(product);
+  const productImages = product.images ?? [];
   const primaryImage = productImages[0];
   const hasSale = product.sale_price_zar !== null && product.sale_price_zar < product.price_zar;
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -249,6 +252,10 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
           {/* Price block */}
           {isEnquiryOnly ? (
             <p className="mb-3 text-base font-bold text-[#1C99D6]">Commercial</p>
+          ) : product.has_variants && product.min_variant_price ? (
+            <p className="mb-3 text-base font-bold text-[#1C99D6]">
+              From {formatZAR(product.min_variant_price)}
+            </p>
           ) : hasSale ? (
             <div className="mb-3 flex items-center justify-center gap-2">
               <span className="text-base font-bold text-[#1C99D6]">
@@ -356,6 +363,17 @@ const AirconProductList = ({
     4: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4",
   };
 
+  // Verify no duplicate product IDs
+  const ids = products.map(p => p.id);
+  const uniqueIds = new Set(ids);
+  if (ids.length !== uniqueIds.size) {
+    console.error("[AirconProductList] Duplicate product IDs detected:", {
+      total: ids.length,
+      unique: uniqueIds.size,
+      duplicates: ids.filter((id, index) => ids.indexOf(id) !== index)
+    });
+  }
+
   return (
     <div className={cn("grid gap-6", gridClasses[columns], className)}>
       {products.map((product) => (
@@ -392,7 +410,6 @@ const DealCard = ({ deal, productSlug }: DealCardProps) => {
       type: deal.deal_type,
       is_enquiry_only: false,
     });
-    toast.success(`${deal.name} added to cart`);
   };
 
   return (

@@ -1,20 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { ShoppingBag, X, Plus, Minus, CreditCard } from "lucide-react";
+import { Plus, Minus, Trash2 } from "lucide-react";
 import { useCart } from "@/components/shop/CartProvider";
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function CartPage() {
-  const { items, removeItem, updateQty, itemCount, total } = useCart();
-  const [promoCode, setPromoCode] = useState("");
-  const [promoApplied, setPromoApplied] = useState(false);
-  const [promoError, setPromoError] = useState(false);
+  const { items, removeItem, updateQty, itemCount } = useCart();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-ZA", {
@@ -25,34 +18,40 @@ export default function CartPage() {
     }).format(price);
   };
 
-  const handleApplyPromo = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (promoCode.toUpperCase() === "SUMMER15") {
-      setPromoApplied(true);
-      setPromoError(false);
-    } else {
-      setPromoError(true);
-      setPromoApplied(false);
-    }
-  };
-
-  const discount = promoApplied ? total * 0.15 : 0;
-  const finalTotal = total - discount;
+  // Compute the full breakdown from cart items so the cart page matches
+  // the checkout summary. The server re-resolves pricing at checkout time,
+  // so these client-side values are display-only.
+  const breakdown = items.reduce(
+    (acc, item) => {
+      const base = (item.sale_price_zar ?? item.price_zar) * item.quantity;
+      const install = (item.installation_price_zar ?? 0) * item.quantity;
+      const kit = (item.kit_price_zar ?? 0) * item.quantity;
+      const maint = (item.maintenance_price_zar ?? 0) * item.quantity;
+      const warranty = (item.warranty_price_zar ?? 0) * item.quantity;
+      acc.subtotal += base;
+      acc.installation += install;
+      acc.kit += kit;
+      acc.maintenance += maint;
+      acc.warranty += warranty;
+      acc.total += base + install + kit + maint + warranty;
+      return acc;
+    },
+    { subtotal: 0, installation: 0, kit: 0, maintenance: 0, warranty: 0, total: 0 },
+  );
 
   if (items.length === 0) {
     return (
-      <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
+      <section className="min-h-screen bg-white pt-[220px] pb-12 px-4 md:pt-[180px]">
         <div className="container max-w-2xl mx-auto">
           <div className="text-center py-16">
-            <ShoppingBag className="size-24 text-muted-foreground mx-auto mb-4" />
-            <h1 className="text-2xl font-normal text-[#1E3A5F] mb-2">
+            <h1 className="text-2xl font-medium text-[#0A2540] mb-2">
               Your cart is empty
             </h1>
-            <p className="text-muted-foreground mb-8">
+            <p className="text-[#5F6B7A] mb-8">
               Start adding products to request a quote
             </p>
             <Button
-              className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
+              className="bg-[#1C99D6] hover:bg-[#1597c6] text-white rounded-none"
               asChild
             >
               <Link href="/products">Browse Products</Link>
@@ -64,29 +63,29 @@ export default function CartPage() {
   }
 
   return (
-    <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
-      <div className="container max-w-2xl mx-auto">
+    <section className="min-h-screen bg-white pt-[220px] pb-12 px-4 md:pt-[180px]">
+      <div className="container max-w-6xl mx-auto">
         {/* Page Heading */}
         <div className="mb-8">
-          <h1 className="text-3xl font-normal text-[#1E3A5F] mb-2">
-            Your Quote Cart
+          <h1 className="text-2xl font-medium text-[#0A2540] mb-2">
+            Shopping Cart
           </h1>
-          <div className="flex items-center gap-2">
-            <p className="text-muted-foreground">
-              Review your items before requesting a quote
-            </p>
-            <Badge variant="secondary">{itemCount} items</Badge>
-          </div>
+          <p className="text-[#5F6B7A] text-sm">
+            {itemCount} {itemCount === 1 ? "item" : "items"}
+          </p>
         </div>
 
-        {/* Cart Items */}
-        <div className="space-y-4 mb-8">
-          {items.map((item) => (
-            <Card key={item.id} className="rounded-xl shadow-sm border-0 p-4">
-              <CardContent className="p-0">
-                <div className="flex gap-4">
+        {/* Two-column layout */}
+        <div className="grid gap-8 lg:grid-cols-[1.7fr_1fr]">
+          {/* Left column - Cart items */}
+          <div className="space-y-4">
+            {items.map((item) => {
+              const unitPrice = item.sale_price_zar || item.price_zar;
+              const lineTotal = unitPrice * item.quantity;
+              return (
+                <div key={item.id} className="flex gap-4 border-b border-[#F0F0F0] pb-4 last:border-0">
                   {/* Product Image */}
-                  <div className="relative w-20 h-20 shrink-0 rounded-lg overflow-hidden bg-muted">
+                  <div className="relative h-28 w-28 shrink-0 overflow-hidden bg-[#F5F5F5]">
                     {item.images[0] && (
                       <Image
                         src={item.images[0]}
@@ -98,142 +97,122 @@ export default function CartPage() {
                   </div>
 
                   {/* Product Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-2">
-                      <div className="min-w-0">
-                        <h3 className="font-semibold text-[#1E3A5F] truncate">
+                  <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm font-medium text-[#0A2540] line-clamp-2">
                           {item.name}
                         </h3>
-                        <Badge variant="outline" className="text-xs mt-1">
-                          {item.type}
-                        </Badge>
+                        {item.variant && (
+                          <p className="text-xs text-[#5F6B7A] mt-0.5">{item.variant}</p>
+                        )}
                       </div>
                       <button
                         onClick={() => removeItem(item.id)}
-                        className="text-muted-foreground hover:text-red-500 transition-colors ml-2"
+                        className="shrink-0 text-[#9CA3AF] hover:text-red-500 transition-colors"
                       >
-                        <X className="size-4" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between">
-                      <div>
-                        {item.is_enquiry_only ? (
-                          <p className="font-semibold text-[#1E3A5F]">Price TBC</p>
-                        ) : (
-                          <p className="font-semibold text-[#1E3A5F]">
-                            {formatPrice(item.sale_price_zar || item.price_zar)}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Quantity Stepper */}
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-8 w-8 rounded-lg"
+                    <div className="mt-auto flex items-center justify-between">
+                      {/* Quantity Control */}
+                      <div className="flex items-center border border-[#E5E5E5]">
+                        <button
+                          type="button"
                           onClick={() => updateQty(item.id, item.quantity - 1)}
+                          className="flex h-8 w-8 items-center justify-center text-[#0A2540] hover:bg-[#F5F5F5] transition-colors text-sm"
+                          aria-label="Decrease quantity"
                         >
-                          <Minus className="size-3" />
-                        </Button>
-                        <span className="w-8 text-center font-medium">
+                          −
+                        </button>
+                        <span className="flex h-8 w-8 items-center justify-center text-[13px] font-medium text-[#0A2540]">
                           {item.quantity}
                         </span>
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="h-8 w-8 rounded-lg"
+                        <button
+                          type="button"
                           onClick={() => updateQty(item.id, item.quantity + 1)}
+                          className="flex h-8 w-8 items-center justify-center text-[#0A2540] hover:bg-[#F5F5F5] transition-colors text-sm"
+                          aria-label="Increase quantity"
                         >
-                          <Plus className="size-3" />
-                        </Button>
+                          +
+                        </button>
                       </div>
+
+                      {/* Price */}
+                      <p className="text-sm font-medium text-[#0A2540]">
+                        {item.is_enquiry_only ? "Price TBC" : formatPrice(lineTotal)}
+                      </p>
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Promo Code */}
-        <form onSubmit={handleApplyPromo} className="mb-8">
-          <div className="flex gap-2">
-            <Input
-              placeholder="Promo code"
-              value={promoCode}
-              onChange={(e) => {
-                setPromoCode(e.target.value);
-                setPromoError(false);
-              }}
-              className="rounded-lg"
-            />
-            <Button
-              type="submit"
-              variant="outline"
-              className="rounded-lg whitespace-nowrap"
-            >
-              Apply
-            </Button>
+              );
+            })}
           </div>
-          {promoApplied && (
-            <p className="text-sm text-emerald-600 mt-2">
-              SUMMER15 applied — 15% off
-            </p>
-          )}
-          {promoError && (
-            <p className="text-sm text-red-500 mt-2">
-              Invalid promo code
-            </p>
-          )}
-        </form>
 
-        {/* Order Summary */}
-        <Card className="rounded-xl shadow-sm border-0 p-6 mb-8">
-          <CardContent className="p-0 space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Subtotal</span>
-              <span className="font-medium">{formatPrice(total)}</span>
-            </div>
-            {promoApplied && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Discount</span>
-                <span className="font-medium text-[#1C99D6]">
-                  -{formatPrice(discount)}
-                </span>
+          {/* Right column - Order summary (sticky on desktop) */}
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <div className="border border-[#E5E7EB] bg-white">
+              <div className="border-b border-[#E5E7EB] px-5 py-4">
+                <h2 className="text-lg font-medium text-[#0A2540]">Order summary</h2>
               </div>
-            )}
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Install estimate</span>
-              <span className="font-medium">TBC</span>
-            </div>
-            <div className="border-t pt-3">
-              <div className="flex justify-between">
-                <span className="font-semibold text-[#1E3A5F] text-lg">Total</span>
-                <span className="font-bold text-[#1E3A5F] text-lg">
-                  {formatPrice(finalTotal)}
-                </span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="px-5 py-4 space-y-4">
+                <div className="flex justify-between text-sm text-[#5F6B7A]">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(breakdown.subtotal)}</span>
+                </div>
+                {breakdown.installation > 0 && (
+                  <div className="flex justify-between text-sm text-[#5F6B7A]">
+                    <span>Installation</span>
+                    <span>{formatPrice(breakdown.installation)}</span>
+                  </div>
+                )}
+                {breakdown.kit > 0 && (
+                  <div className="flex justify-between text-sm text-[#5F6B7A]">
+                    <span>Installation kit</span>
+                    <span>{formatPrice(breakdown.kit)}</span>
+                  </div>
+                )}
+                {breakdown.maintenance > 0 && (
+                  <div className="flex justify-between text-sm text-[#5F6B7A]">
+                    <span>Maintenance</span>
+                    <span>{formatPrice(breakdown.maintenance)}</span>
+                  </div>
+                )}
+                {breakdown.warranty > 0 && (
+                  <div className="flex justify-between text-sm text-[#5F6B7A]">
+                    <span>Warranty</span>
+                    <span>{formatPrice(breakdown.warranty)}</span>
+                  </div>
+                )}
+                <div className="pt-4 space-y-2">
+                  <div className="flex justify-between text-lg font-semibold text-[#0A2540] pt-2 border-t border-[#E5E7EB]">
+                    <span>Total</span>
+                    <span>{formatPrice(breakdown.total)}</span>
+                  </div>
+                  <p className="text-xs text-[#5F6B7A] pt-1">
+                    Final total is calculated securely from current prices when you checkout.
+                  </p>
+                </div>
 
-        {/* CTA Buttons */}
-        <div className="space-y-3">
-          <Button
-            className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-lg"
-            asChild
-          >
-            <Link href="/checkout">Request Quote</Link>
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full rounded-lg"
-            asChild
-          >
-            <Link href="/products">Continue Shopping</Link>
-          </Button>
+                {/* CTA Buttons */}
+                <div className="pt-4 space-y-2">
+                  <Button
+                    className="h-[48px] w-full bg-[#1C99D6] hover:bg-[#1597c6] text-white rounded-none text-[15px] font-semibold"
+                    asChild
+                  >
+                    <Link href="/checkout">Checkout</Link>
+                  </Button>
+                  <Link
+                    href="/products"
+                    className="block w-full text-center text-[12px] font-medium text-[#5F6B7A] hover:text-[#0A2540] py-2"
+                  >
+                    Continue shopping
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

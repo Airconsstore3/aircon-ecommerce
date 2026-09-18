@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
 import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
@@ -36,11 +37,20 @@ const categoryInfo: Record<string, { name: string; description: string }> = {
   },
 };
 
+interface Promotion {
+  id?: string;
+  name?: string;
+  code?: string | null;
+  starts_at?: string | null;
+  expires_at?: string | null;
+  is_active?: boolean;
+}
+
 interface CategoryClientProps {
   categorySlug: string;
   category: { name: string; description: string };
   products: AirconProduct[];
-  activePromotion: any;
+  activePromotion: Promotion | null;
   categoryOptions?: { value: string; label: string; count: number }[];
   btuOptions?: { value: string; label: string; count: number }[];
   brandOptions?: { value: string; label: string; count: number }[];
@@ -164,13 +174,13 @@ export default function CategoryClient({
       {/* Breadcrumb */}
       <div className="w-full px-4 sm:px-20 py-4 border-b">
         <nav className="flex items-center text-sm text-muted-foreground">
-          <a href="/" className="hover:text-foreground">
+          <Link href="/" className="hover:text-foreground">
             Home
-          </a>
+          </Link>
           <span className="mx-2">/</span>
-          <a href="/products" className="hover:text-foreground">
+          <Link href="/products" className="hover:text-foreground">
             Products
-          </a>
+          </Link>
           <span className="mx-2">/</span>
           <span className="text-foreground font-medium">{category.name}</span>
         </nav>
@@ -307,7 +317,7 @@ export default function CategoryClient({
                   className="mt-4"
                   asChild
                 >
-                  <a href="/products">Browse all products</a>
+                  <Link href="/products">Browse all products</Link>
                 </Button>
               </div>
             )}
