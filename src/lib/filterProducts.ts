@@ -28,11 +28,13 @@ export async function filterProducts(
       break;
 
     case 'commercial':
-      // Show aircons with BTU >= 40000
+      // Show aircons with BTU > 32000 — must match the residential cutoff
+      // (<= 32000) and the filter-chip counts in the listing pages so units
+      // in the 32–40k BTU range don't fall into a dead zone.
       query = query
         .eq('type', 'aircon')
         .not('btu_range', 'is', null)
-        .gte('btu_range', 40000);
+        .gte('btu_range', 32001);
       break;
 
     case 'all-aircon':

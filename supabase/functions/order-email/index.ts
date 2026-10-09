@@ -31,19 +31,29 @@ function formatPrice(value: number) {
   }).format(value);
 }
 
+// Order fields are user-supplied — never interpolate them into HTML raw.
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function orderHtml(order: WebhookPayload["record"]) {
   const items = order.items
-    .map((item) => `<li>${item.quantity} x ${item.name} - ${formatPrice(item.line_total_zar)}</li>`)
+    .map((item) => `<li>${item.quantity} x ${escapeHtml(item.name)} - ${formatPrice(item.line_total_zar)}</li>`)
     .join("");
 
   return `
     <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; color: #0A2540;">
       <h1>New checkout request</h1>
-      <p><strong>Reference:</strong> ${order.id}</p>
-      <p><strong>Name:</strong> ${order.name}</p>
-      <p><strong>Phone:</strong> ${order.phone}</p>
-      ${order.email ? `<p><strong>Email:</strong> ${order.email}</p>` : ""}
-      ${order.notes ? `<p><strong>Notes:</strong><br>${order.notes.replaceAll("\n", "<br>")}</p>` : ""}
+      <p><strong>Reference:</strong> ${escapeHtml(order.id)}</p>
+      <p><strong>Name:</strong> ${escapeHtml(order.name)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(order.phone)}</p>
+      ${order.email ? `<p><strong>Email:</strong> ${escapeHtml(order.email)}</p>` : ""}
+      ${order.notes ? `<p><strong>Notes:</strong><br>${escapeHtml(order.notes).replaceAll("\n", "<br>")}</p>` : ""}
       <h2>Items</h2>
       <ul>${items}</ul>
       <p><strong>Total:</strong> ${formatPrice(order.total_zar)}</p>
@@ -82,7 +92,12 @@ Deno.serve(async (request) => {
 
   const expectedSecret = Deno.env.get("ORDER_WEBHOOK_SECRET");
 
-  if (expectedSecret && request.headers.get("x-webhook-secret") !== expectedSecret) {
+  // Fail closed — without a configured secret this endpoint is an open
+  // email-sending relay.
+  if (!expectedSecret) {
+    return new Response("Server misconfigured", { status: 500 });
+  }
+  if (request.headers.get("x-webhook-secret") !== expectedSecret) {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -109,9 +124,9 @@ Deno.serve(async (request) => {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 640px; margin: 0 auto; color: #0A2540;">
           <h1>We received your request</h1>
-          <p>Hi ${order.name},</p>
+          <p>Hi ${escapeHtml(order.name)},</p>
           <p>Thank you for contacting Aircons Store. We will confirm availability, delivery, and installation details before payment.</p>
-          <p><strong>Reference:</strong> ${order.id}</p>
+          <p><strong>Reference:</strong> ${escapeHtml(order.id)}</p>
           <p><strong>Total:</strong> ${formatPrice(order.total_zar)}</p>
         </div>
       `,

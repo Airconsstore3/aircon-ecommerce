@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 
 import { markWhatsAppSent } from "@/app/(shop)/checkout/actions";
 
-export function WhatsAppButton({ orderId, whatsappUrl }: { orderId: string; whatsappUrl: string }) {
+export function WhatsAppButton({ orderId, secureToken, whatsappUrl }: { orderId: string; secureToken: string; whatsappUrl: string }) {
   const handleClick = async () => {
     const consent = window.localStorage.getItem("airconsstore_cookie_consent");
 
@@ -14,7 +14,7 @@ export function WhatsAppButton({ orderId, whatsappUrl }: { orderId: string; what
       });
     }
 
-    await markWhatsAppSent(orderId);
+    await markWhatsAppSent(orderId, secureToken);
     window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 

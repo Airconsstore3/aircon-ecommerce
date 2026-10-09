@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/components/shop/CartProvider";
 import { fetchEnabledProviders } from "./providers-action";
+import type { KitConfiguration } from "@/types/installation-kit";
 
 import { markWhatsAppSent, submitCheckout } from "./actions";
 
@@ -118,7 +119,7 @@ export function CheckoutClient() {
         quantity: item.quantity,
         has_installation: item.has_installation,
         installation_tier_id: item.installation_tier_id,
-        kit_configuration: item.kit_configuration,
+        kit_configuration: item.kit_configuration as KitConfiguration | null | undefined,
         maintenance_plan_id: item.maintenance_plan_id,
         warranty_option_id: item.warranty_option_id,
       })),
@@ -134,7 +135,7 @@ export function CheckoutClient() {
 
     if (result.whatsappUrl) {
       window.open(result.whatsappUrl, "_blank", "noopener,noreferrer");
-      await markWhatsAppSent(result.orderId);
+      await markWhatsAppSent(result.orderId, result.secureToken);
     }
 
     // If Payfast, redirect to payment gateway

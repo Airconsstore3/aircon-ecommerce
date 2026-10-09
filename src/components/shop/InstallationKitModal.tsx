@@ -230,7 +230,7 @@ export function InstallationKitModal({
   }, [open, config, activeKits]);
 
   const resolved = useMemo(
-    () => resolveCompatibleIds(config, state, state.kitId),
+    () => resolveCompatibleIds(config, state, state.kitId ?? ""),
     [config, state]
   );
 
@@ -261,7 +261,7 @@ export function InstallationKitModal({
   const updateState = (patch: Partial<KitConfiguration>) => {
     setState((prev) => {
       const next = { ...prev, ...patch };
-      const resolved = resolveCompatibleIds(config, next, next.kitId);
+      const resolved = resolveCompatibleIds(config, next, next.kitId ?? "");
       return { ...next, ...resolved, customCageDimensions: next.customCageDimensions };
     });
   };
@@ -476,7 +476,7 @@ export function InstallationKitModal({
                     <KitOptionButton
                       key="add-cage"
                       label="Add protective cage"
-                      isSelected={state.hasCage}
+                      isSelected={state.hasCage ?? false}
                       onClick={() => {
                         const firstCage = resolved.cages[0];
                         updateState({ hasCage: true, cageId: firstCage?.id ?? null });

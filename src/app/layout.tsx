@@ -24,8 +24,8 @@ const googleSansFlex = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CoolAir - Cape Town Air Conditioning Specialists",
-  description: "Residential and commercial air conditioning solutions in Cape Town. Sales, installation, maintenance, and repairs.",
+  title: "Aircons Store — Air Conditioning Sales, Installation & Repairs",
+  description: "Residential and commercial air conditioning solutions across South Africa. Sales, accredited installation, maintenance, and repairs.",
 };
 
 export default function RootLayout({

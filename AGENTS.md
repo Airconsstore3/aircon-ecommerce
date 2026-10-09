@@ -72,3 +72,11 @@ so it's fully initialized before any provider module loads.
   These are legitimate React patterns (localStorage hydration, matchMedia sync,
   carousel API sync) and not bugs. Fixing them would require `useSyncExternalStore`
   refactors that change the implementation pattern.
+
+## Audit Docs (2026-09-25)
+- `ARCHITECTURE_AUDIT.md` — full system audit, bug register, lifecycle traces.
+- `ECOMMERCE_FIX_PLAN.md` — severity-ranked fix list (all code fixes applied).
+- `supabase/migrations/20260925_audit_hardening.sql` — revokes stale anon
+  INSERT on orders + restricts settings to admins. **Must be applied manually
+  in the Supabase dashboard.**
+- `ORDER_WEBHOOK_SECRET` is in git history — rotate before relying on it.

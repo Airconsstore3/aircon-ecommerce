@@ -112,7 +112,6 @@ export default async function OrderConfirmedPage({
       payment_status, payment_method, secure_token
     `)
     .eq("id", orderToken)
-    .gt("expires_at", new Date().toISOString())
     .single();
 
   if (!order) {
@@ -121,6 +120,13 @@ export default async function OrderConfirmedPage({
 
   // Verify secure token
   if (order.secure_token !== secureToken) {
+    notFound();
+  }
+
+  // Order links expire after 48h — except pending Manual EFT orders, whose
+  // customers may still need the banking details while payment is awaited.
+  const isPendingEft = order.payment_method === "manual_eft" && order.payment_status === "pending";
+  if (order.expires_at && new Date(order.expires_at) < new Date() && !isPendingEft) {
     notFound();
   }
 
@@ -148,7 +154,7 @@ export default async function OrderConfirmedPage({
 
   return (
     <section className="min-h-screen bg-[#FAFAF9] pt-[220px] pb-12 px-4 md:pt-[180px]">
-      <LeadTracking value={order.total_zar} email={order.email} phone={order.phone} itemIds={items.map((item) => item.product_id)} />
+      <LeadTracking orderId={order.id} value={order.total_zar} email={order.email} phone={order.phone} itemIds={items.map((item) => item.product_id)} />
       <style>{`
         @media print {
           header, footer, .no-print { display: none !important; }
@@ -359,7 +365,7 @@ export default async function OrderConfirmedPage({
             </div>
 
             <div className="no-print flex flex-col gap-3 sm:flex-row">
-              {order.whatsapp_url && <WhatsAppButton orderId={order.id} whatsappUrl={order.whatsapp_url} />}
+              {order.whatsapp_url && <WhatsAppButton orderId={order.id} secureToken={order.secure_token} whatsappUrl={order.whatsapp_url} />}
               <PrintButton />
               <Button variant="outline" className="rounded-lg" asChild>
                 <Link href="/products">Continue browsing</Link>

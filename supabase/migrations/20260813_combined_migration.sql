@@ -214,10 +214,12 @@ BEGIN
   END IF;
 END $$;
 
--- Allow public (anon) to read orders by secure_token
-CREATE POLICY "Public can read own order by token"
-  ON public.orders FOR SELECT TO anon
-  USING (secure_token IS NOT NULL);
+-- NOTE: this file previously re-created an insecure anon SELECT policy on
+-- orders ("Public can read own order by token" — `secure_token IS NOT NULL`
+-- is true for every row). That policy allowed anonymous users to read ALL
+-- orders. It was removed by 20260817_fix_orders_rls_security.sql; do not
+-- reintroduce it — order confirmation reads go through the service role.
+DROP POLICY IF EXISTS "Public can read own order by token" ON public.orders;
 
 -- ─── 9. Security hardening ───────────────────────────────────────────────────
 

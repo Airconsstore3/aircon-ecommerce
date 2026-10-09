@@ -191,36 +191,39 @@ function resolveInstallationTierPrice(
   tierId: string | undefined,
   productBtuRange: number | null,
   productInstallationPricing: Record<string, number> | null
-): { price: number; isEnquiry: boolean } {
+): { price: number; isEnquiry: boolean; tierId: string | null } {
   // 1. Check product-specific pricing from Supabase first
   if (productInstallationPricing && productBtuRange) {
     const btuKey = String(productBtuRange);
     if (productInstallationPricing[btuKey] !== undefined) {
-      return { price: productInstallationPricing[btuKey], isEnquiry: false };
+      return { price: productInstallationPricing[btuKey], isEnquiry: false, tierId: null };
     }
     for (const [key, price] of Object.entries(productInstallationPricing)) {
       const range = key.split("-").map(Number);
       if (range.length === 2 && productBtuRange >= range[0] && productBtuRange <= range[1]) {
-        return { price, isEnquiry: false };
+        return { price, isEnquiry: false, tierId: null };
       }
     }
   }
 
-  // 2. Fall back to tier from DB
-  const tier = tiers.find((t) => t.id === tierId);
-  if (tier) {
-    return { price: tier.is_enquiry ? 0 : tier.price_zar, isEnquiry: tier.is_enquiry };
-  }
-
-  // 3. Fall back to BTU range match
-  if (productBtuRange) {
-    const matched = tiers.find((t) => productBtuRange >= t.min_btu && productBtuRange <= t.max_btu);
-    if (matched) {
-      return { price: matched.is_enquiry ? 0 : matched.price_zar, isEnquiry: matched.is_enquiry };
+  // 2. Derive the tier from the product's BTU rating. This is authoritative —
+  // the client-supplied tier id is advisory only and must never be allowed to
+  // select a cheaper tier than the product's BTU range requires.
+  if (productBtuRange != null) {
+    const derived = tiers.find((t) => productBtuRange >= t.min_btu && productBtuRange <= t.max_btu);
+    if (derived) {
+      return { price: derived.is_enquiry ? 0 : derived.price_zar, isEnquiry: derived.is_enquiry, tierId: derived.id };
     }
   }
 
-  return { price: 0, isEnquiry: true };
+  // 3. No BTU range on the product — fall back to the client's tier choice,
+  // but never an enquiry tier (that would record "free" installation).
+  const requested = tiers.find((t) => t.id === tierId && !t.is_enquiry);
+  if (requested) {
+    return { price: requested.price_zar, isEnquiry: false, tierId: requested.id };
+  }
+
+  return { price: 0, isEnquiry: true, tierId: null };
 }
 
 function resolveMaintenancePriceServer(
@@ -282,7 +285,7 @@ export async function resolveOrderPricing(
   // Fetch all products in one query
   const { data: products, error: productsError } = await serviceRoleClient
     .from("products")
-    .select("id, name, slug, price_zar, sale_price_zar, images, is_published, is_enquiry_only, btu_range, brand, type, installation_pricing")
+    .select("id, name, slug, price_zar, sale_price_zar, images, is_published, is_enquiry_only, is_sold_out, btu_range, brand, type, installation_pricing")
     .in("id", productIds)
     .eq("is_published", true);
 
@@ -311,6 +314,10 @@ export async function resolveOrderPricing(
       throw new Error("One or more cart items are no longer available.");
     }
 
+    if (product.is_sold_out) {
+      throw new Error(`"${product.name}" is currently sold out. Please remove it from your cart.`);
+    }
+
     const baseUnitPrice = product.sale_price_zar || product.price_zar;
     const isEnquiryOnly = product.is_enquiry_only ?? false;
 
@@ -327,9 +334,7 @@ export async function resolveOrderPricing(
       );
       if (!resolved.isEnquiry) {
         installationPrice = resolved.price;
-        installationTierId = item.installation_tier_id ?? tiers.find((t) =>
-          product.btu_range && product.btu_range >= t.min_btu && product.btu_range <= t.max_btu
-        )?.id ?? null;
+        installationTierId = resolved.tierId;
       }
     }
 

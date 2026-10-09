@@ -2,23 +2,34 @@
 
 import { headers } from "next/headers";
 import { z } from "zod";
-import { createClient } from "@supabase/supabase-js";
 
 import { serviceRoleClient } from "@/lib/supabase-service";
 import { resolveOrderPricing, CartItemConfig } from "@/lib/server-pricing";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
-const anonClient = createClient((supabaseUrl || "").trim(), (supabaseAnonKey || "").trim());
-
 // ─── Validation schemas ──────────────────────────────────────────────────────
+
+const kitConfigurationSchema = z.object({
+  kitId: z.string().optional(),
+  materialId: z.string().optional(),
+  pipeSizeId: z.string().optional(),
+  pipeLengthId: z.string().optional(),
+  bracketId: z.string().optional(),
+  insulationId: z.string().optional(),
+  hasCage: z.boolean().optional(),
+  cageId: z.string().nullable().optional(),
+  customCageDimensions: z.object({
+    width: z.string(),
+    height: z.string(),
+    depth: z.string(),
+  }).optional(),
+}).nullable().optional();
 
 const itemSchema = z.object({
   id: z.string(),
   quantity: z.coerce.number().int().min(1).max(99),
   has_installation: z.boolean().optional(),
   installation_tier_id: z.string().optional(),
-  kit_configuration: z.any().optional(),
+  kit_configuration: kitConfigurationSchema,
   maintenance_plan_id: z.string().nullable().optional(),
   warranty_option_id: z.string().nullable().optional(),
 });
@@ -176,7 +187,8 @@ async function getWhatsAppNumber() {
   const { data } = await serviceRoleClient
     .from("settings")
     .select("whatsapp_number")
-    .single();
+    .limit(1)
+    .maybeSingle();
 
   if (!data?.whatsapp_number) {
     throw new Error("Business WhatsApp number is not configured.");
@@ -343,7 +355,11 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
       .insert(orderItemsRows);
 
     if (itemsError) {
+      // Compensating delete — don't leave an order with no line items.
+      // order_items/payments cascade from orders, so this cleans everything.
       console.error("[checkout] Order items creation error:", itemsError);
+      await serviceRoleClient.from("orders").delete().eq("id", order.id);
+      throw new Error("We couldn't complete your order. Please try again.");
     }
 
     // ─── Create initial payment record ─────────────────────────────────────
@@ -359,6 +375,8 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
 
     if (paymentError) {
       console.error("[checkout] Payment record creation error:", paymentError);
+      await serviceRoleClient.from("orders").delete().eq("id", order.id);
+      throw new Error("We couldn't complete your order. Please try again.");
     }
 
     // ─── Build WhatsApp message ─────────────────────────────────────────────
@@ -381,9 +399,12 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
       : null;
 
     if (whatsappUrl) {
+      // Store the generated URL for the confirmation page. Status stays
+      // 'submitted' until the customer actually opens WhatsApp
+      // (markWhatsAppSent) or payment completes.
       await serviceRoleClient
         .from("orders")
-        .update({ whatsapp_url: whatsappUrl, status: "sent_whatsapp" })
+        .update({ whatsapp_url: whatsappUrl })
         .eq("id", order.id);
     }
 
@@ -412,6 +433,12 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     };
   } catch (error) {
     console.error("[checkout] submitCheckout error:", error);
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        error: error.issues[0]?.message ?? "Please check your details and try again.",
+      };
+    }
     return {
       success: false,
       error: error instanceof Error ? error.message : "Checkout failed. Please try again.",
@@ -419,9 +446,23 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
   }
 }
 
-export async function markWhatsAppSent(orderId: string) {
+// Called after the customer actually opens the WhatsApp deep link. Requires
+// the order's secure token so this cannot be used to mutate arbitrary orders.
+export async function markWhatsAppSent(orderId: string, secureToken: string) {
+  const uuidRe = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  if (!uuidRe.test(orderId) || !uuidRe.test(secureToken)) return;
+
+  const { data: order } = await serviceRoleClient
+    .from("orders")
+    .select("id, secure_token")
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (!order || order.secure_token !== secureToken) return;
+
   await serviceRoleClient
     .from("orders")
     .update({ status: "sent_whatsapp" })
-    .eq("id", orderId);
+    .eq("id", orderId)
+    .eq("status", "submitted");
 }

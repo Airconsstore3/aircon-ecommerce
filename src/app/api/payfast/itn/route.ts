@@ -2,6 +2,25 @@ import { NextRequest, NextResponse } from "next/server";
 import { serviceRoleClient } from "@/lib/supabase-service";
 import { getProvider } from "@/lib/payment/provider";
 
+// Payfast ITN source IPs.
+// See: https://developers.payfast.co.za/documentation/#itn
+const PAYFAST_IPS = ["41.74.179.228", "41.74.179.229", "41.74.179.230", "41.74.179.231"];
+if (process.env.NODE_ENV !== "production") {
+  PAYFAST_IPS.push("127.0.0.1", "::1", "::ffff:127.0.0.1");
+}
+
+// The client IP is the LAST hop in x-forwarded-for — earlier entries are
+// supplied by the client and can be spoofed. On Vercel, x-real-ip is the
+// trustworthy header set by the edge network.
+function getSourceIp(request: NextRequest): string | null {
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  if (!forwardedFor) return null;
+  const hops = forwardedFor.split(",").map((h) => h.trim()).filter(Boolean);
+  return hops[hops.length - 1] ?? null;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -12,12 +31,12 @@ export async function POST(request: NextRequest) {
     }
 
     const signature = body.signature || undefined;
-    const sourceIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || undefined;
+    const sourceIp = getSourceIp(request);
 
-    // Validate source IP (Payfast sends from known IPs)
-    const PAYFAST_IPS = ["41.74.179.228", "41.74.179.229", "41.74.179.230", "41.74.179.231", "127.0.0.1"];
-    if (sourceIp && !PAYFAST_IPS.includes(sourceIp)) {
-      console.warn(`[payfast-itn] Rejected ITN from unknown IP: ${sourceIp}`);
+    // Validate source IP (Payfast sends from known IPs). Fail closed: a
+    // request with no identifiable source is not a legitimate ITN.
+    if (!sourceIp || !PAYFAST_IPS.includes(sourceIp)) {
+      console.warn(`[payfast-itn] Rejected ITN from unknown IP: ${sourceIp ?? "none"}`);
       return NextResponse.json({ error: "Invalid source" }, { status: 403 });
     }
 
@@ -59,13 +78,16 @@ export async function POST(request: NextRequest) {
     }
 
     // ─── Validate amount ────────────────────────────────────────────────────
-    if (verification.amountZar !== null) {
-      const expectedAmount = order.total_zar;
-      const receivedAmount = Math.round(verification.amountZar);
-      if (receivedAmount !== expectedAmount) {
-        console.error(`[payfast-itn] Amount mismatch: expected ${expectedAmount}, got ${receivedAmount}`);
-        return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
-      }
+    // Exact match in cents — no rounding tolerance.
+    if (verification.amountZar === null) {
+      console.error("[payfast-itn] Missing amount_gross in notification");
+      return NextResponse.json({ error: "Missing amount" }, { status: 400 });
+    }
+    if (Math.round(verification.amountZar * 100) !== Math.round(order.total_zar * 100)) {
+      console.error(
+        `[payfast-itn] Amount mismatch: expected ${order.total_zar}, got ${verification.amountZar}`
+      );
+      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
     }
 
     // ─── Idempotency: check if already paid ─────────────────────────────────

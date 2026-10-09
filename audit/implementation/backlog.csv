@@ -1,0 +1,80 @@
+ID,Epic,Story/Task,Title,Source Finding,Priority,MoSCoW,Estimate,Owner,Dependencies,Acceptance Criteria,Test Plan,Rollback,Status
+S-01.1,E-01,Story,"Commit+push+deploy Sept-25 security fixes",CF-01,P0,Must,M (4h),ENG,"Vercel access","git status clean; HEAD==prod deploy; collections route 200 on prod","build+test+lint pre-commit; prod smoke EFT order","Vercel redeploy-previous",Todo
+T-01.1.1,E-01,Task,"Stage+commit 36 files as security-hardening commit",CF-01,P0,Must,2h,ENG,S-01.1 parent,"commit exists; tree clean","git log check","git reset",Todo
+T-01.1.2,E-01,Task,"Push + verify Vercel deploy",CF-01,P0,Must,1h,ENG,T-01.1.1,"prod serves new code","deploy log + marker check","redeploy-previous",Todo
+T-01.1.3,E-01,Task,"Prod smoke: real EFT checkout",CF-01,P0,Must,1h,ENG,T-01.1.2,"order row + owner email","manual E2E","n/a",Todo
+S-01.2,E-01,Story,"Apply 20260925_audit_hardening.sql + verify RLS",CF-02,P0,Must,S (2h),OPS,"S-01.1; Supabase access","anon INSERT+SELECT on orders denied; service-role checkout works","anon-key curl before/after; live checkout","re-grant statements (documented)",Todo
+S-01.3,E-01,Story,"Rotate ORDER_WEBHOOK_SECRET",CF-03,P0,Must,S (3h),OPS,S-01.1,"old secret→401; new→200; order email still fires","curl old/new; test order","restore prior env",Todo
+S-01.4,E-01,Story,"Prod env + config verification spike",CF-40;CF-68;U-02..U-09,P0,Must,S (3h),ENG+PM,"dashboard access","env matrix written; silent-skip defenses documented","inventory vs .env.example","n/a",Todo
+S-01.5,E-01,Story,"Upgrade next to >=16.3.8",CF-17,P1,Must,S (2h),ENG,S-01.1,"0 high advisories for next/sharp; build green","audit+build+smoke","revert+reinstall",Todo
+S-01.6,E-01,Story,"Verify prod variant FK cascade behavior",CF-39,P1,Must,S (1h),OPS,Supabase access,"pg_constraint result documented; ticket if CASCADE","pg_constraint query","n/a",Todo
+S-01.7,E-01,Story,"Rotate GitHub PAT + scrub remote URL creds",CF-71,P0,Must,S (1h),OPS,GitHub access,"old PAT 401s; remote URL has no creds; push works","API call old token; git push test","restore creds temporarily (then re-rotate)",Todo
+S-01.8,E-01,Story,"Trusted-IP helper for checkout rate limiting",CF-76,P0,Must,S (2h),ENG,none,"spoofed first XFF hops share one bucket","unit: forged XFF chain","revert (note: current=bug)",Todo
+S-02.1,E-02,Story,"Owner notification for all order channels",CF-05,P0,Must,S (4h),ENG,S-01.3,"whatsapp/email/both orders each trigger owner email","3 test orders via each channel","revert edge fn (degraded not broken)",Todo
+S-02.2,E-02,Story,"Fix settings .single() on order-confirmed",CF-19,P1,Must,S (1h),ENG,none,"0 or 2 settings rows still render banking block","seed extra row; view pending-EFT order","revert",Todo
+S-02.3,E-02,Story,"Minimal /admin/orders panel",CF-06,P0,Must,XL (32h),ENG,"S-02.1; admins table seeded","non-admin 403; mark-paid updates orders+payments; cancel works; list+detail views","e2e admin login->confirm paid; negative auth test","unpublish /admin route",Todo
+T-02.3.1,E-02,Task,"Admin auth guard + /admin layout",CF-06,P0,Must,4h,ENG,admins seed,"/admin/* redirects non-admin","manual + negative test","revert",Todo
+T-02.3.2,E-02,Task,"Orders list page w/ filters",CF-06,P0,Must,8h,ENG,T-02.3.1,"list shows status/payment/total/channel/date","seed orders; filter each","revert",Todo
+T-02.3.3,E-02,Task,"Order detail page",CF-06,P0,Must,8h,ENG,T-02.3.2,"full items+address+timeline","compare vs DB row","revert",Todo
+T-02.3.4,E-02,Task,"Server actions: markPaid/cancel/fulfill",CF-06,P0,Must,8h,ENG,T-02.3.3,"transactional updates; admin-checked","wrong-token/non-admin→deny","revert",Todo
+T-02.3.5,E-02,Task,"Seed owner into admins + UAT",CF-06,P0,Must,4h,ENG,T-02.3.4,"owner completes mark-paid unaided","UAT","remove admin row",Todo
+S-02.4,E-02,Story,"Order status lifecycle extension",CF-16,P2,Should,L (12h),ENG,S-02.3,"confirmed->scheduled->delivered statuses; CHECK migrated; customer-visible","admin advance; account view shows status","status enum migration rollback",Todo
+S-02.5,E-02,Story,"Payment/status transactional emails",CF-69;CF-61,P2,Should,M (8h),ENG,S-02.1;S-02.3,"mark-paid/ITN sends payment-confirmed email","test ITN + admin path","revert template",Todo
+S-02.6,E-02,Story,"Stale-order reconciliation cron",CF-89,P2,Should,S (3h),ENG,S-02.1,"pending/processing >N hrs triggers owner alert","insert stale order; run job","drop cron",Todo
+S-03.1,E-03,Story,"service_requests table + forms pipeline",CF-04,P0,Must,M (10h),ENG,S-01.2;S-02.1,"3 forms persist+notify; anon INSERT-only RLS; error states honest","submit each form; check DB+email","forms->wa.me fallback",Todo
+T-03.1.1,E-03,Task,"Migration + RLS for service_requests",CF-04,P0,Must,2h,ENG,none,"anon INSERT ok, SELECT denied","anon-key test","drop table",Todo
+T-03.1.2,E-03,Task,"Shared submitServiceRequest action",CF-04,P0,Must,3h,ENG,T-03.1.1,"zod+honeypot+rate-limit; owner email","submit tests","revert",Todo
+T-03.1.3,E-03,Task,"Wire maintenance/repairs/warranty forms",CF-04,P0,Must,4h,ENG,T-03.1.2,"success+error paths honest","submit each","revert to preventDefault is NOT allowed",Todo
+S-03.2,E-03,Story,"Newsletter persist or remove",CF-21,P1,Should,S (4h),PM->ENG,"D-11","submissions land in table or forms gone","submit test","revert",Todo
+S-04.1,E-04,Story,"Global footer in (shop) layout",CF-07,P0,Must,M (6h),ENG,S-04.2,"footer on products/PDP/cart/checkout/categories/deals","route sweep","layout revert",Todo
+S-04.2,E-04,Story,"Link repair: build 4 pages + prune dead links",CF-08;CF-20,P0,Must,L (14h),ENG+PM,"PM copy+contact data","0 chrome 404s; /contact /faq /shipping /returns live","link crawl","revert links",Todo
+S-04.3,E-04,Story,"Site search (Postgres FTS) or icon removal",CF-09,P0,Must,M (12h),ENG,"D-07","search returns real products; empty state; /search shareable","brand query; gibberish","remove icon (1h fallback)",Todo
+S-04.4,E-04,Story,"Remove/wire dead Google OAuth buttons",CF-10,P0,Must,S (1h),ENG,"PM (default remove)","no dead buttons on login/signup","click test","revert",Todo
+S-04.5,E-04,Story,"/account index + sub-nav",CF-50,P1,Must,S (4h),ENG,"D-09/S-06.2","/account resolves; persistent account nav","route+click test","redirect to /account/orders",Todo
+S-04.6,E-04,Story,"Real pagination or removal",CF-25,P1,Must,S (4h),ENG,none,"?page= paginates OR control removed","page-2 returns different items","revert",Todo
+S-04.7,E-04,Story,"OrderHistory dead controls fix",CF-18,P1,Must,S (3h),ENG,S-02.4,"View Details resolves; dead buttons gone; valid timeline","click-through","revert",Todo
+S-04.8,E-04,Story,"Real contact details everywhere",CF-20,P1,Must,S (2h),PM+ENG,"PM supplies data","no +27210000000/27000000000 anywhere","grep sweep","revert",Todo
+S-05.1,E-05,Story,"Session-stable checkout idempotency key",CF-44,P1,Must,S (2h),ENG,none,"double-submit/back-resubmit = 1 order","submit twice","revert",Todo
+S-05.2,E-05,Story,"Payfast failure retry + cart preservation",CF-43,P2,Should,S (4h),ENG,none,"failed order shows retry; cart survives failed redirect","sandbox fail path","revert",Todo
+S-05.3,E-05,Story,"Expired-link UX + guest order lookup",CF-45;CF-54,P2,Should,M (6h),ENG,S-04.1,"expired token->lookup form (rate-limited); order-confirmed in shop chrome","expired token test","revert",Todo
+S-05.4,E-05,Story,"Shipping/delivery pricing",CF-13,P1,Must,M (8h) flat / L (20h) zones,ENG,"D-03","delivery line in cart+checkout+confirmation; server-resolved","charged total==displayed total","feature-flag off / copy-only fallback",Todo
+S-05.5,E-05,Story,"VAT display + tax invoice",CF-14,P1,Must,M (8h),ENG+EXT-TAX,"D-04","VAT line per ruling; compliant invoice block","invoice review by EXT-TAX","hide VAT line if non-vendor",Todo
+S-05.6,E-05,Story,"Checkout UX overhaul",CF-31;CF-32;CF-36;CF-24,P2,Should,L (12h),ENG,S-04.8,"inline errors; single-provider shortcut; consent hint; trust strip; prefill","manual UX pass","revert",Todo
+S-05.7,E-05,Story,"Cart early revalidation",CF-63,P3,Could,S (4h),ENG,none,"cart warns on stale/price-drift items","edit DB price then load cart","revert",Todo
+S-05.8,E-05,Story,"Atomic create_order Postgres RPC",CF-87,P2,Should,M (8h),ENG,S-08.4,"forced failure -> zero partial rows; happy path unchanged","forced items failure test","keep compensating-delete path",Todo
+S-05.9,E-05,Story,"orders.user_id + claim-on-signup + prefill",CF-88,P3,Could,M (8h),ENG,S-05.6,"logged-in orders link user_id; guest orders claimable; prefill works","signup-claim test","revert; email-match remains",Todo
+S-06.1,E-06,Story,"Remove fabricated ratings",CF-12,P0,Must,S (2h),ENG,"D-05 (default remove)","no rating rendered unless real columns set","page render check","revert",Todo
+S-06.2,E-06,Story,"Delete/hide mock account pages",CF-22,P0,Must,S (2h),ENG,"D-09 (default delete)","no fabricated data to signed-in users","route check","revert",Todo
+S-06.3,E-06,Story,"Truthful copy pass",CF-46,P1,Must,S (3h),PM+ENG,"PM copy review","no financing/tracking claims anywhere","grep+read pages","revert",Todo
+S-06.4,E-06,Story,"POPIA hardening",CF-60,P2,Should,M (6h),ENG,S-03.1,"retention covers all PII fields; rights path documented","cron dry-run","revert cron scope",Todo
+S-06.5,E-06,Story,"Deal-price policy implementation",CF-37,P2,Should,S (1h) copy / M (6h) honor,ENG,"D-12","checkout price==advertised or honest copy","deal->checkout compare","revert",Todo
+S-06.6,E-06,Story,"Legal entity disclosure + terms re-issue",CF-72;CF-73;CF-79;CF-80,P0,Must,M (6h)+legal,ENG+PM+EXT,"entity/reg/VAT/address published; terms re-dated & aligned; cooling-off addressed; IO named; accreditation claim resolved","page review vs ECTA s43","revert is NOT allowed once entity data verified",Todo
+S-07.1,E-07,Story,"Carousel pause + reduced-motion",CF-11,P0,Must,S (3h),ENG,none,"pause control; stops on hover/focus; reduced-motion off","manual+axe","revert",Todo
+S-07.2,E-07,Story,"CartDrawer accessible dialog",CF-27,P0,Must,M (5h),ENG,none,"role=dialog; focus trap; Escape; focus return","axe+keyboard","revert",Todo
+S-07.3,E-07,Story,"Contrast remediation AA",CF-28,P0,Must,S (4h),DES/ENG,S-07.4 (or parallel),"interactive text >=4.5:1","contrast checker+axe","revert",Todo
+S-07.4,E-07,Story,"Design-token consolidation Phase A",CF-30;CF-29;CF-48,P1,Should,XL (20h),DES/ENG,"SP-3 spike","single palette+type scale on top-20 files; !important wars gone","screenshot diffs","per-file revert",Todo
+S-07.5,E-07,Story,"A11y labels + semantics sweep",CF-55,P1,Should,M (6h),ENG,none,"aria-labels on icon buttons; rating role=img; focus rings","axe+keyboard","revert",Todo
+S-07.6,E-07,Story,"Dead-component purge",CF-47,P2,Could,S (4h),ENG,none,"17 dead files+Poppins removed; build green","import-graph+build","git revert",Todo
+S-08.1,E-08,Story,"CI pipeline (lint+tsc+test+build+audit)",CF-33,P0,Must,M (4h),OPS,"GitHub access","PR check green; preview deploys","open test PR","disable workflow",Todo
+S-08.2,E-08,Story,"Error monitoring + uptime",CF-34,P1,Must,M (4h),OPS,none,"Sentry catches test error; uptime alerts owner","throw test error; kill site","remove SDK",Todo
+S-08.3,E-08,Story,"Env + package-manager hygiene",CF-66;CF-68,P1,Should,S (2h),OPS,none,".env.example+engines+packageManager committed; backup/nul deleted","fresh-clone install test","revert",Todo
+S-08.4,E-08,Story,"Staging environment",readiness-§2,P1,Should,M (5h),OPS,S-01.4,"preview env for destructive tests","apply test migration to staging","document prod-only risk",Todo
+S-08.5,E-08,Story,"Backup/DR + release runbooks",readiness-§2,P1,Should,M (4h),OPS,S-08.4,"restore drill done; runbooks written","restore to scratch project","n/a",Todo
+S-08.6,E-08,Story,"Security headers incl. CSP",CF-59,P2,Should,S (3h),ENG,none,"HSTS+XCTO+frame+CSP (report-only ok)","securityheaders.com scan","remove headers",Todo
+S-08.7,E-08,Story,"Auth rate limiting + admin hardening",CF-78,P2,Should,S (3h),ENG,S-01.4;S-01.8,"login/signup/reset buckets; 11th attempt -> 429","brute-force test","revert",Todo
+S-09.1,E-09,Story,"Payfast sandbox E2E",CF-61,P1,Must-before-enable,M (8h),ENG,"S-02.3; sandbox creds","sandbox pay->ITN->paid->confirmation","full sandbox journey","stay disabled",Todo
+S-09.2,E-09,Story,"Refund/cancel workflow",CF-35,P2,Should,M (10h),ENG,S-02.3,"admin marks refunded w/ amount+reason","admin action test","revert",Todo
+S-09.3,E-09,Story,"Inventory policy implementation",CF-15,P2,Should,M (8h),ENG,"D-13","decrement+enforce OR honest advisory copy","qty>stock test","revert",Todo
+S-09.4,E-09,Story,"Payfast enablement gate",CF-61,P1,Must-before-enable,S (2h),ENG,S-09.1,"gate checklist green; is_enabled flip","live R1 order watch","is_enabled=false",Todo
+S-10.1,E-10,Story,"Analytics funnel events + loader fix",CF-41,P2,Should,M (6h),ENG,"U-04","view_item/add_to_cart/begin_checkout fire; loader verified","dataLayer inspection","revert",Todo
+S-10.2,E-10,Story,"Coupons (cut candidate)",CF-23,P3,Could,L (12h),ENG,"PM decision","code applies server-resolved discount","coupon apply test","revert",Todo
+S-10.3,E-10,Story,"SEO fixes",CF-42,P2,Should,S (4h),ENG,none,"categories+collections in sitemap; variants canonical/excluded; category notFound","sitemap+404 check","revert",Todo
+S-11.1,E-11,Story,"Unit tests import real code",CF-58,P1,Must,M (8h),ENG,none,"signature/phone/resolver tests exercise real modules","mutation check: break code->test fails","revert",Todo
+S-11.2,E-11,Story,"Playwright e2e (3 paths)",CF-58,P1,Must,M (10h),ENG,S-08.1;S-08.4;S-11.1,"browse->checkout EFT; auth orders; admin mark-paid all green in CI","CI run","remove suite (manual UAT)",Todo
+S-11.3,E-11,Story,"Accessibility verification (axe+keyboard)",CF-55;readiness-§5,P1,Must,M (5h),ENG,"E-07 done","0 critical/serious top-8 routes; keyboard pass documented","axe report","n/a",Todo
+S-11.4,E-11,Story,"Performance + load smoke",CF-57,P2,Should,M (5h),ENG,S-08.4,"LCP<2.5s PDP; 0 5xx under load; budgets documented","k6+Lighthouse","n/a",Todo
+S-12.1,E-12,Story,"Mobile fixes (targets, offsets, sticky total)",CF-49,P2,Should,M (5h),ENG,none,"44px targets; no pt-220 dead space; sticky mobile total","device check","revert",Todo
+S-12.2,E-12,Story,"Loading states",CF-26,P2,Should,M (6h),ENG,none,"loading.tsx PLP/PDP/account; skeletons","throttled nav test","revert",Todo
+S-12.3,E-12,Story,"Filter + breadcrumb polish",CF-52;CF-53;CF-51,P2,Should,M (6h),ENG,none,"no auto URL mutation; slider max=data; filter chips; unified breadcrumbs","manual UX pass","revert",Todo
+S-12.4,E-12,Story,"Image + asset hygiene",CF-56,P2,Should,M (6h),ENG,none,"img->next/image; storage host verified; dir rename; smaller payload","lint+build+manual","revert",Todo
+S-12.5,E-12,Story,"Misc correctness sweep",CF-64;CF-65;CF-70,P3,Could,S (3h),ENG,none,"useCart throws; BTU boundary unified; nav >=12px+active; mock files deleted","unit+grep","revert",Todo

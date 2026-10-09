@@ -9,7 +9,7 @@ async function sha256(value: string) {
   return Array.from(new Uint8Array(hash)).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 
-export function LeadTracking({ value, email, phone, itemIds }: { value: number; email: string | null; phone: string | null; itemIds: string[] }) {
+export function LeadTracking({ orderId, value, email, phone, itemIds }: { orderId: string; value: number; email: string | null; phone: string | null; itemIds: string[] }) {
   useEffect(() => {
     async function track() {
       const consent = window.localStorage.getItem("airconsstore_cookie_consent");
@@ -17,6 +17,14 @@ export function LeadTracking({ value, email, phone, itemIds }: { value: number; 
       if (consent !== "accepted" || !window.gtag) {
         return;
       }
+
+      // Fire once per order per browser — a refresh of the confirmation page
+      // must not duplicate the conversion.
+      const dedupKey = `lead_tracked_${orderId}`;
+      if (window.sessionStorage.getItem(dedupKey)) {
+        return;
+      }
+      window.sessionStorage.setItem(dedupKey, "1");
 
       const enhancedData: Record<string, string> = {};
 
@@ -31,6 +39,7 @@ export function LeadTracking({ value, email, phone, itemIds }: { value: number; 
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({
         event: "generate_lead",
+        transaction_id: orderId,
         value,
         currency: "ZAR",
         item_ids: itemIds,
@@ -38,6 +47,7 @@ export function LeadTracking({ value, email, phone, itemIds }: { value: number; 
       });
 
       window.gtag("event", "generate_lead", {
+        transaction_id: orderId,
         value,
         currency: "ZAR",
         items: itemIds.map((id) => ({ item_id: id })),
@@ -46,7 +56,7 @@ export function LeadTracking({ value, email, phone, itemIds }: { value: number; 
     }
 
     track();
-  }, [email, itemIds, phone, value]);
+  }, [orderId, email, itemIds, phone, value]);
 
   return null;
 }

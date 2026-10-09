@@ -1,6 +1,7 @@
 import "photoswipe/style.css";
 import { Metadata } from "next";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { serviceRoleClient } from "@/lib/supabase-service";
 import { ProductDetailClient } from "./ProductDetailClient";
@@ -336,14 +337,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     .single();
 
   if (!product) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground mb-2">Product not found.</p>
-          <p className="text-xs text-muted-foreground">Looking for slug: {slug}</p>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   // Adapt Supabase product to AirconProduct with stock info

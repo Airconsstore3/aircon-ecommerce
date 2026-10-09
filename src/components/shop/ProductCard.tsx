@@ -9,7 +9,6 @@ import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getCssImageUrl } from "@/lib/product-images";
 import { useState, useEffect } from "react";
-import { useCart } from "@/components/shop/CartProvider";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -393,24 +392,10 @@ const DealCard = ({ deal, productSlug }: DealCardProps) => {
   const percentSaved = calculatePercentSaved(deal.original_price_zar, deal.sale_price_zar);
   const hasImages = deal.images.length > 0;
   const primaryImage = hasImages ? deal.images[0] : "/placeholder.jpg";
-  const { addItem } = useCart();
 
   const productHref = productSlug ? `/products/${productSlug}` : `/deals/${deal.slug}`;
 
   const isExpired = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
-
-  const handleAddToCart = () => {
-    addItem({
-      id: deal.id,
-      name: deal.name,
-      slug: deal.slug,
-      price_zar: deal.original_price_zar,
-      sale_price_zar: deal.sale_price_zar,
-      images: deal.images,
-      type: deal.deal_type,
-      is_enquiry_only: false,
-    });
-  };
 
   return (
     <Card className="group relative block rounded-none border border-solid border-[#0A2540]/30 bg-transparent py-5 shadow-none ring ring-border">
@@ -510,17 +495,24 @@ const DealCard = ({ deal, productSlug }: DealCardProps) => {
           )}
 
           {/* CTA buttons */}
+          {/* A deal is not a product — adding deal.id to the cart breaks
+              checkout (pricing resolves against the products table). Route
+              to the deal's linked product page instead. */}
           <div className="relative z-[60] flex flex-col gap-2 pt-2">
-            <div>
-              <Button
-                variant="outline"
-                className="w-full rounded-none border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] hover:bg-[#1C99D6]/10 font-[var(--font-google-sans-flex)]"
-                onClick={handleAddToCart}
-              >
-                <ShoppingBag className="mr-2 size-4" />
-                Add to cart
-              </Button>
-            </div>
+            {productSlug ? (
+              <div>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full rounded-none border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] hover:bg-[#1C99D6]/10 font-[var(--font-google-sans-flex)]"
+                >
+                  <Link href={productHref}>
+                    <ShoppingBag className="mr-2 size-4" />
+                    Buy this product
+                  </Link>
+                </Button>
+              </div>
+            ) : null}
             <div>
               <Button
                 asChild

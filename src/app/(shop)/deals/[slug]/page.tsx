@@ -1,12 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Clock, AlertCircle, CheckCircle2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import DealAddToCartButton from "./DealAddToCartButton";
+
 
 export default async function DealDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -28,17 +29,7 @@ export default async function DealDetailPage({ params }: { params: Promise<{ slu
     .single();
 
   if (!deal) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <div className="text-center">
-          <p className="text-muted-foreground mb-2">Deal not found.</p>
-          <p className="text-xs text-muted-foreground">Looking for slug: {slug}</p>
-          <Link href="/deals" className="inline-block mt-4 text-[#1C99D6] hover:underline">
-            View all deals
-          </Link>
-        </div>
-      </div>
-    );
+    notFound();
   }
 
   // Get linked product from the join
@@ -212,9 +203,17 @@ export default async function DealDetailPage({ params }: { params: Promise<{ slu
             )}
 
             {/* Actions */}
+            {/* Deals link to their underlying product — checkout always prices
+                from the products table, so a deal must never be added to the
+                cart directly (its id is not a products.id). */}
             <div className="space-y-3">
-              {!isExpired && deal.stock_remaining > 0 && (
-                <DealAddToCartButton deal={deal} />
+              {!isExpired && deal.stock_remaining > 0 && productHref && (
+                <Button
+                  className="w-full bg-[#1C99D6] hover:bg-[#1680b0] text-white"
+                  asChild
+                >
+                  <Link href={productHref}>Buy this product</Link>
+                </Button>
               )}
               {productHref && (
                 <Button

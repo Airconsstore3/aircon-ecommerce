@@ -48,6 +48,34 @@ function generateSignature(params: Record<string, string>, passphrase: string): 
   return createHash("md5").update(query).digest("hex");
 }
 
+// ─── ITN server-to-server validation ─────────────────────────────────────────
+// Payfast requires us to post the received notification data back to their
+// validation endpoint, which responds "VALID" only if Payfast itself sent it.
+// See: https://developers.payfast.co.za/documentation/#itn
+async function validateItnWithPayfast(
+  body: Record<string, string>,
+  mode: string
+): Promise<boolean> {
+  const host =
+    mode === "live"
+      ? "https://www.payfast.co.za/eng/query/validate"
+      : "https://sandbox.payfast.co.za/eng/query/validate";
+
+  try {
+    const response = await fetch(host, {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams(body).toString(),
+      signal: AbortSignal.timeout(10000),
+    });
+    const text = (await response.text()).trim();
+    return response.ok && text === "VALID";
+  } catch (error) {
+    console.error("[payfast] ITN server validation request failed:", error);
+    return false;
+  }
+}
+
 // ─── Payfast Provider ────────────────────────────────────────────────────────
 
 class PayfastProvider implements PaymentProvider {
@@ -99,33 +127,44 @@ class PayfastProvider implements PaymentProvider {
     const config = getConfig();
     const body = params.body;
 
+    const invalid: VerifyWebhookResult = {
+      valid: false,
+      orderNumber: null,
+      amountZar: null,
+      paymentStatus: null,
+      providerTransactionId: null,
+      rawResponse: body,
+    };
+
+    if (!config.passphrase) {
+      // Without a passphrase the signature is md5(sorted-params) — computable
+      // by anyone. The server-to-server validation below is the only real
+      // guarantee in that configuration.
+      console.warn("[payfast] PAYFAST_PASSPHRASE is not set — ITN signatures are forgeable; relying on server validation");
+    }
+
     // 1. Validate signature
     const expectedSignature = generateSignature(body, config.passphrase);
     const providedSignature = params.signature || body.signature;
 
     if (!providedSignature || providedSignature !== expectedSignature) {
       console.error("[payfast] Signature mismatch");
-      return {
-        valid: false,
-        orderNumber: null,
-        amountZar: null,
-        paymentStatus: null,
-        providerTransactionId: null,
-        rawResponse: body,
-      };
+      return invalid;
     }
 
-    // 2. Validate merchant ID
+    // 2. Server-to-server validation: post the received data back to Payfast.
+    // Payfast confirms whether it genuinely sent this notification — this is
+    // the authoritative check and cannot be forged by a client.
+    const valid = await validateItnWithPayfast(body, config.mode);
+    if (!valid) {
+      console.error("[payfast] Server validation failed — Payfast did not confirm this ITN");
+      return invalid;
+    }
+
+    // 3. Validate merchant ID
     if (body.merchant_id !== config.merchantId) {
       console.error("[payfast] Merchant ID mismatch");
-      return {
-        valid: false,
-        orderNumber: null,
-        amountZar: null,
-        paymentStatus: null,
-        providerTransactionId: null,
-        rawResponse: body,
-      };
+      return invalid;
     }
 
     // 3. Extract payment data

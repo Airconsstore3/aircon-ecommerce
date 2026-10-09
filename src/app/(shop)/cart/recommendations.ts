@@ -27,8 +27,26 @@ interface CartItem {
   category_id: string | null;
 }
 
+// Cart item ids are composite strings ("<uuid>-install-<kitIds>..." — see
+// ProductDetailClient). Only the leading UUID is a products.id, and only
+// validated UUIDs may reach a PostgREST filter — anything else is either
+// a malformed query or an injection attempt.
+const UUID_RE = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+
 export async function getRecommendations(cartItemIds: string[]): Promise<Recommendation[]> {
   if (cartItemIds.length === 0) {
+    return [];
+  }
+
+  const productIds = [
+    ...new Set(
+      cartItemIds
+        .map((id) => id.match(UUID_RE)?.[0])
+        .filter((id): id is string => !!id)
+    ),
+  ];
+
+  if (productIds.length === 0) {
     return [];
   }
 
@@ -36,7 +54,7 @@ export async function getRecommendations(cartItemIds: string[]): Promise<Recomme
   const { data: cartItems } = await anonClient
     .from("products")
     .select("id, brand, type, btu_range, category_id")
-    .in("id", cartItemIds);
+    .in("id", productIds);
 
   if (!cartItems || cartItems.length === 0) {
     return [];
@@ -53,7 +71,7 @@ export async function getRecommendations(cartItemIds: string[]): Promise<Recomme
     .select("id, name, slug, brand, type, price_zar, sale_price_zar, images, is_enquiry_only, btu_range")
     .eq("is_published", true)
     .in("type", types)
-    .not("id", "in", `(${cartItemIds.join(",")})`)
+    .not("id", "in", `(${productIds.join(",")})`)
     .order("is_featured", { ascending: false })
     .limit(10);
 

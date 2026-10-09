@@ -1,0 +1,9 @@
+Phase,Effort Days,Owner,Available Days,Gap,Mitigation
+P0 Stabilization (W0),2.7,ENG+OPS,2.5,-0.2,PAT+migration are ops tasks — quick
+P1 Foundation (W1-2),7.6,ENG,5.0,-2.6,"Descope admin polish; defer S-02.4/02.5/02.6 to Phase 5"
+P2 Core flows (W3-6),9.4,ENG+PM content,10.0,+0.6,"Slack absorbs PM content lag"
+P3 Hardening (W7-9),11.0,ENG+DES-C?,7.5,-3.5,"Cut S-07.4 tail + S-12.x + S-05.8; or 3-4d contract designer"
+P4 Launch gate (W10-11),3.6,ENG+PM,5.0,+1.4,Buffer for UAT surprises
+P5 Post-launch (W12+),9.3,ENG,open,0,Unscheduled; per-story gating
+TOTAL (Must+Should ~357h),~52,"1 dev (solo founder confirmed)",~34,-18 (-34%),"Cut list order: coupons->token tail->loading->SEO->filter polish->RPC->P5 items; or hire"
+TOTAL (incl. Could/decision-heavy ~381h),~54,"1 dev",~34,-20 (-37%),"Won't-do list enforced; contract help required to keep all"

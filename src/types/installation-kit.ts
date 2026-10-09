@@ -138,15 +138,18 @@ export interface InstallationKitConfig {
 
 // ─── User's selected configuration ───────────────────────────────────────────
 
+// All fields optional except conceptually kitId — the client sends only the
+// options the user actually configured; every id is re-validated against the
+// config tables server-side before it affects price.
 export interface KitConfiguration {
-  kitId: string;
-  materialId: string;
-  pipeSizeId: string;
-  pipeLengthId: string;
-  bracketId: string;
-  insulationId: string;
-  hasCage: boolean;
-  cageId: string | null;
+  kitId?: string;
+  materialId?: string;
+  pipeSizeId?: string;
+  pipeLengthId?: string;
+  bracketId?: string;
+  insulationId?: string;
+  hasCage?: boolean;
+  cageId?: string | null;
   customCageDimensions?: {
     width: string;
     height: string;
