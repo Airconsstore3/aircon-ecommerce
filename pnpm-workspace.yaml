@@ -6,3 +6,7 @@ allowBuilds:
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
+overrides:
+  sharp: '>=0.35.5'
+  source-map-js: '>=1.2.2'
+  browserslist: '>=4.28.7'

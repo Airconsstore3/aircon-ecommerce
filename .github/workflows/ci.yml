@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # NOTE: currently fails — 15 react-hooks/set-state-in-effect errors.
+      # Fix or intentionally suppress them before relying on this gate.
+      - name: Lint
+        run: pnpm lint
+
+      # NOTE: currently fails — next@16.3.6 has 5 high advisories.
+      # Clears after upgrade to next >= 16.3.8.
+      - name: Audit (prod deps, high+)
+        run: pnpm audit --prod --audit-level=high
+
+      - name: Test
+        run: pnpm test
+
+      # Placeholder env values — build-time only, no network calls made.
+      - name: Build
+        run: pnpm build
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: placeholder-anon-key
+          SUPABASE_SERVICE_ROLE_KEY: placeholder-service-key
