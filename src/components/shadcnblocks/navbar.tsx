@@ -444,12 +444,15 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
   // open state after Escape so the menu truly closes.
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [escapeClosed, setEscapeClosed] = useState<string | null>(null);
+  const [lastPathname, setLastPathname] = useState(pathname);
 
-  // Route changes close any open menu.
-  useEffect(() => {
+  // Route changes close any open menu — adjusting state during render
+  // (not in an effect) so no extra render pass is scheduled.
+  if (lastPathname !== pathname) {
+    setLastPathname(pathname);
     setOpenSubmenu(null);
     setEscapeClosed(null);
-  }, [pathname]);
+  }
 
   return (
     <>
