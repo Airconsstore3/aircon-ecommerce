@@ -238,28 +238,32 @@ export default function CategoryClient({
                 </Sheet>
 
                 {/* Columns Toggle - Hidden on mobile */}
-                <div className="hidden sm:flex items-center gap-1">
+                <div className="hidden sm:flex items-center gap-1" role="group" aria-label="Products per row">
                   <Button
                     size="icon"
                     variant={columns === 3 ? "default" : "ghost"}
+                    aria-label="Show three products per row"
+                    aria-pressed={columns === 3}
                     className={cn(
                       "rounded-full",
                       columns === 3 ? "bg-white hover:bg-white/90 text-[#1C99D6]" : "text-white hover:bg-white/10"
                     )}
                     onClick={() => setColumns(3)}
                   >
-                    <Grid3x3 className="h-4 w-4" />
+                    <Grid3x3 className="h-4 w-4" aria-hidden="true" />
                   </Button>
                   <Button
                     size="icon"
                     variant={columns === 4 ? "default" : "ghost"}
+                    aria-label="Show four products per row"
+                    aria-pressed={columns === 4}
                     className={cn(
                       "rounded-full",
                       columns === 4 ? "bg-white hover:bg-white/90 text-[#1C99D6]" : "text-white hover:bg-white/10"
                     )}
                     onClick={() => setColumns(4)}
                   >
-                    <Grid2x2 className="h-4 w-4" />
+                    <Grid2x2 className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 </div>
 

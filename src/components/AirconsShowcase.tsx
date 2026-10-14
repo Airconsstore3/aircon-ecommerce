@@ -7,7 +7,7 @@ const showcaseImage = "/AIRCON HOME.webp";
 
 export function AirconsShowcase() {
   return (
-    <main className="nivis-page">
+    <section className="nivis-page" aria-label="Air conditioner showcase">
       <style>{`
         .nivis-page {
           min-height: 100%;
@@ -192,6 +192,6 @@ export function AirconsShowcase() {
           </div>
         </section>
       </section>
-    </main>
+    </section>
   );
 }

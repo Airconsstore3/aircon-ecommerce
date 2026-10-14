@@ -10,9 +10,11 @@ export default function ShopLayout({
   return (
     <div className="shop-layout bg-white">
       <NavbarWrapper />
-      <main className="min-h-screen bg-white">
+      {/* The root layout already renders the page's main landmark —
+          a second nested main would violate landmark rules. */}
+      <div className="min-h-screen bg-white">
         {children}
-      </main>
+      </div>
       <FooterGate>
         <PremiumFooter />
       </FooterGate>

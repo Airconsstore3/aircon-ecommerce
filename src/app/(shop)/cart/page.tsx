@@ -82,10 +82,10 @@ export default function CartPage() {
                           <button
                             type="button"
                             onClick={() => removeItem(item.id)}
-                            className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-[#E5E7EB] text-[#9CA3AF] hover:border-red-400 hover:text-red-500 transition-colors"
+                            className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#E5E7EB] text-[#9CA3AF] hover:border-red-400 hover:text-red-500 transition-colors focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[#1C99D6]"
                             aria-label={`Remove ${item.name}`}
                           >
-                            <X className="h-3 w-3" />
+                            <X className="h-3 w-3" aria-hidden="true" />
                           </button>
                           <Link
                             href={`/products/${item.slug}`}
