@@ -11,9 +11,9 @@ interface ProductList9Props {
 const ProductList9 = ({ products, className }: ProductList9Props) => {
   return (
     <FeaturedProducts
-      eyebrow="BEST SELLERS"
-      title="Our Best Sellers"
-      description="Discover our most popular air conditioners for homes, offices and commercial spaces."
+      eyebrow="FEATURED"
+      title="Featured Aircons"
+      description="A selection of air conditioners for homes, offices and commercial spaces."
       products={products}
       className={className}
       showViewAll={true}

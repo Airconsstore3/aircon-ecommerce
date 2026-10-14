@@ -217,7 +217,7 @@ export default function CommercialCategoryClient({
                     <SelectItem value="newest">Newest</SelectItem>
                     <SelectItem value="price-low">Price: Low to High</SelectItem>
                     <SelectItem value="price-high">Price: High to Low</SelectItem>
-                    <SelectItem value="best-selling">Best Selling</SelectItem>
+                    <SelectItem value="best-selling">Curated</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -246,7 +246,7 @@ export default function CommercialCategoryClient({
                   <SelectItem value="newest">Newest</SelectItem>
                   <SelectItem value="price-low">Price: Low to High</SelectItem>
                   <SelectItem value="price-high">Price: High to Low</SelectItem>
-                  <SelectItem value="best-selling">Best Selling</SelectItem>
+                  <SelectItem value="best-selling">Curated</SelectItem>
                 </SelectContent>
               </Select>
             </div>

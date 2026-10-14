@@ -16,6 +16,8 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { ChevronRight, ChevronLeft, Filter, Search, X, SlidersHorizontal } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useMemo, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -39,6 +41,7 @@ interface ResidentialCategoryClientProps {
   categoryTitle?: string;
   categoryDescription?: string;
   productCountLabel?: string;
+  categoryKind?: "residential" | "commercial" | "all";
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -75,13 +78,63 @@ const AVAILABILITY_OPTIONS = [
   { value: "special-order", label: "Special Order" },
 ];
 
+const TECHNOLOGY_OPTIONS = [
+  { value: "inverter", label: "Inverter" },
+  { value: "non-inverter", label: "Non-Inverter" },
+];
+
 const SORT_OPTIONS = [
   { value: "featured", label: "Featured" },
   { value: "newest", label: "Newest" },
   { value: "price-low", label: "Price: Low to High" },
   { value: "price-high", label: "Price: High to Low" },
-  { value: "best-selling", label: "Best Selling" },
+  { value: "best-selling", label: "Curated" },
 ];
+
+const ROOM_SIZE_GUIDE: Record<string, string> = {
+  "9000": "16–18 m²",
+  "12000": "21–24 m²",
+  "18000": "32–36 m²",
+  "24000": "43–48 m²",
+  "30000": "56–60 m²",
+  "36000": "66–70 m²",
+};
+
+const CATEGORY_HIGHLIGHTS = {
+  residential: {
+    label: "Home comfort and installation",
+    image: "/Hero Images/Product category pictures/Residential Comfort For Every Room High Quality.png",
+    installationImage: "/Hero Images/Product category pictures/Residential Installation Technician High Quality.png",
+    imageAlt: "Wall-mounted air conditioner cooling a comfortable living room",
+    eyebrow: "Made for home",
+    title: "Comfort for every room",
+    description: "A cooler living room. A cosier bedroom. Find your fit.",
+    helpDescription: "Find the right setup for your space, with installation to match.",
+    sizingNote: "Room sizes are approximate. Sunlight, insulation and ceiling height affect the capacity you need.",
+  },
+  commercial: {
+    label: "Business cooling and installation",
+    image: "/Hero Images/Product category pictures/Commercial Aircon Ultra Quality.png",
+    installationImage: "/Hero Images/Product category pictures/Commercial Installation High Quality.png",
+    imageAlt: "Commercial outdoor air conditioning system mounted on an office building",
+    eyebrow: "Built for business",
+    title: "Comfort that works harder",
+    description: "Cooling for offices, retail and larger spaces. Find your business fit.",
+    helpDescription: "Plan the right system and installation for your business space.",
+    sizingNote: "Areas are indicative, based on 600 BTU per m² for a standard heat load. Occupancy, equipment and ceiling height affect sizing. Larger systems require a site assessment.",
+  },
+  all: {
+    label: "All air conditioners and installation",
+    image: "/Hero Images/Product category pictures/Aircons Warehouse Ultra Quality.png",
+    installationImage: "/Hero Images/Product category pictures/All Aircons Ultra Quality.png",
+    imageAlt: "Warehouse stocked with residential and commercial air conditioners",
+    eyebrow: "The full range",
+    title: "Every space covered",
+    description: "From bedrooms to boardrooms — browse the full air conditioning range.",
+    helpDescription: "Find the right system for any space, with installation to match.",
+    sizingNote: "Room sizes are approximate for typical homes; larger systems show indicative areas or need a site assessment. Sunlight, insulation, occupancy and ceiling height affect the capacity you need.",
+  },
+};
 
 const PAGE_SIZE = 12;
 
@@ -158,13 +211,28 @@ export default function ResidentialCategoryClient({
   brandOptions,
   typeOptions,
   categoryTitle = "Residential Air Conditioning",
-  categoryDescription = "Split units, cassette systems, and floor-standing air conditioners for homes.",
+  categoryDescription = "Find your everyday comfort. Shop air conditioners by brand, cooling capacity and system type.",
   productCountLabel = "Residential Air Conditioners",
+  categoryKind = "residential",
 }: ResidentialCategoryClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const highlights = CATEGORY_HIGHLIGHTS[categoryKind];
+  const productsAnchor = `${categoryKind}-products`;
+  const capacityOptions = btuOptions.map((option) => {
+    const btu = Number(option.value);
+    // Residential uses the fixed room guide; commercial/other sizes fall back
+    // to the 600 BTU/m² estimate, then "Site sizing" for very large systems.
+    const roomSize = categoryKind === "residential"
+      ? ROOM_SIZE_GUIDE[option.value]
+      : ROOM_SIZE_GUIDE[option.value] ??
+        (Number.isFinite(btu) && btu > 0
+          ? btu <= 60000 ? `≈${Math.round(btu / 600)} m²` : "Site sizing"
+          : undefined);
+    return { ...option, label: roomSize ? `${option.label} (${roomSize})` : option.label };
+  });
 
   // ─── Tabs: "View all" + system types ────────────────────────────────
   const tabs = [
@@ -178,6 +246,18 @@ export default function ResidentialCategoryClient({
   // ─── Filtering logic ────────────────────────────────────────────────
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
+
+    // Header search submits ?q= to this catalogue
+    const urlQuery = (searchParams.get("q") ?? "").trim();
+    if (urlQuery) {
+      const terms = urlQuery.toLowerCase().split(/\s+/);
+      filtered = filtered.filter((p) => {
+        const searchable = [p.name, p.brand, p.btu_size, p.btu_range, p.ac_type, p.type]
+          .join(" ")
+          .toLowerCase();
+        return terms.every((term) => searchable.includes(term));
+      });
+    }
 
     // Keyword search
     if (keyword.trim()) {
@@ -210,6 +290,16 @@ export default function ResidentialCategoryClient({
     if (types.length > 0) {
       filtered = filtered.filter(
         (p) => p.ac_type && types.includes(p.ac_type.toLowerCase())
+      );
+    }
+
+    // Inverter technology filter
+    const technologies = searchParams.getAll("technology");
+    if (technologies.length > 0) {
+      filtered = filtered.filter((p) =>
+        technologies.some((technology) =>
+          technology === "inverter" ? p.is_inverter === true : p.is_inverter === false
+        )
       );
     }
 
@@ -386,6 +476,10 @@ export default function ResidentialCategoryClient({
 
   // ─── Active filter tags ─────────────────────────────────────────────
   const activeFilterTags: { label: string; filterId: string; value: string }[] = [];
+  const urlQueryTag = (searchParams.get("q") ?? "").trim();
+  if (urlQueryTag) {
+    activeFilterTags.push({ label: `“${urlQueryTag}”`, filterId: "q", value: urlQueryTag });
+  }
   searchParams.getAll("brand").forEach((v) => {
     const opt = brandOptions.find((o) => o.value === v);
     if (opt) activeFilterTags.push({ label: opt.label, filterId: "brand", value: v });
@@ -397,6 +491,10 @@ export default function ResidentialCategoryClient({
   searchParams.getAll("type").forEach((v) => {
     const opt = typeOptions.find((o) => o.value === v);
     if (opt) activeFilterTags.push({ label: opt.label, filterId: "type", value: v });
+  });
+  searchParams.getAll("technology").forEach((v) => {
+    const opt = TECHNOLOGY_OPTIONS.find((o) => o.value === v);
+    if (opt) activeFilterTags.push({ label: opt.label, filterId: "technology", value: v });
   });
   searchParams.getAll("priceRange").forEach((v) => {
     const opt = PRICE_RANGE_OPTIONS.find((o) => o.value === v);
@@ -416,28 +514,72 @@ export default function ResidentialCategoryClient({
   const currentTab = searchParams.get("type") || "all";
 
   return (
-    <div className={cn("min-h-screen bg-white", fontClass)}>
-      <div className="mx-auto max-w-[1600px] px-6 sm:px-10 lg:px-16 pt-16 md:pt-20 lg:pt-24 pb-24">
+    <div className={cn("aircon-catalogue min-h-screen bg-white", fontClass)}>
+      <div className="mx-auto max-w-[1600px] px-4 pb-24 pt-6 sm:px-6 lg:px-10 lg:pt-8">
         {/* ─── Header ────────────────────────────────────────────────── */}
-        <div className="mb-12 md:mb-16 lg:mb-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1C99D6]">
-            SHOP
-          </p>
-          <h1 className="mt-3 text-[36px] md:text-[48px] lg:text-[56px] font-semibold leading-[1.05] tracking-tight text-[#1E3A5F]">
+        <div className="catalogue-heading mb-5">
+          <h1 className="font-semibold leading-[1.05] tracking-tight text-[#1E3A5F]">
             {categoryTitle}
           </h1>
-          <p className="mt-4 text-[18px] md:text-[20px] leading-[1.6] text-[#5F6B7A] max-w-[650px]">
+          <p className="mt-2 text-[#5F6B7A]">
             {categoryDescription}
           </p>
         </div>
 
+            <section aria-label={highlights.label} className="catalogue-banners mb-5 grid gap-3 md:grid-cols-2 md:gap-4">
+              <a href={`#${productsAnchor}`} aria-label={`Browse ${categoryKind} air conditioners`} className="group relative isolate block min-h-56 overflow-hidden rounded-xl bg-[#1E3A5F] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1478A8] sm:min-h-60 lg:min-h-64">
+                <Image src={highlights.image} alt="" fill preload quality={100} unoptimized={categoryKind !== "residential"} sizes="(min-width: 1600px) 752px, (min-width: 768px) 48vw, 100vw" className="-z-20 object-cover object-center transition-transform duration-500 motion-safe:group-hover:scale-105" />
+              </a>
+              <Link href="/installation" aria-label="Explore installation options" className="group relative isolate block min-h-56 overflow-hidden rounded-xl bg-[#0A2540] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#1478A8] sm:min-h-60 lg:min-h-64">
+                <Image src={highlights.installationImage} alt="" fill preload quality={100} unoptimized={categoryKind === "all"} sizes="(min-width: 1600px) 752px, (min-width: 768px) 48vw, 100vw" className="-z-20 object-cover object-center transition-transform duration-500 motion-safe:group-hover:scale-105" />
+              </Link>
+            </section>
+            <div id={productsAnchor} className="mb-4 space-y-2 scroll-mt-[calc(var(--secondary-nav-height,120px)+16px)]">
+              {[
+                { id: "brand", label: "Brand", allLabel: "All brands", options: brandOptions },
+                {
+                  id: "btu",
+                  label: "Cooling capacity",
+                  allLabel: "All sizes",
+                  options: capacityOptions,
+                },
+              ].filter((group) => group.options.length > 0).map((group) => {
+                const selected = searchParams.getAll(group.id);
+                const chipClass = "inline-flex min-h-11 shrink-0 items-center rounded-full border px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1478A8] sm:min-h-9";
+                const activeClass = "border-[#1478A8] bg-[#1478A8] text-white";
+                const inactiveClass = "border-[#D9E2EB] bg-white text-[#1E3A5F] hover:border-[#1478A8] hover:bg-[#F0F9FF]";
+                return (
+                  <div key={group.id} role="group" aria-label={`Filter by ${group.label.toLowerCase()}`} className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:gap-3">
+                    <span className="shrink-0 text-xs font-semibold text-[#5F6B7A] sm:w-28 sm:pt-2.5">{group.label}</span>
+                    <div className="flex min-w-0 flex-wrap gap-1.5">
+                      <button type="button" aria-pressed={selected.length === 0} onClick={() => clearFilter(group.id)} className={cn(chipClass, selected.length === 0 ? activeClass : inactiveClass)}>
+                        {group.allLabel}
+                      </button>
+                      {group.options.map((option) => (
+                        <button key={option.value} type="button" aria-pressed={selected.includes(option.value)} onClick={() => toggleFilter(group.id, option.value, !selected.includes(option.value))} className={cn(chipClass, selected.includes(option.value) ? activeClass : inactiveClass)}>
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+              {btuOptions.length > 0 && (
+                <p className="text-xs text-[#5F6B7A] sm:pl-[124px]">
+                  {highlights.sizingNote}
+                </p>
+              )}
+            </div>
+
         {/* ─── Filter Bar: Filters button + Tabs + Sort ──────────────── */}
-        <div className="mb-8 grid auto-cols-fr grid-cols-2 grid-rows-[auto_auto] items-center justify-between gap-x-6 gap-y-6 lg:grid-cols-[1fr_max-content_1fr] lg:gap-y-0">
+        <div className="mb-4 grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-3">
           {/* Filters toggle button — 48px height, 10px radius, matches Sort */}
           <Button
             variant="outline"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="w-fit gap-2.5 self-start h-12 rounded-[10px] border-gray-200 px-5 text-[#1E3A5F] hover:bg-gray-50 font-medium"
+            aria-expanded={isFilterOpen}
+            aria-controls="category-filter-panel"
+            className="col-start-1 row-start-2 w-fit gap-2.5 self-start h-12 rounded-[10px] border-gray-200 px-3 text-[#1E3A5F] hover:bg-gray-50 font-medium"
           >
             <Filter className="h-5 w-5" />
             <span>Filters</span>
@@ -452,11 +594,12 @@ export default function ResidentialCategoryClient({
           <Tabs
             value={currentTab}
             onValueChange={handleTabChange}
-            className="flex w-full flex-col items-center justify-center [grid-area:2/1/3/3] lg:[grid-area:auto/auto/auto/auto]"
+            className="col-span-2 col-start-1 row-start-1 min-w-0 w-full border-y border-[#E7EDF3]"
           >
             <TabsList
               variant="line"
-              className="flex items-center justify-center gap-9 bg-transparent p-0 h-auto overflow-x-auto w-full px-4"
+              aria-label="Air conditioner system type"
+              className="flex h-auto w-full items-center justify-start gap-5 overflow-x-auto bg-transparent p-0 group-data-horizontal/tabs:h-auto"
               style={{
                 scrollbarWidth: "none",
                 msOverflowStyle: "none",
@@ -480,7 +623,8 @@ export default function ResidentialCategoryClient({
                     "data-[state=active]:text-[#1C99D6] data-[state=active]:font-medium",
                     "data-[state=inactive]:text-[#0d1b2a] data-[state=inactive]:hover:text-[#1C99D6]",
                     "after:content-[''] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-[#1C99D6] after:transition-all after:duration-200",
-                    "data-[state=active]:after:opacity-100 data-[state=inactive]:after:opacity-0 hover:after:opacity-100"
+                    "data-[state=active]:after:opacity-100 data-[state=inactive]:after:opacity-0 hover:after:opacity-100",
+                    "min-h-12 flex-none rounded-none py-3 text-xs group-data-horizontal/tabs:after:bottom-0"
                   )}
                 >
                   {tab.trigger}
@@ -490,33 +634,39 @@ export default function ResidentialCategoryClient({
           </Tabs>
 
           {/* Sort dropdown — matches Filters button height/radius */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="-mr-2 flex items-center gap-2.5 justify-self-end cursor-pointer h-12 rounded-[10px] border border-gray-200 px-5 text-sm font-medium text-[#1E3A5F] hover:bg-gray-50 transition-colors">
-              <SlidersHorizontal className="h-5 w-5" />
-              <span className="whitespace-nowrap">Sort by</span>
-              <ChevronRight className="shrink-0 h-4 w-4 rotate-90 text-[#1E3A5F] transition-transform duration-300" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              {SORT_OPTIONS.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                  onClick={() => updateSort(option.value)}
-                  className={cn(
-                    "cursor-pointer",
-                    currentSort === option.value && "font-semibold text-[#1C99D6]"
-                  )}
-                >
-                  {option.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="col-start-2 row-start-2 flex min-w-0 flex-wrap items-center justify-end gap-x-4 gap-y-2">
+            <span role="status" aria-label={productCountLabel} className="order-2 w-full text-right text-xs text-[#5F6B7A] sm:order-none sm:w-auto">
+              {filteredProducts.length} of {products.length} {categoryKind === "all" ? "products" : "air conditioners"}
+            </span>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex max-w-full items-center gap-2.5 justify-self-end cursor-pointer h-12 rounded-[10px] border border-gray-200 px-3 text-sm font-medium text-[#1E3A5F] hover:bg-gray-50 transition-colors">
+                <SlidersHorizontal className="h-5 w-5 shrink-0" />
+                <span className="truncate">Sort: {SORT_OPTIONS.find((option) => option.value === currentSort)?.label ?? "Featured"}</span>
+                <ChevronRight className="shrink-0 h-4 w-4 rotate-90 text-[#1E3A5F] transition-transform duration-300" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {SORT_OPTIONS.map((option) => (
+                  <DropdownMenuItem
+                    key={option.value}
+                    onClick={() => updateSort(option.value)}
+                    className={cn(
+                      "cursor-pointer",
+                      currentSort === option.value && "font-semibold text-[#1C99D6]"
+                    )}
+                  >
+                    {option.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         {/* ─── Collapsible Filter Panel ──────────────────────────────── */}
         <AnimatePresence initial={false} mode="wait">
           {isFilterOpen && (
             <motion.div
+              id="category-filter-panel"
               variants={containerVariants}
               initial="initial"
               animate="animate"
@@ -624,7 +774,7 @@ export default function ResidentialCategoryClient({
         </AnimatePresence>
 
         {/* ─── Active filter tags + result count ─────────────────────── */}
-        <div className="mb-8 flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className={cn("mb-4 flex w-full flex-wrap items-center gap-4", activeFilterCount === 0 && "hidden")}>
           <div className="flex flex-wrap items-center gap-2">
             {activeFilterTags.map((tag) => (
               <div
@@ -664,9 +814,6 @@ export default function ResidentialCategoryClient({
               </Button>
             )}
           </div>
-          <span className="text-[15px] font-medium text-[#6B7280] whitespace-nowrap">
-            Showing {filteredProducts.length} of {products.length} {productCountLabel}
-          </span>
         </div>
 
         {/* ─── Product Grid ──────────────────────────────────────────── */}
@@ -674,7 +821,7 @@ export default function ResidentialCategoryClient({
           <>
             <div
               ref={gridRef}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 xl:gap-12"
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6 scroll-mt-[calc(var(--secondary-nav-height,120px)+16px)]"
             >
               {paginatedProducts.map((product) => (
                 <AirconProductCard key={product.id} product={product} />

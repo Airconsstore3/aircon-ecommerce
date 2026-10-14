@@ -97,6 +97,29 @@ describe("authenticity guards", () => {
     expect(mapper).toContain('"Featured"');
   });
 
+  it("no sales-performance label is shown for featured/curated data", () => {
+    const list = readSource("components/product-list9.tsx");
+    expect(list).not.toMatch(/Best Sell/i);
+    const residential = readSource(
+      "app/(shop)/categories/[slug]/ResidentialCategoryClient.tsx",
+    );
+    const commercial = readSource(
+      "app/(shop)/categories/[slug]/CommercialCategoryClient.tsx",
+    );
+    // The 'best-selling' sort value actually sorts by is_featured + sort_order
+    expect(residential).not.toContain('label: "Best Selling"');
+    expect(commercial).not.toContain(">Best Selling<");
+  });
+
+  it("accessories availability filter uses the shared stock resolver", () => {
+    const client = readSource(
+      "app/(shop)/categories/[slug]/AccessoriesCategoryClient.tsx",
+    );
+    expect(client).toContain("resolveStockStatus");
+    // null stock must not fall into the in-stock bucket
+    expect(client).not.toContain("product.stock.stock_count <= 0");
+  });
+
   it("product cards resolve stock via the shared logic, never defaulting to in-stock", () => {
     const card = readSource("components/ProductCard.tsx");
     expect(card).toContain("resolveStockStatus");

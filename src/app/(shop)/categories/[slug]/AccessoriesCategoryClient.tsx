@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronRight, ChevronLeft, Filter, Search, X, SlidersHorizontal } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { AirconProductCard, AirconProduct } from "@/components/shop/ProductCard";
+import { AccessoryProductCard, AirconProduct } from "@/components/shop/ProductCard";
+import { ACCESSORY_KINDS, INSTALLATION_KINDS, MAINTENANCE_KINDS, getAccessoryPrice, getMaintenanceKind } from "@/lib/accessories";
+import { resolveStockStatus } from "@/lib/stock-status";
 import { cn } from "@/lib/utils";
 
 const fontClass = "font-[var(--font-google-sans-flex)]";
@@ -32,6 +34,8 @@ interface AccessoriesCategoryClientProps {
   categoryTitle?: string;
   categoryDescription?: string;
   productCountLabel?: string;
+  catalogueKind?: "accessories" | "installation" | "maintenance";
+  catalogueIntro?: ReactNode;
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────
@@ -47,10 +51,13 @@ function getAvailabilityBuckets(product: AirconProduct): string[] {
   const buckets: string[] = [];
   if (product.is_enquiry_only) {
     buckets.push("price-on-request");
-  } else if (product.stock.is_sold_out) {
-    buckets.push("special-order");
   } else {
-    buckets.push("in-stock");
+    const status = resolveStockStatus({
+      isSoldOut: product.stock.is_sold_out,
+      stockCount: product.stock.stock_count,
+      lowStockThreshold: product.stock.low_stock_threshold,
+    });
+    buckets.push(status === "sold_out" || status === "on_request" ? "special-order" : "in-stock");
   }
   return buckets;
 }
@@ -65,7 +72,7 @@ const PRICE_RANGE_OPTIONS = [
 const AVAILABILITY_OPTIONS = [
   { value: "in-stock", label: "In Stock" },
   { value: "price-on-request", label: "Price on Request" },
-  { value: "special-order", label: "Special Order" },
+  { value: "special-order", label: "Confirm availability" },
 ];
 
 const SORT_OPTIONS = [
@@ -73,10 +80,10 @@ const SORT_OPTIONS = [
   { value: "newest", label: "Newest" },
   { value: "price-low", label: "Price: Low to High" },
   { value: "price-high", label: "Price: High to Low" },
-  { value: "best-selling", label: "Best Selling" },
+  { value: "name", label: "Name: A to Z" },
 ];
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 20;
 
 // Framer Motion variants for the collapsible filter panel
 const containerVariants = {
@@ -149,9 +156,25 @@ export default function AccessoriesCategoryClient({
   products,
   brandOptions,
   categoryTitle = "Aircon Accessories",
-  categoryDescription = "Pipes, brackets, remotes, and installation accessories for your air conditioning system.",
+  categoryDescription = "Brackets, installation kits and smart controls. The finishing touches for your aircon setup.",
   productCountLabel = "Accessories",
+  catalogueKind = "accessories",
+  catalogueIntro,
 }: AccessoriesCategoryClientProps) {
+  const isInstallation = catalogueKind === "installation";
+  const isMaintenance = catalogueKind === "maintenance";
+  const kindOptions = isMaintenance ? MAINTENANCE_KINDS : isInstallation ? INSTALLATION_KINDS : ACCESSORY_KINDS;
+  const searchLabel = isInstallation
+    ? "Search installation products"
+    : isMaintenance
+      ? "Search maintenance & services"
+      : "Search accessories";
+  // Maintenance products are classified by name, not specs.accessory_kind
+  const kindOf = useCallback(
+    (p: AirconProduct) =>
+      isMaintenance ? getMaintenanceKind(p) : p.specs?.accessory_kind,
+    [isMaintenance]
+  );
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -160,6 +183,8 @@ export default function AccessoriesCategoryClient({
   // ─── Filtering logic ────────────────────────────────────────
   const filteredProducts = useMemo(() => {
     let filtered = [...products];
+    const kind = searchParams.get("kind");
+    if (kind) filtered = filtered.filter((p) => kindOf(p) === kind);
 
     // Keyword search
     if (keyword.trim()) {
@@ -183,7 +208,8 @@ export default function AccessoriesCategoryClient({
     const priceRanges = searchParams.getAll("priceRange");
     if (priceRanges.length > 0) {
       filtered = filtered.filter((p) => {
-        const bucket = getPriceBucket(p.price_zar);
+        if (p.is_enquiry_only) return false;
+        const bucket = getPriceBucket(getAccessoryPrice(p));
         return bucket !== null && priceRanges.includes(bucket);
       });
     }
@@ -201,34 +227,31 @@ export default function AccessoriesCategoryClient({
     const sort = searchParams.get("sort") || "featured";
     switch (sort) {
       case "price-low":
-        filtered.sort((a, b) => a.price_zar - b.price_zar);
+        filtered.sort((a, b) => Number(a.is_enquiry_only) - Number(b.is_enquiry_only) || getAccessoryPrice(a) - getAccessoryPrice(b));
         break;
       case "price-high":
-        filtered.sort((a, b) => b.price_zar - a.price_zar);
+        filtered.sort((a, b) => Number(a.is_enquiry_only) - Number(b.is_enquiry_only) || getAccessoryPrice(b) - getAccessoryPrice(a));
         break;
       case "newest":
-        filtered.sort((a, b) => b.id.localeCompare(a.id));
+        filtered.sort((a, b) => (b.created_at || "").localeCompare(a.created_at || ""));
         break;
-      case "best-selling":
-        filtered.sort((a, b) => {
-          const aScore = (a.is_featured ? 1 : 0) + (a.sort_order || 0) * 0.01;
-          const bScore = (b.is_featured ? 1 : 0) + (b.sort_order || 0) * 0.01;
-          return bScore - aScore;
-        });
+      case "name":
+        filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
       case "featured":
       default:
         filtered.sort(
-          (a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0)
+          (a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0) || (a.sort_order ?? 0) - (b.sort_order ?? 0)
         );
         break;
     }
 
     return filtered;
-  }, [products, searchParams, keyword]);
+  }, [products, searchParams, keyword, kindOf]);
 
   // ─── Pagination logic ──────────────────────────────────────
-  const currentPage = Math.max(1, parseInt(searchParams.get("page") || "1", 10));
+  const requestedPage = Number(searchParams.get("page") || "1");
+  const currentPage = Number.isSafeInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
   const safePage = Math.min(currentPage, totalPages);
   const paginatedProducts = useMemo(() => {
@@ -306,7 +329,7 @@ export default function AccessoriesCategoryClient({
     const current = new URLSearchParams(searchParams.toString());
     current.set("sort", value);
     current.delete("page");
-    router.push(`?${current.toString()}`);
+    router.push(`?${current.toString()}`, { scroll: false });
   };
 
   const toggleFilter = (filterId: string, value: string, checked: boolean) => {
@@ -355,32 +378,59 @@ export default function AccessoriesCategoryClient({
     toggleFilter(filterId, value, false);
   };
 
+  const selectedKind = searchParams.get("kind") || "";
+  const activeKind = kindOptions.find((kind) => kind.value === selectedKind);
+  if (selectedKind) activeFilterTags.push({ label: activeKind?.label || selectedKind, filterId: "kind", value: selectedKind });
   const activeFilterCount = activeFilterTags.length + (keyword.trim() ? 1 : 0);
   const currentSort = searchParams.get("sort") || "featured";
+  const selectKind = (value: string) => {
+    const current = new URLSearchParams(searchParams.toString());
+    if (value) current.set("kind", value);
+    else current.delete("kind");
+    current.delete("page");
+    router.push(`?${current.toString()}`, { scroll: false });
+  };
+
+  const categoryFilters = (
+    <div className={cn("flex flex-wrap gap-2", isInstallation ? "w-full lg:w-auto" : "mb-4")} role="group" aria-label={isInstallation ? "Installation categories" : isMaintenance ? "Maintenance categories" : "Accessory categories"}>
+      {[{ value: "", label: isInstallation ? "All products" : isMaintenance ? "All services" : "All accessories" }, ...kindOptions.filter((kind) => products.some((product) => kindOf(product) === kind.value))].map((kind) => (
+        <button type="button" key={kind.value} aria-pressed={selectedKind === kind.value} onClick={() => selectKind(kind.value)} className={cn("min-h-10 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-sky-600", selectedKind === kind.value ? "border-[#1E3A5F] bg-[#1E3A5F] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-sky-300 hover:bg-sky-50")}>{kind.label}</button>
+      ))}
+    </div>
+  );
 
   return (
-    <div className={cn("min-h-screen bg-white", fontClass)}>
-      <div className="mx-auto max-w-[1600px] px-6 sm:px-10 lg:px-16 pt-16 md:pt-20 lg:pt-24 pb-24">
+    <div className={cn("accessories-catalogue min-h-screen bg-white", isInstallation && "installation-catalogue", fontClass)}>
+      <div className={cn("mx-auto max-w-[1600px] px-4 sm:px-6 lg:px-8 pb-16", isInstallation ? "pt-5 md:pt-6" : "pt-7 md:pt-9")}>
         {/* ─── Header ────────────────────────────────────────────────── */}
-        <div className="mb-12 md:mb-16 lg:mb-20">
-          <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1C99D6]">
-            SHOP
-          </p>
-          <h1 className="mt-3 text-[36px] md:text-[48px] lg:text-[56px] font-semibold leading-[1.05] tracking-tight text-[#1E3A5F]">
-            {categoryTitle}
-          </h1>
-          <p className="mt-4 text-[18px] md:text-[20px] leading-[1.6] text-[#5F6B7A] max-w-[650px]">
-            {categoryDescription}
-          </p>
+        <div className={cn("accessories-heading", isInstallation ? "mb-4" : "mb-6")}>
+          <div className="min-w-0 flex-1">
+            {!isInstallation && <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1C99D6]">
+              SHOP
+            </p>}
+            <h1 className={cn("font-semibold leading-[1.05] tracking-tight text-[#1E3A5F]", !isInstallation && "mt-3")}>
+              {categoryTitle}
+            </h1>
+            <p className={cn("mt-2 leading-relaxed text-[#5F6B7A]", !isInstallation && "max-w-[650px]")}>
+              {categoryDescription}
+            </p>
+          </div>
         </div>
 
+        {catalogueIntro}
+
+        {!isInstallation && categoryFilters}
+
         {/* ─── Filter Bar: Filters button + Sort ──────────────── */}
-        <div className="mb-8 flex items-center justify-between gap-x-6 gap-y-6">
+        <div className={cn("mb-3 flex items-center gap-3", isInstallation ? "flex-wrap" : "justify-between border-t border-slate-100 pt-4")}>
+          {isInstallation && categoryFilters}
           {/* Filters toggle button */}
           <Button
             variant="outline"
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="w-fit gap-2.5 h-12 rounded-[10px] border-gray-200 px-5 text-[#1E3A5F] hover:bg-gray-50 font-medium"
+            aria-expanded={isFilterOpen}
+            aria-controls="accessory-filters"
+            className="w-fit gap-2 h-10 rounded-lg border-sky-100 bg-sky-50 px-4 text-[#1E3A5F] hover:bg-sky-100 font-medium"
           >
             <Filter className="h-5 w-5" />
             <span>Filters</span>
@@ -393,9 +443,9 @@ export default function AccessoriesCategoryClient({
 
           {/* Sort dropdown */}
           <DropdownMenu>
-            <DropdownMenuTrigger className="-mr-2 flex items-center gap-2.5 cursor-pointer h-12 rounded-[10px] border border-gray-200 px-5 text-sm font-medium text-[#1E3A5F] hover:bg-gray-50 transition-colors">
-              <SlidersHorizontal className="h-5 w-5" />
-              <span className="whitespace-nowrap">Sort by</span>
+            <DropdownMenuTrigger aria-label={isInstallation ? "Sort installation products" : isMaintenance ? "Sort maintenance services" : "Sort accessories"} className="ml-auto flex items-center gap-2 cursor-pointer h-10 rounded-lg border border-gray-200 px-3 text-sm font-medium text-[#1E3A5F] hover:bg-gray-50 transition-colors">
+              <SlidersHorizontal className="h-4 w-4" />
+              <span className="whitespace-nowrap">{SORT_OPTIONS.find((option) => option.value === currentSort)?.label || "Featured"}</span>
               <ChevronRight className="shrink-0 h-4 w-4 rotate-90 text-[#1E3A5F] transition-transform duration-300" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -419,13 +469,14 @@ export default function AccessoriesCategoryClient({
         <AnimatePresence initial={false} mode="wait">
           {isFilterOpen && (
             <motion.div
+              id="accessory-filters"
               variants={containerVariants}
               initial="initial"
               animate="animate"
               exit="exit"
               className="overflow-hidden"
             >
-              <div className="mb-8 grid grid-cols-1 gap-x-8 gap-y-6 lg:grid-cols-4 border-t border-gray-100 pt-8">
+              <div className={cn("mb-6 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-gray-100 pt-6", brandOptions.length ? "lg:grid-cols-4" : "lg:grid-cols-3")}>
                 {/* Keyword search */}
                 <div>
                   <div className="mb-3 flex items-center justify-between">
@@ -444,7 +495,8 @@ export default function AccessoriesCategoryClient({
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                      placeholder="Keyword"
+                      placeholder={searchLabel}
+                      aria-label={searchLabel}
                       value={keyword}
                       onChange={(e) => setKeyword(e.target.value)}
                       className="pl-10 border-gray-200 text-sm"
@@ -453,7 +505,7 @@ export default function AccessoriesCategoryClient({
                 </div>
 
                 {/* Brand filter */}
-                <div>
+                <div className={cn(!brandOptions.length && "hidden")}>
                   <div className="mb-3 flex items-center justify-between">
                     <span className="text-sm font-medium text-[#1E3A5F]">Brand</span>
                     {searchParams.getAll("brand").length > 0 && (
@@ -530,7 +582,7 @@ export default function AccessoriesCategoryClient({
         </AnimatePresence>
 
         {/* ─── Active filter tags + result count ─────────────────────── */}
-        <div className="mb-8 flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="mb-4 flex w-full flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2">
             {activeFilterTags.map((tag) => (
               <div
@@ -570,8 +622,8 @@ export default function AccessoriesCategoryClient({
               </Button>
             )}
           </div>
-          <span className="text-[15px] font-medium text-[#6B7280] whitespace-nowrap">
-            Showing {filteredProducts.length} of {products.length} {productCountLabel}
+          <span aria-live="polite" className="text-xs leading-relaxed text-[#6B7280]">
+            {filteredProducts.length} {productCountLabel.toLowerCase()} · Availability confirmed before payment
           </span>
         </div>
 
@@ -580,10 +632,11 @@ export default function AccessoriesCategoryClient({
           <>
             <div
               ref={gridRef}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 xl:gap-12"
+              id={isInstallation ? "book-installation" : undefined}
+              className="grid scroll-mt-[calc(var(--secondary-nav-height,80px)+16px)] grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
             >
               {paginatedProducts.map((product) => (
-                <AirconProductCard key={product.id} product={product} />
+                <AccessoryProductCard key={product.id} product={product} />
               ))}
             </div>
 
@@ -636,11 +689,11 @@ export default function AccessoriesCategoryClient({
         ) : (
           <div className="border border-gray-200 p-12 text-center rounded-xl">
             <h6 className="mb-2 text-lg font-bold leading-[1.4] text-[#1E3A5F]">
-              {products.length === 0 ? "Accessories coming soon." : "No results found."}
+              {products.length === 0 ? (isInstallation ? "Installation products coming soon." : isMaintenance ? "Maintenance plans coming soon." : "Accessories coming soon.") : "No results found."}
             </h6>
             <p className="text-gray-500 mb-6">
               {products.length === 0
-                ? "We're adding accessories to our catalog. Check back soon for pipes, brackets, remotes, and more."
+                ? (isInstallation ? "We're updating our installation catalogue. Please check back soon." : isMaintenance ? "We're updating our maintenance and service plans. Please check back soon." : "We're adding accessories to our catalog. Check back soon for pipes, brackets, remotes, and more.")
                 : "There are no results with these criteria. Try changing your search."}
             </p>
             {products.length > 0 && activeFilterCount > 0 && (
