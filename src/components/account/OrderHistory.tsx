@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Calendar, CheckCircle, CreditCard, MessageSquare, Package, Search, Star, Truck, Wrench, type LucideIcon } from "lucide-react";
+import { Calendar, CheckCircle, CreditCard, MessageSquare, Package, Search, Star, Truck, Wrench, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -159,16 +159,12 @@ const OrderHistory = ({
                         )}
                       </div>
                     ) : (
-                      <Link href="/account/orders">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-9 rounded-none text-xs tracking-wide uppercase"
-                        >
-                          Track Order
-                          <ArrowRight className="ml-2 size-3" />
-                        </Button>
-                      </Link>
+                      <Badge
+                        variant="outline"
+                        className="rounded-none px-3 py-1 text-xs font-medium tracking-wide text-muted-foreground uppercase"
+                      >
+                        Order status: {statusSteps[currentStatusIndex]?.label ?? order.status}
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -279,16 +275,10 @@ const OrderHistory = ({
                 {/* Order Footer */}
                 <div className="mt-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-t pt-6">
                   <div className="flex flex-wrap gap-4 sm:gap-6 text-xs">
-                    <Link href={`/account/orders/${order.orderNumber}`} className="font-medium tracking-wide text-muted-foreground uppercase transition-colors hover:text-foreground">
-                      View Details
-                    </Link>
-                    <button className="font-medium tracking-wide text-muted-foreground uppercase transition-colors hover:text-foreground">
-                      Invoice
-                    </button>
                     {order.status === "completed" && (
-                      <button className="font-medium tracking-wide text-muted-foreground uppercase transition-colors hover:text-foreground">
+                      <Link href="/repairs" className="font-medium tracking-wide text-muted-foreground uppercase transition-colors hover:text-foreground">
                         Request Service
-                      </button>
+                      </Link>
                     )}
                   </div>
                   {order.trackingNumber && order.status !== "completed" && (
