@@ -497,7 +497,7 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
           <div className="lg:hidden"><MobileMenu menu={sideMenu} navMenu={menu} homeLink={home} /></div>
         </div>
       </div>
-      <div className="border-b border-[#B8E3F7]/70 bg-white font-[var(--font-pp-neue-montreal)]">
+      <div className="border-b border-[#B8E3F7]/70 bg-white">
         <nav aria-label="Shop categories and services" className="mx-auto max-w-[1440px] overflow-x-auto px-4 sm:px-6 lg:overflow-visible lg:px-8">
           <ul className="flex min-w-max items-stretch gap-1 lg:min-w-0 lg:gap-2">
             {categoryMenu.map(({ href, label, image, imageClassName, icon: Icon = Snowflake, sections }, index) => {
