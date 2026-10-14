@@ -1,4 +1,6 @@
 import { NavbarWrapper } from "@/components/shop/NavbarWrapper";
+import { FooterGate } from "@/components/shop/FooterGate";
+import { PremiumFooter } from "@/components/premium-footer";
 
 export default function ShopLayout({
   children,
@@ -11,6 +13,9 @@ export default function ShopLayout({
       <main className="min-h-screen bg-white">
         {children}
       </main>
+      <FooterGate>
+        <PremiumFooter />
+      </FooterGate>
     </div>
   );
 }

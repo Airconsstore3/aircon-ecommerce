@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export default function EditorialSection() {
+export default function EditorialSection({ contactHref }: { contactHref: string | null }) {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -100,12 +100,14 @@ export default function EditorialSection() {
               isVisible && "opacity-100 translate-y-0"
             )}
           >
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center bg-[#1C99D6] px-8 h-[48px] font-[var(--font-google-sans-flex)] text-sm font-medium text-white transition-all duration-250 hover:bg-[#1680b0] hover:scale-[1.02]"
-            >
-              Get Expert Advice
-            </Link>
+            {contactHref && (
+              <a
+                href={contactHref}
+                className="inline-flex items-center justify-center bg-[#1C99D6] px-8 h-[48px] font-[var(--font-google-sans-flex)] text-sm font-medium text-white transition-all duration-250 hover:bg-[#1680b0] hover:scale-[1.02]"
+              >
+                Get Expert Advice
+              </a>
+            )}
             <Link
               href="/products"
               className="mt-4 sm:mt-0 font-[var(--font-google-sans-flex)] text-sm font-medium text-white transition-all duration-250 hover:text-white/80 hover:scale-[1.02] inline-flex items-center h-[48px]"

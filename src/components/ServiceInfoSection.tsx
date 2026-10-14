@@ -16,26 +16,26 @@ interface ServiceCard {
 const SERVICE_CARDS: ServiceCard[] = [
   {
     id: "installation",
-    title: "Accredited Installation",
-    description: "Installed by accredited professionals for complete peace of mind from day one.",
-    image: "/Hero Images/feature-cards/accredited-installer.webp",
-    href: "/categories/installation",
+    title: "Professional Installation",
+    description: "Installation support for the systems we supply — details confirmed when you enquire.",
+    image: "/Hero Images/feature-cards/Accredited Installation.webp",
+    href: "/installation",
     cta: "Book Installation",
   },
   {
     id: "delivery",
-    title: "Fast Delivery",
-    description: "Delivered across Cape Town in 24–48 hours, with nationwide shipping in 3–5 business days.",
-    image: "/Hero Images/feature-cards/delivery.webp",
-    href: "/help/delivery",
+    title: "Delivery",
+    description: "Free delivery within Cape Town. Other areas are arranged and timing is confirmed with your order.",
+    image: "/Hero Images/feature-cards/Fast Delivery.webp",
+    href: "/#faqs",
     cta: "Delivery Information",
   },
   {
     id: "returns",
     title: "Easy Returns",
     description: "If something isn't right, our simple returns process makes it easy to shop with confidence.",
-    image: "/Hero Images/feature-cards/warranty.webp",
-    href: "/help/returns",
+    image: "/Hero Images/feature-cards/Easy Returns.webp",
+    href: "/return-policy",
     cta: "View Return Policy",
   },
 ];
@@ -47,7 +47,7 @@ interface ServiceInfoSectionProps {
 export function ServiceInfoSection({ className }: ServiceInfoSectionProps) {
   return (
     <section className={cn("w-full bg-white pt-14 pb-0 md:pt-24 md:pb-24", className)}>
-      <div className="mx-auto max-w-[95%] px-4 md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           {SERVICE_CARDS.map((card) => (
             <div
@@ -64,8 +64,11 @@ export function ServiceInfoSection({ className }: ServiceInfoSectionProps) {
                   sizes="(max-width: 768px) 100vw, 33vw"
                   quality={100}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                <h3 className="absolute bottom-4 left-4 font-[var(--font-google-sans-flex)] text-xl font-medium text-white">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent"
+                />
+                <h3 className="absolute bottom-5 left-5 right-5 font-[var(--font-google-sans-flex)] text-xl font-medium text-white md:bottom-6 md:left-6 md:right-6">
                   {card.title}
                 </h3>
               </div>

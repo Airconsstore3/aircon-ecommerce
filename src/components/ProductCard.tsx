@@ -111,9 +111,6 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
     type,
     title,
     images,
-    rating,
-    reviewCount,
-    installRequired,
     badge,
   } = product;
 
@@ -143,7 +140,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
 
   return (
     <div
-      className="group relative flex h-full flex-col overflow-hidden rounded-none border border-[#E8EDF3] md:border-[#EAEAEA] bg-card text-card-foreground transition-all duration-300 hover:shadow-lg hover:border-[#1C99D6]"
+      className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-[#E8EDF3] md:border-[#EAEAEA] bg-card text-card-foreground transition-all duration-300 hover:shadow-lg hover:border-[#1C99D6]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -281,16 +278,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </div>
         )}
 
-        {/* Rating line */}
+        {/* Availability — no fabricated ratings shown */}
         <p className="text-[11px] text-muted-foreground mb-3 md:mb-5">
-          {reviewCount > 0 ? (
-            <>
-              ★ {rating.toFixed(1)} ({reviewCount})
-            </>
-          ) : (
-            "New"
-          )}{" "}
-          · {currentVariant.stockCount <= 3 && currentVariant.stockCount > 0 ? `Only ${currentVariant.stockCount} left` : <span className="text-green-600">In stock</span>}
+          {currentVariant.stockCount <= 3 && currentVariant.stockCount > 0 ? `Only ${currentVariant.stockCount} left` : <span className="text-green-600">In stock</span>}
         </p>
 
         {/* Price */}
@@ -312,10 +302,9 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
         <div className="flex flex-col gap-[3px] text-xs mb-6 md:mb-6">
           <div className="flex items-center gap-1.5 text-green-600">
             <Truck className="size-3.5 shrink-0" aria-hidden="true" />
-            <span>Cape Town 24–48 hrs</span>
+            <span>Free delivery in Cape Town</span>
           </div>
-          {/* TODO: geo-detect and collapse to one tier with a computed delivery date */}
-          <div className="pl-5 text-muted-foreground">Nationwide 3–5 days</div>
+          <div className="pl-5 text-muted-foreground">Timing confirmed with your order</div>
         </div>
 
         {/* Primary CTA + Secondary link — 24px above button, 16px below to

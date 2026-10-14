@@ -58,13 +58,13 @@ const AccreditedBrands = ({ className }: AccreditedBrandsProps) => {
         {/* Section Header */}
         <div className="mb-12 md:mb-14 text-center">
           <span className="mb-4 block font-[var(--font-google-sans-flex)] text-[14px] font-semibold uppercase tracking-[0.18em] text-[#1C99D6]">
-            Accredited Partner Brands
+            Brands We Supply
           </span>
           <h2 className="mx-auto max-w-[320px] md:max-w-[520px] font-[var(--font-google-sans-flex)] text-[34px] md:text-[46px] lg:text-[56px] font-medium leading-[1.08] md:leading-[1.08] lg:leading-[1.05] tracking-[-0.025em] md:tracking-[-0.03em] lg:tracking-[-0.03em] text-black">
-            Accredited by Industry-Leading Brands
+            Brands We Work With
           </h2>
           <p className="mx-auto mt-4 max-w-[620px] font-[var(--font-google-sans-flex)] text-base md:text-lg font-normal leading-[1.6] text-[#475569]">
-            Authorised installation and support for trusted air conditioning brands.
+            Installation and support for the air conditioning brands we supply.
           </p>
         </div>
 

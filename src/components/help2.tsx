@@ -3,7 +3,6 @@
 import { Plus, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface FAQ {
@@ -16,6 +15,10 @@ interface Help2Props {
   description?: string;
   faqs?: FAQ[];
   className?: string;
+  /** Verified primary contact link (WhatsApp/phone/email) or null when not configured. */
+  contactHref?: string | null;
+  /** Verified WhatsApp link or null when not configured. */
+  whatsappHref?: string | null;
 }
 
 const DEFAULT_FAQS: FAQ[] = [
@@ -27,37 +30,37 @@ const DEFAULT_FAQS: FAQ[] = [
   {
     question: "Do you offer professional installation?",
     answer:
-      "Yes. We work with accredited installers across South Africa. Every installation is carried out by a certified technician to ensure your warranty remains valid and your system performs at its best.",
+      "Yes. We offer installation support for the systems we supply. Availability depends on your area — we'll confirm the details when you enquire.",
   },
   {
     question: "How long does delivery take?",
     answer:
-      "Same-day delivery is available in Cape Town. For other areas nationwide, delivery typically takes 2–3 business days. You'll receive tracking updates by email once your order ships.",
+      "Delivery is free within Cape Town. For other areas, delivery is arranged and the timing is confirmed with your order before payment.",
   },
   {
     question: "Which brands do you recommend?",
     answer:
-      "We stock only accredited, warranty-backed brands including Samsung, LG, Daikin, Hisense, and Alliance. Each has its strengths — our specialists can recommend the best fit for your budget and needs.",
+      "We stock leading air conditioning brands including Samsung, LG, Daikin, Hisense, and Alliance. Each has its strengths — our specialists can recommend the best fit for your budget and needs.",
   },
   {
     question: "Can I buy now and book installation later?",
     answer:
-      "Absolutely. You can purchase your air conditioner online and book installation at a date that suits you. Your warranty is valid as long as the unit is installed by an accredited technician.",
+      "Yes. You can purchase your air conditioner online and arrange installation for a date that suits you — we'll confirm availability when you enquire.",
   },
   {
     question: "What warranty comes with my air conditioner?",
     answer:
-      "Most units include a manufacturer's warranty of 3 to 5 years on the compressor and 1 to 2 years on parts. Extended warranty options are available — contact us for details on specific models.",
+      "Every unit includes the manufacturer's warranty. Coverage and length vary by brand and model — we confirm the exact warranty for your unit before purchase.",
   },
   {
     question: "Can you deliver anywhere in South Africa?",
     answer:
-      "Yes, we deliver nationwide to all major cities and most regional areas. If you're in a remote location, contact us to confirm delivery availability and timeframes.",
+      "We deliver nationwide. Delivery availability and timing for your area are confirmed with your order before you pay.",
   },
   {
-    question: "Can I finance my purchase?",
+    question: "How do I pay for my order?",
     answer:
-      "Yes, we offer flexible payment options including PayJustNow and Mobicred. You can split your purchase into manageable instalments — select your preferred option at checkout.",
+      "We take payment by manual EFT after your order is confirmed — no payment is taken online at checkout. Once availability is confirmed, we send you the banking details.",
   },
 ];
 
@@ -68,6 +71,8 @@ const Help2 = ({
   description = "Everything you need to know about choosing, buying and installing an air conditioner.",
   faqs = DEFAULT_FAQS,
   className,
+  contactHref = null,
+  whatsappHref = null,
 }: Help2Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [openIndex, setOpenIndex] = useState<number | null>(null);
@@ -83,7 +88,7 @@ const Help2 = ({
   }, [faqs, searchQuery]);
 
   return (
-    <section className={cn("pt-16 pb-16 md:pt-24 md:pb-24", className)}>
+    <section id="faqs" className={cn("pt-16 pb-16 md:pt-24 md:pb-24", className)}>
       <div className="mx-auto px-6 md:max-w-[95%] md:px-6 font-[var(--font-google-sans-flex)]">
         {/* Editorial header — center-aligned, narrower on mobile for balanced wrap */}
         <div className="mx-auto max-w-[320px] md:max-w-[700px] text-center">
@@ -165,14 +170,17 @@ const Help2 = ({
           <p className={`${FONT_CLASS} text-[16px] font-normal leading-[1.6] text-[#5E6B7A] mb-8`}>
             Our specialists are here to help.
           </p>          <div className="flex flex-col items-center gap-4">
-            <Link
-              href="/contact"
-              className={`inline-flex w-full sm:w-auto items-center justify-center bg-[#1C99D6] px-8 h-[52px] rounded-none ${FONT_CLASS} text-[16px] font-semibold text-white transition-all duration-250 hover:bg-[#1680b0] active:scale-[0.98]`}
-            >
-              Contact Us
-            </Link>
-            <Link
-              href="https://wa.me/27000000000"
+            {contactHref && (
+              <a
+                href={contactHref}
+                className={`inline-flex w-full sm:w-auto items-center justify-center bg-[#1C99D6] px-8 h-[52px] rounded-none ${FONT_CLASS} text-[16px] font-semibold text-white transition-all duration-250 hover:bg-[#1680b0] active:scale-[0.98]`}
+              >
+                Contact Us
+              </a>
+            )}
+            {whatsappHref && (
+            <a
+              href={whatsappHref}
               className={`support-whatsapp-link inline-flex items-center gap-1.5 ${FONT_CLASS} text-[16px] font-medium text-[#1C99D6] transition-colors duration-200 hover:text-[#1680b0]`}
             >
               <svg className="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -180,7 +188,8 @@ const Help2 = ({
               </svg>
               <span>Chat on WhatsApp</span>
               <span className="support-whatsapp-arrow inline-block transition-transform duration-200">&rarr;</span>
-            </Link>
+            </a>
+            )}
           </div>
         </div>
       </div>

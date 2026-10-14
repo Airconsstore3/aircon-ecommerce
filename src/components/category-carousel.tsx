@@ -35,17 +35,10 @@ const CATEGORIES: Category[] = [
     cta: "Shop Commercial →",
   },
   {
-    id: "heat-pumps",
-    name: "Heat Pumps",
-    image: "/Hero Images/Product category pictures/Heat Pumps.png",
-    link: "/categories/heat-pumps",
-    cta: "Shop Heat Pumps →",
-  },
-  {
     id: "portable",
     name: "Portable",
     image: "/Hero Images/Product category pictures/Portable Aircons.png",
-    link: "/categories/portable",
+    link: "/products?type=portable",
     cta: "Shop Portable →",
     // Portable unit sits on the right of the source image; shift the crop
     // so the product reads as more central in the mobile frame.
@@ -55,7 +48,7 @@ const CATEGORIES: Category[] = [
     id: "installation",
     name: "Installation\nPackages",
     image: "/Hero Images/Product category pictures/Installation Packages.png",
-    link: "/categories/kits",
+    link: "/installation",
     cta: "Shop Packages →",
   },
 ];
