@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ArrowRight, ArrowDown, MapPin, Star } from "lucide-react";
+import { CheckCircle, ArrowRight, ArrowDown, MapPin } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
+import { getContactChannels, primaryContactHref } from "@/lib/contact-settings";
+
 const fontClass = "font-[var(--font-google-sans-flex)]";
+
+// Contact details come from the settings table — render on demand so admin
+// changes take effect without a rebuild.
+export const dynamic = "force-dynamic";
 
 // ─── Data ──────────────────────────────────────────────────────────────────
 
@@ -24,12 +30,12 @@ const howWeHelp = [
   },
   {
     step: "Deliver",
-    description: "Fast delivery across South Africa, straight to your door.",
+    description: "Delivery across South Africa, straight to your door.",
     image: "/Hero Images/feature-cards/delivery.webp",
   },
   {
     step: "Install",
-    description: "Qualified installers ensure everything is fitted correctly.",
+    description: "Professional installation support for the systems we supply.",
     image: "/Hero Images/feature-cards/warranty.webp",
   },
 ];
@@ -54,44 +60,7 @@ const galleryImages = [
   { src: "/Installation page picsh/why choose us on isntallation.webp", alt: "Finished project" },
 ];
 
-const reviews = [
-  {
-    name: "Thabo M.",
-    location: "Cape Town",
-    rating: 5,
-    text: "From choosing the right unit to installation, the whole process was seamless. The team knew exactly what would work for my home.",
-  },
-  {
-    name: "Sarah K.",
-    location: "Johannesburg",
-    rating: 5,
-    text: "Professional, on time, and the price was exactly what they quoted. My office has never been more comfortable.",
-  },
-  {
-    name: "Pieter v.",
-    location: "Durban",
-    rating: 5,
-    text: "Great advice on which unit to buy. They didn't try to oversell — just helped me find the right fit for my budget.",
-  },
-  {
-    name: "Lerato N.",
-    location: "Pretoria",
-    rating: 5,
-    text: "The installation was clean and tidy. They even followed up a week later to make sure everything was working well.",
-  },
-  {
-    name: "James W.",
-    location: "Cape Town",
-    rating: 5,
-    text: "Bought a Samsung unit and had it installed the same week. Really happy with the service from start to finish.",
-  },
-  {
-    name: "Aisha P.",
-    location: "Port Elizabeth",
-    rating: 5,
-    text: "Delivery was fast and the installer was qualified and friendly. Would definitely recommend Aircons Store.",
-  },
-];
+// NOTE: fabricated testimonials removed — no real review source exists yet.
 
 const serviceAreas = [
   "Cape Town",
@@ -104,11 +73,11 @@ const serviceAreas = [
 const faqs = [
   {
     question: "Do you install?",
-    answer: "Yes. We offer professional installation by qualified technicians in Cape Town, Johannesburg, Durban, and Pretoria, with nationwide delivery for products.",
+    answer: "Yes. We offer professional installation support — service areas and availability are confirmed when you enquire. Products are delivered nationwide.",
   },
   {
     question: "Which brands do you sell?",
-    answer: "We stock Samsung, LG, Daikin, Alliance, Carrier, Midea, Hisense, York, and more. All units are sourced through authorised channels with full warranty support.",
+    answer: "We stock Samsung, LG, Daikin, Alliance, Carrier, Midea, Hisense, York, and more. Every unit includes the manufacturer's warranty.",
   },
   {
     question: "Do products include warranties?",
@@ -116,7 +85,7 @@ const faqs = [
   },
   {
     question: "How long does delivery take?",
-    answer: "Delivery typically takes 2–5 business days depending on your location. Cape Town, Johannesburg, Durban, and Pretoria usually receive next-day delivery.",
+    answer: "Delivery is free within Cape Town. For other areas, delivery is arranged and the timing is confirmed with your order before payment.",
   },
   {
     question: "Can you help me choose the correct size?",
@@ -126,7 +95,10 @@ const faqs = [
 
 // ─── Page ──────────────────────────────────────────────────────────────────
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const contact = await getContactChannels();
+  const contactHref = primaryContactHref(contact, "Hi Aircons Store — I'd like some advice.");
+
   return (
     <div className={`min-h-screen bg-white ${fontClass}`}>
       {/* 1. Hero */}
@@ -157,21 +129,14 @@ export default function AboutPage() {
             <Button asChild size="lg" className="bg-[#1C99D6] hover:bg-[#1680b0] text-white rounded-[10px] h-14 px-8 text-[15px] font-semibold uppercase tracking-wider shadow-[0_4px_20px_rgba(28,153,214,0.3)]">
               <Link href="/products">Shop Air Conditioners</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/25 text-white hover:bg-white/10 hover:text-white hover:border-white/40 rounded-[10px] h-14 px-8 text-[15px] font-semibold uppercase tracking-wider bg-transparent">
-              <Link href="/help">Talk to an Expert</Link>
-            </Button>
+            {contactHref && (
+              <Button asChild size="lg" variant="outline" className="border-white/25 text-white hover:bg-white/10 hover:text-white hover:border-white/40 rounded-[10px] h-14 px-8 text-[15px] font-semibold uppercase tracking-wider bg-transparent">
+                <a href={contactHref}>Talk to an Expert</a>
+              </Button>
+            )}
           </div>
           {/* Trust row */}
           <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-white/75">
-            <div className="flex items-center gap-2">
-              <div className="flex">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="size-4 fill-[#1C99D6] text-[#1C99D6]" />
-                ))}
-              </div>
-              <span className="text-[13px] md:text-sm font-medium">4.9 Google Rating</span>
-            </div>
-            <span className="text-white/30">•</span>
             <span className="text-[13px] md:text-sm font-medium">Nationwide Delivery</span>
             <span className="text-white/30">•</span>
             <span className="text-[13px] md:text-sm font-medium">Professional Installation</span>
@@ -321,67 +286,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 7. Customer Reviews */}
-      <section className="py-16 md:py-20 lg:py-24 px-6 sm:px-8 lg:px-12 bg-[#F8FBFD]">
-        <div className="mx-auto max-w-[1280px]">
-          <div className="mb-12 md:mb-16 text-center">
-            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1C99D6] mb-3">
-              Customer Reviews
-            </p>
-            <h2 className="text-[28px] md:text-[36px] lg:text-[44px] font-medium leading-[1.1] tracking-tight text-[#0A2540] mb-6">
-              Rated by real customers.
-            </h2>
-            <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="size-5 fill-[#1C99D6] text-[#1C99D6]" />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-[#0A2540]">Google Rating</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="size-5 fill-[#1C99D6] text-[#1C99D6]" />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-[#0A2540]">Trustpilot</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="size-5 fill-[#1C99D6] text-[#1C99D6]" />
-                  ))}
-                </div>
-                <span className="text-sm font-medium text-[#0A2540]">Verified Customers</span>
-              </div>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {reviews.map((review) => (
-              <div
-                key={review.name}
-                className="bg-white border border-gray-100 rounded-[12px] p-6 md:p-8"
-              >
-                <div className="flex mb-4">
-                  {[...Array(review.rating)].map((_, i) => (
-                    <Star key={i} className="size-4 fill-[#1C99D6] text-[#1C99D6]" />
-                  ))}
-                </div>
-                <p className="text-[15px] md:text-[16px] leading-[1.6] text-[#0A2540] mb-6">
-                  &ldquo;{review.text}&rdquo;
-                </p>
-                <div className="border-t border-gray-100 pt-4">
-                  <p className="text-sm font-medium text-[#0A2540]">{review.name}</p>
-                  <p className="text-xs text-[#5F6B7A]">{review.location}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* 8. Service Areas */}
       <section className="py-16 md:py-20 lg:py-24 px-6 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-[1280px]">
@@ -469,9 +373,11 @@ export default function AboutPage() {
                 <ArrowRight className="ml-2 size-4" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white rounded-[10px] h-12 px-8 text-sm font-semibold uppercase tracking-wider bg-transparent">
-              <Link href="/help">Contact Us</Link>
-            </Button>
+            {contactHref && (
+              <Button asChild size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:text-white rounded-[10px] h-12 px-8 text-sm font-semibold uppercase tracking-wider bg-transparent">
+                <a href={contactHref}>Contact Us</a>
+              </Button>
+            )}
           </div>
         </div>
       </section>

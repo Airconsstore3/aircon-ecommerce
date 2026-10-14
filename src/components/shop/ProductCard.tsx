@@ -1,14 +1,16 @@
 "use client";
 
-import { ShoppingBag, Clock, AlertCircle, Heart } from "lucide-react";
+import { Package, Ruler, Wifi, Radio, Cable, ShoppingCart, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import { useCart } from "@/components/shop/CartProvider";
+import { ACCESSORY_KINDS, INSTALLATION_KINDS, getAccessoryPrice, getAccessoryCardImage } from "@/lib/accessories";
 import Link from "next/link";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getCssImageUrl } from "@/lib/product-images";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -30,6 +32,7 @@ interface AirconProduct {
   is_inverter?: boolean;
   specs?: Record<string, unknown>;
   sort_order?: number;
+  created_at?: string;
   has_variants?: boolean;
   min_variant_price?: number | null;
   stock: {
@@ -41,26 +44,6 @@ interface AirconProduct {
 
 interface AirconProductCardProps {
   product: AirconProduct;
-}
-
-// Deal-specific types
-interface DealCardProps {
-  deal: {
-    id: string;
-    name: string;
-    slug: string;
-    description: string;
-    original_price_zar: number;
-    sale_price_zar: number;
-    ends_at: string;
-    deal_type: 'residential' | 'commercial' | 'bundle' | 'clearance';
-    stock_remaining: number;
-    is_hero: boolean;
-    product_id?: string;
-    images: string[];
-    includes?: string[];
-  };
-  productSlug?: string;
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -117,37 +100,6 @@ function getProductDescriptionBullets(product: AirconProduct, stockStatus: Retur
   return uniqueBullets.slice(0, 4);
 }
 
-// Countdown timer helper
-function useCountdown(endDate: string) {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const calculateTimeLeft = () => {
-      const difference = new Date(endDate).getTime() - new Date().getTime();
-      if (difference > 0) {
-        return {
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-          minutes: Math.floor((difference / 1000 / 60) % 60),
-          seconds: Math.floor((difference / 1000) % 60),
-        };
-      }
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    };
-
-    setTimeLeft(calculateTimeLeft());
-    const timer = setInterval(() => setTimeLeft(calculateTimeLeft()), 1000);
-    return () => clearInterval(timer);
-  }, [endDate]);
-
-  return timeLeft;
-}
-
-// Calculate percentage saved
-function calculatePercentSaved(original: number, sale: number): number {
-  return Math.round(((original - sale) / original) * 100);
-}
-
 // ─── Product Card ─────────────────────────────────────────────────────────────
 
 const AirconProductCard = ({ product }: AirconProductCardProps) => {
@@ -155,7 +107,6 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
   const productImages = product.images ?? [];
   const primaryImage = productImages[0];
   const hasSale = product.sale_price_zar !== null && product.sale_price_zar < product.price_zar;
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const usps = getProductDescriptionBullets(product, stockStatus);
   const inverterLabel =
     product.type === "aircon"
@@ -183,14 +134,6 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
 
         {/* ── Image area ── */}
         <div className="relative w-full px-6 pt-10 pb-4">
-          <button
-            type="button"
-            onClick={() => setIsWishlisted((current) => !current)}
-            className="pointer-events-auto absolute right-4 top-4 z-40 p-1 text-black/70 transition-colors hover:text-red-500"
-            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          >
-            <Heart className={cn("h-6 w-6 transition-all", isWishlisted ? "fill-red-500 stroke-red-500" : "stroke-[1.5px]")} />
-          </button>
           {primaryImage ? (
             <Link
               href={`/products/${product.slug}`}
@@ -285,9 +228,9 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
               </span>
             )}
             {stockStatus === "sold_out" && (
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-red-500">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-red-400" />
-                Sold Out
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+                Available on request
               </span>
             )}
           </div>
@@ -313,16 +256,6 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
                   className="aircon-angled-button h-auto w-full rounded-none hover:bg-transparent"
                 >
                   <Link href={`/products/${product.slug}`}>Price on Request</Link>
-                </Button>
-              </div>
-            ) : stockStatus === "sold_out" ? (
-              <div className="aircon-angled-button-wrap w-full">
-                <Button
-                  disabled
-                  variant="ghost"
-                  className="aircon-angled-button h-auto w-full rounded-none opacity-50 cursor-not-allowed"
-                >
-                  Sold Out
                 </Button>
               </div>
             ) : (
@@ -382,157 +315,65 @@ const AirconProductList = ({
   );
 };
 
-export { AirconProductCard, AirconProductList };
-export type { AirconProduct };
-
-// ─── Deal Card Component ───────────────────────────────────────────────────────
-
-const DealCard = ({ deal, productSlug }: DealCardProps) => {
-  const timeLeft = useCountdown(deal.ends_at);
-  const percentSaved = calculatePercentSaved(deal.original_price_zar, deal.sale_price_zar);
-  const hasImages = deal.images.length > 0;
-  const primaryImage = hasImages ? deal.images[0] : "/placeholder.jpg";
-
-  const productHref = productSlug ? `/products/${productSlug}` : `/deals/${deal.slug}`;
-
-  const isExpired = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
+const AccessoryProductCard = ({ product }: AirconProductCardProps) => {
+  const { addItem } = useCart();
+  const [imageFailed, setImageFailed] = useState(false);
+  const kind = [...ACCESSORY_KINDS, ...INSTALLATION_KINDS].find((item) => item.value === product.specs?.accessory_kind);
+  const isService = kind?.value === "installation-services";
+  const Icon = kind?.value === "brackets" ? Ruler : kind?.value === "wifi-modules" ? Wifi : kind?.value === "remotes" ? Radio : kind?.value === "pipes-trunking" ? Cable : Package;
+  const price = getAccessoryPrice(product);
+  const hasSale = !product.is_enquiry_only && !product.has_variants && price < product.price_zar;
+  const href = `/products/${product.slug}`;
+  const image = getAccessoryCardImage(product);
+  const hasPhoto = image && !imageFailed;
+  const available = !isService && !product.stock.is_sold_out && product.stock.stock_count > 0;
+  const needsOptions = product.has_variants || (product.is_enquiry_only && !isService);
+  const specs = [product.specs?.size, product.specs?.length, product.specs?.material, isService ? product.specs?.pipe_run : null].filter((value): value is string => typeof value === "string");
 
   return (
-    <Card className="group relative block rounded-none border border-solid border-[#0A2540]/30 bg-transparent py-5 shadow-none ring ring-border">
-      
-      {/* Entire card is clickable */}
-      <Link
-        href={`/deals/${deal.slug}`}
-        className="absolute inset-0 z-50 size-full"
-        aria-label={`View ${deal.name}`}
-      />
-
-      <CardContent>
-
-        {/* ── Image area ── */}
-        <div className="relative overflow-hidden">
-          <AspectRatio
-            ratio={0.833}
-            className="overflow-hidden rounded-[1.25rem]"
-          >
-            <img
-              src={primaryImage}
-              alt={deal.name}
-              className="block size-full object-cover object-center scale-110 transition-transform duration-350 group-hover:scale-100"
-            />
-          </AspectRatio>
-
-          {/* % Saved badge - brand blue #1C99D6 */}
-          <Badge
-            className="absolute start-3 top-3 z-30 rounded-full bg-[#1C99D6] text-white text-xs font-semibold"
-          >
-            Save {percentSaved}%
-          </Badge>
-
-          {/* Deal type badge */}
-          <Badge
-            variant="outline"
-            className="absolute end-3 top-3 z-30 rounded-full bg-white text-xs font-semibold text-[#1E3A5F]"
-          >
-            {deal.deal_type}
-          </Badge>
-        </div>
-
-        {/* ── Card info ── */}
-        <div className="space-y-2 pt-3.5">
-
-          {/* Product name */}
-          <CardTitle className="leading-snug text-base text-[#1E3A5F] line-clamp-2">
-            {deal.name}
-          </CardTitle>
-
-          {/* Description */}
-          <p className="text-xs text-muted-foreground line-clamp-2">
-            {deal.description}
-          </p>
-
-          {/* Countdown timer */}
-          {!isExpired && (
-            <div className="flex items-center gap-2 text-xs text-[#1C99D6] font-medium">
-              <Clock className="w-3 h-3" />
-              <span>
-                {timeLeft.days > 0 && `${timeLeft.days}d `}
-                {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-              </span>
-            </div>
-          )}
-
-          {isExpired && (
-            <div className="flex items-center gap-2 text-xs text-red-500 font-medium">
-              <AlertCircle className="w-3 h-3" />
-              <span>Deal expired</span>
-            </div>
-          )}
-
-          {/* Price block */}
-          <div className="flex items-center gap-2">
-            <span className="text-lg font-bold text-[#1C99D6]">
-              {formatZAR(deal.sale_price_zar)}
-            </span>
-            <span className="text-sm text-muted-foreground line-through">
-              {formatZAR(deal.original_price_zar)}
-            </span>
+    <article className="accessory-card group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
+      <Link href={href} className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-white focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-sky-600" aria-label={`View ${product.name}`}>
+        {hasPhoto ? (
+          <>
+            <Image src={image.src} alt={image.illustrative ? `${kind?.label || "Accessory"} illustration; actual product may vary` : product.name} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 25vw, 20vw" className={cn("transition-transform", isService ? "object-cover group-hover:scale-105" : image.illustrative && (kind?.value === "brackets" || kind?.value === "installation-kits") ? "object-contain p-4 group-hover:scale-105" : image.illustrative ? "object-cover p-3 group-hover:scale-105" : "object-contain p-5 group-hover:scale-105")} onError={() => setImageFailed(true)} />
+          </>
+        ) : (
+          <div className="flex flex-col items-center gap-3 text-slate-500">
+            <div className="flex size-20 items-center justify-center rounded-2xl border border-sky-100 bg-white text-sky-700 shadow-sm"><Icon className="size-10" strokeWidth={1.25} aria-hidden="true" /></div>
+            <span className="text-xs">Photo coming soon</span>
           </div>
-
-          {/* Stock urgency */}
-          {deal.stock_remaining <= 5 && deal.stock_remaining > 0 && (
-            <span className="inline-flex items-center gap-1 text-xs text-amber-600 font-medium">
-              <AlertCircle className="w-3 h-3" />
-              Only {deal.stock_remaining} left
-            </span>
-          )}
-
-          {deal.stock_remaining === 0 && (
-            <span className="inline-flex items-center gap-1 text-xs text-red-500 font-medium">
-              <AlertCircle className="w-3 h-3" />
-              Sold Out
-            </span>
-          )}
-
-          {/* CTA buttons */}
-          {/* A deal is not a product — adding deal.id to the cart breaks
-              checkout (pricing resolves against the products table). Route
-              to the deal's linked product page instead. */}
-          <div className="relative z-[60] flex flex-col gap-2 pt-2">
-            {productSlug ? (
-              <div>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="w-full rounded-none border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] hover:bg-[#1C99D6]/10 font-[var(--font-google-sans-flex)]"
-                >
-                  <Link href={productHref}>
-                    <ShoppingBag className="mr-2 size-4" />
-                    Buy this product
-                  </Link>
-                </Button>
-              </div>
-            ) : null}
-            <div>
-              <Button
-                asChild
-                variant="ghost"
-                className="w-full rounded-none border border-dashed border-[#0A2540] bg-transparent text-[#0A2540] hover:bg-[#1C99D6]/10 font-[var(--font-google-sans-flex)]"
-              >
-                <Link href={productHref}>View product</Link>
-              </Button>
-            </div>
-          </div>
-
-          {/* Deal ends date */}
-          <p className="text-[10px] text-muted-foreground text-center">
-            Deal ends: {new Date(deal.ends_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}
-          </p>
-
+        )}
+        {hasSale && <span className="absolute left-3 top-3 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">Save {Math.round((1 - price / product.price_zar) * 100)}%</span>}
+      </Link>
+      <div className="flex flex-1 flex-col p-3.5">
+        <span className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-sky-700">{kind?.label || "Accessory"}</span>
+        <h2 className="accessory-title min-h-10 font-semibold text-[#1E3A5F]"><Link href={href} className="line-clamp-2 hover:underline focus-visible:outline-sky-600">{product.name}</Link></h2>
+        <div className="my-2 flex min-h-6 flex-wrap gap-1.5">
+          {specs.map((spec) => <span key={spec} className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600">{spec}</span>)}
         </div>
-      </CardContent>
-    </Card>
+        <p className="accessory-description mb-3 line-clamp-2 min-h-9 text-slate-500">{product.description || "Check compatibility with your air conditioner before ordering."}</p>
+        <div className="mt-auto">
+          <div className="mb-2 flex min-h-7 flex-wrap items-baseline gap-x-2">
+            <span className="text-lg font-semibold tracking-tight text-[#1E3A5F]">{product.is_enquiry_only ? "Price on request" : `${product.has_variants ? "From " : ""}${formatZAR(product.min_variant_price ?? price)}`}</span>
+            {hasSale && <span className="text-xs text-slate-400 line-through">{formatZAR(product.price_zar)}</span>}
+          </div>
+          <span className={cn("mb-3 flex items-center gap-1.5 text-[11px]", available ? "text-emerald-700" : "text-slate-500")}>
+            <span className={cn("size-1.5 rounded-full", available ? "bg-emerald-500" : "bg-slate-400")} />
+            {isService ? "Booking date confirmed on enquiry" : available ? "In stock" : "Availability confirmed on enquiry"}
+          </span>
+          <div className="flex gap-2 border-t border-slate-100 pt-3">
+            <Link href={href} aria-label={`Details for ${product.name}`} className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 text-xs font-medium text-[#1E3A5F] hover:bg-slate-50 focus-visible:outline-sky-600">Details<ArrowUpRight className="size-3.5" aria-hidden="true" /></Link>
+            {needsOptions ? (
+              <Link href={href} className="inline-flex min-h-10 flex-1 items-center justify-center rounded-lg bg-[#007FBA] px-2 text-xs font-semibold text-white hover:bg-[#006b9e] focus-visible:outline-sky-600">{product.is_enquiry_only ? "Enquire" : "Choose options"}</Link>
+            ) : (
+              <button type="button" aria-label={`Add ${product.name} to ${product.is_enquiry_only ? "enquiry" : "cart"}`} onClick={() => addItem({ id: product.id, name: product.name, slug: product.slug, price_zar: product.price_zar, sale_price_zar: hasSale ? price : undefined, images: product.images, type: product.type, is_enquiry_only: product.is_enquiry_only })} className="accessory-add inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#007FBA] px-2 font-semibold text-white hover:bg-[#006b9e] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"><ShoppingCart className="size-3.5 shrink-0" aria-hidden="true" />{product.is_enquiry_only ? "Add to enquiry" : "Add to cart"}</button>
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
   );
 };
 
-export { DealCard };
+export { AirconProductCard, AirconProductList, AccessoryProductCard };
+export type { AirconProduct };

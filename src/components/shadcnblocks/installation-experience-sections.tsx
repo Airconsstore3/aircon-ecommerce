@@ -10,13 +10,10 @@ import {
   PackageOpen,
   Snowflake,
   Wrench,
-  Mail,
   MapPin,
   MessageCircle,
-  Phone,
   Search,
   ShieldCheck,
-  Star,
 } from "lucide-react";
 
 const steps = [
@@ -28,12 +25,6 @@ const steps = [
 ];
 
 const suburbs = ["Cape Town", "Bellville", "Somerset West", "Stellenbosch", "Durbanville", "Paarl", "Claremont", "Milnerton"];
-
-const reviews = [
-  ["Sarah M.", "Cape Town", "Daikin Emura", "The team arrived on time, explained everything clearly, and left the room spotless. The whole process felt professional."],
-  ["Jason P.", "Bellville", "Samsung WindFree", "From the quote to the final testing, communication was excellent. Our new system works perfectly."],
-  ["Nomsa K.", "Somerset West", "Alliance Inverter", "A genuinely easy experience. The installer was knowledgeable, respectful, and meticulous."],
-];
 
 const faqs: Array<[string, string, typeof House]> = [
   ["Can you install an air conditioner I bought elsewhere?", "Yes. Our accredited technicians can install compatible units purchased from another supplier, subject to a site and product assessment.", House],
@@ -144,15 +135,6 @@ export function InstallationExperienceSections() {
       </section>
 
 
-      <section className="bg-[#F8FBFD] px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="customer-reviews">
-        <div className="mx-auto max-w-[1280px]">
-          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end"><div><p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Customer stories</p><h2 id="customer-reviews" className={sectionHeading}>Customer Reviews</h2></div><div className="flex items-center gap-3"><span className="text-4xl font-medium text-foreground">4.9/5</span><span className="text-sm text-muted-foreground">Based on 300+<br />installations</span></div></div>
-          <div className="mt-12 grid gap-6 md:grid-cols-3">
-            {reviews.map(([name, location, product, review], index) => <article key={name} className={`${index === 0 ? "md:col-span-2 md:p-10" : "p-7"} border border-[#EDF2F7] bg-white`}><div className="flex gap-1 text-[#1C99D6]">{[1, 2, 3, 4, 5].map((star) => <Star key={star} className="size-4 fill-current" />)}</div><p className={`${index === 0 ? "mt-8 text-2xl md:text-3xl" : "mt-6 text-base"} leading-[1.5] text-foreground`}>“{review}”</p><div className="mt-8 border-t border-[#EDF2F7] pt-5"><p className="font-medium text-foreground">{name}</p><p className="mt-1 text-sm text-muted-foreground">{location} · {product}</p><span className="mt-4 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.06em] text-[#1C99D6]"><ShieldCheck className="size-4" /> Verified Installation</span></div></article>)}
-          </div>
-        </div>
-      </section>
-
       <section className="px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="installation-faq">
         <div className="mx-auto grid max-w-[1100px] gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div>
@@ -180,8 +162,6 @@ export function InstallationExperienceSections() {
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[#EEF2F6] pt-6 text-sm text-muted-foreground">
               <span className="font-medium text-foreground">Still have a question?</span>
               <a href="/installation?intent=whatsapp#book-installation" className="inline-flex items-center gap-2 hover:text-[#1C99D6]"><MessageCircle className="size-4 text-[#1C99D6]" /> WhatsApp</a>
-              <a href="tel:+27000000000" className="inline-flex items-center gap-2 hover:text-[#1C99D6]"><Phone className="size-4 text-[#1C99D6]" /> Call Us</a>
-              <a href="mailto:hello@airconsstore.co.za" className="inline-flex items-center gap-2 hover:text-[#1C99D6]"><Mail className="size-4 text-[#1C99D6]" /> Email</a>
             </div>
           </div>
         </div>
@@ -189,13 +169,13 @@ export function InstallationExperienceSections() {
 
       <section id="book-installation" className="bg-[#F8FBFD] px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="book-installation-heading">
         <div className="mx-auto grid max-w-[1280px] gap-16 lg:grid-cols-[1.15fr_0.85fr]">
-          <div><p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Start your project</p><h2 id="book-installation-heading" className={sectionHeading}>Book Your Installation</h2><p className="mt-4 max-w-[560px] text-base leading-[1.7] text-muted-foreground">Tell us about your project and we&apos;ll contact you shortly.</p><div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground"><span>Average response: 15–30 minutes</span><span>No obligation quote</span></div><div className="mt-5 border-l-2 border-[#1C99D6] pl-4 text-sm text-foreground">Request type: <span className="font-semibold text-[#1C99D6]">{requestTypeLabel}</span>{selectedPackage !== "Select package" && <span> · {selectedPackage}</span>}</div><form onSubmit={(event) => event.preventDefault()} className="mt-10 grid gap-5 sm:grid-cols-2"><input type="hidden" name="requestType" value={requestTypeLabel} /><input type="hidden" name="selectedPackage" value={selectedPackage} /><input required placeholder="Name" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><input required type="tel" placeholder="Phone" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><input required type="email" placeholder="Email" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><input placeholder="Suburb" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><select name="package" value={selectedPackage} onChange={(event) => setSelectedPackage(event.target.value)} className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm text-muted-foreground outline-none focus:border-[#1C99D6]"><option>Select package</option><option>Home Standard</option><option>Extended Installation</option><option>Multi-Room System</option><option>Commercial Solutions</option></select><input type="date" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm text-muted-foreground outline-none focus:border-[#1C99D6]" /><textarea placeholder="Tell us about your project" rows={4} className="border border-[#DCE6EB] bg-white px-4 py-3 text-sm outline-none focus:border-[#1C99D6] sm:col-span-2" /><button type="submit" className={`${blueButton} sm:col-span-2 sm:w-fit`}>Book Installation <ArrowRight className="ml-3 size-4" /></button></form></div>
-          <div className="border-l border-[#DCE6EB] pl-8 lg:pl-12"><h3 className="text-xl font-medium text-foreground">Prefer to speak with us?</h3><p className="mt-3 text-sm leading-[1.7] text-muted-foreground">Our specialists are ready to help you choose the right solution.</p><div className="mt-8 grid gap-4"><a href="/installation?intent=whatsapp#book-installation" className="flex h-14 items-center gap-4 border border-[#1C99D6] bg-[#1C99D6] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#1680B0]"><MessageCircle className="size-5" /> WhatsApp us</a><a href="tel:+27000000000" className="flex items-center gap-4 border-b border-[#EDF2F7] py-4 text-sm font-medium text-foreground hover:text-[#1C99D6]"><Phone className="size-5 text-[#1C99D6]" /> Call Us</a><a href="mailto:hello@airconsstore.co.za" className="flex items-center gap-4 border-b border-[#EDF2F7] py-4 text-sm font-medium text-foreground hover:text-[#1C99D6]"><Mail className="size-5 text-[#1C99D6]" /> Email Us</a></div><div className="mt-10 grid gap-4 text-sm text-muted-foreground"><span className="flex items-center gap-3"><Clock3 className="size-4 text-[#1C99D6]" /> Mon–Fri, 08:00–17:00</span><span className="flex items-center gap-3"><CalendarDays className="size-4 text-[#1C99D6]" /> Usually replies within 15 minutes</span><span className="flex items-center gap-3"><ShieldCheck className="size-4 text-[#1C99D6]" /> Accredited installers</span></div></div>
+          <div><p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Start your project</p><h2 id="book-installation-heading" className={sectionHeading}>Book Your Installation</h2><p className="mt-4 max-w-[560px] text-base leading-[1.7] text-muted-foreground">Tell us about your project and we&apos;ll contact you shortly.</p><div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted-foreground"><span>No obligation quote</span></div><div className="mt-5 border-l-2 border-[#1C99D6] pl-4 text-sm text-foreground">Request type: <span className="font-semibold text-[#1C99D6]">{requestTypeLabel}</span>{selectedPackage !== "Select package" && <span> · {selectedPackage}</span>}</div><form onSubmit={(event) => event.preventDefault()} className="mt-10 grid gap-5 sm:grid-cols-2"><input type="hidden" name="requestType" value={requestTypeLabel} /><input type="hidden" name="selectedPackage" value={selectedPackage} /><input required placeholder="Name" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><input required type="tel" placeholder="Phone" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><input required type="email" placeholder="Email" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><input placeholder="Suburb" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm outline-none focus:border-[#1C99D6]" /><select name="package" value={selectedPackage} onChange={(event) => setSelectedPackage(event.target.value)} className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm text-muted-foreground outline-none focus:border-[#1C99D6]"><option>Select package</option><option>Home Standard</option><option>Extended Installation</option><option>Multi-Room System</option><option>Commercial Solutions</option></select><input type="date" className="h-12 border border-[#DCE6EB] bg-white px-4 text-sm text-muted-foreground outline-none focus:border-[#1C99D6]" /><textarea placeholder="Tell us about your project" rows={4} className="border border-[#DCE6EB] bg-white px-4 py-3 text-sm outline-none focus:border-[#1C99D6] sm:col-span-2" /><button type="submit" className={`${blueButton} sm:col-span-2 sm:w-fit`}>Book Installation <ArrowRight className="ml-3 size-4" /></button></form></div>
+          <div className="border-l border-[#DCE6EB] pl-8 lg:pl-12"><h3 className="text-xl font-medium text-foreground">Prefer to speak with us?</h3><p className="mt-3 text-sm leading-[1.7] text-muted-foreground">Our specialists are ready to help you choose the right solution.</p><div className="mt-8 grid gap-4"><a href="/installation?intent=whatsapp#book-installation" className="flex h-14 items-center gap-4 border border-[#1C99D6] bg-[#1C99D6] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#1680B0]"><MessageCircle className="size-5" /> WhatsApp us</a></div><div className="mt-10 grid gap-4 text-sm text-muted-foreground"><span className="flex items-center gap-3"><Clock3 className="size-4 text-[#1C99D6]" /> Installation support</span></div></div>
         </div>
       </section>
 
       <section className="px-4 py-24 text-center sm:px-6 lg:px-8" aria-labelledby="final-installation-cta">
-        <div className="mx-auto max-w-[720px]"><h2 id="final-installation-cta" className={sectionHeading}>Let&apos;s Get Your Home Comfortable.</h2><p className="mt-4 text-base leading-[1.7] text-muted-foreground">Book your installation today or speak with one of our specialists.</p><div className="mt-8 flex flex-wrap justify-center gap-4"><a href="/installation?intent=installation#book-installation" className={blueButton}>Book Installation</a><a href="/installation?intent=whatsapp#book-installation" className="inline-flex h-[46px] items-center bg-[#1C99D6] px-7 text-sm font-semibold text-white transition-colors hover:bg-[#1680B0]">WhatsApp Us</a></div><p className="mt-8 text-sm text-muted-foreground">Accredited installers · Warranty protected · Trusted workmanship</p></div>
+        <div className="mx-auto max-w-[720px]"><h2 id="final-installation-cta" className={sectionHeading}>Let&apos;s Get Your Home Comfortable.</h2><p className="mt-4 text-base leading-[1.7] text-muted-foreground">Book your installation today or speak with one of our specialists.</p><div className="mt-8 flex flex-wrap justify-center gap-4"><a href="/installation?intent=installation#book-installation" className={blueButton}>Book Installation</a><a href="/installation?intent=whatsapp#book-installation" className="inline-flex h-[46px] items-center bg-[#1C99D6] px-7 text-sm font-semibold text-white transition-colors hover:bg-[#1680B0]">WhatsApp Us</a></div><p className="mt-8 text-sm text-muted-foreground">Installation support · Warranty support · Trusted workmanship</p></div>
       </section>
 
       <a href="/installation?intent=installation#book-installation" className="fixed bottom-4 left-4 right-4 z-30 inline-flex h-12 items-center justify-center bg-[#1C99D6] text-sm font-semibold text-white shadow-lg md:hidden">Book Installation</a>

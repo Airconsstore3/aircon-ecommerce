@@ -1,10 +1,12 @@
-"use client";
+import { Check, X, Phone, MessageCircle, Mail } from "lucide-react";
 
-import { Check, X, Phone, MessageCircle } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { buildWhatsAppHref, getContactChannels, primaryContactHref } from "@/lib/contact-settings";
 
 const fontClass = "font-[var(--font-google-sans-flex)]";
+
+// Contact details come from the settings table — render on demand so admin
+// changes take effect without a rebuild.
+export const dynamic = "force-dynamic";
 
 const overviewCards = [
   {
@@ -113,8 +115,12 @@ const faqs = [
   },
 ];
 
-export default function ReturnPolicyPage() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+export default async function ReturnPolicyPage() {
+  const contact = await getContactChannels();
+  const whatsappHref = contact.whatsappDigits
+    ? buildWhatsAppHref(contact.whatsappDigits, "Hi Aircons Store — I need help with a return.")
+    : null;
+  const contactHref = primaryContactHref(contact, "Hi Aircons Store — I need help with a return.");
 
   return (
     <div className={`min-h-screen bg-white ${fontClass}`}>
@@ -306,26 +312,21 @@ export default function ReturnPolicyPage() {
           </h2>
           <div className="space-y-0">
             {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-gray-200">
-                <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full flex items-center justify-between py-6 text-left"
-                >
+              <details key={index} className="group border-b border-gray-200">
+                <summary className="flex w-full cursor-pointer list-none items-center justify-between py-6 text-left [&::-webkit-details-marker]:hidden">
                   <span className="text-[18px] font-medium text-[#0A2540] pr-4">
                     {faq.question}
                   </span>
-                  <span className={`text-[20px] text-[#1C99D6] transition-transform duration-200 ${openFaq === index ? 'rotate-45' : ''}`}>
+                  <span className="text-[20px] text-[#1C99D6] transition-transform duration-200 group-open:rotate-45">
                     +
                   </span>
-                </button>
-                {openFaq === index && (
-                  <div className="pb-6">
-                    <p className="text-[18px] leading-[1.7] text-[#5F6B7A]">
-                      {faq.answer}
-                    </p>
-                  </div>
-                )}
-              </div>
+                </summary>
+                <div className="pb-6">
+                  <p className="text-[18px] leading-[1.7] text-[#5F6B7A]">
+                    {faq.answer}
+                  </p>
+                </div>
+              </details>
             ))}
           </div>
         </div>
@@ -345,27 +346,42 @@ export default function ReturnPolicyPage() {
             Our team will guide you through every step.
           </p>
           <div className="flex flex-col items-center gap-4">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center bg-[#1C99D6] text-white px-8 h-[52px] font-semibold text-[16px] hover:bg-[#1680b0] transition-colors rounded-none w-full md:w-auto max-w-[300px]"
-            >
-              Contact Support
-            </Link>
+            {contactHref && (
+              <a
+                href={contactHref}
+                className="inline-flex items-center justify-center bg-[#1C99D6] text-white px-8 h-[52px] font-semibold text-[16px] hover:bg-[#1680b0] transition-colors rounded-none w-full md:w-auto max-w-[300px]"
+              >
+                Contact Support
+              </a>
+            )}
             <div className="flex items-center gap-6 mt-4">
-              <a
-                href="tel:+27210000000"
-                className="flex items-center gap-2 text-[#1C99D6] hover:text-[#1680b0] transition-colors"
-              >
-                <Phone className="size-4" strokeWidth={1.5} />
-                <span className="text-[16px] font-medium">Call Us</span>
-              </a>
-              <a
-                href="https://wa.me/27000000000"
-                className="flex items-center gap-2 text-[#1C99D6] hover:text-[#1680b0] transition-colors"
-              >
-                <MessageCircle className="size-4" strokeWidth={1.5} />
-                <span className="text-[16px] font-medium">WhatsApp</span>
-              </a>
+              {contact.phoneTel && (
+                <a
+                  href={contact.phoneTel}
+                  className="flex items-center gap-2 text-[#1C99D6] hover:text-[#1680b0] transition-colors"
+                >
+                  <Phone className="size-4" strokeWidth={1.5} />
+                  <span className="text-[16px] font-medium">Call Us</span>
+                </a>
+              )}
+              {whatsappHref && (
+                <a
+                  href={whatsappHref}
+                  className="flex items-center gap-2 text-[#1C99D6] hover:text-[#1680b0] transition-colors"
+                >
+                  <MessageCircle className="size-4" strokeWidth={1.5} />
+                  <span className="text-[16px] font-medium">WhatsApp</span>
+                </a>
+              )}
+              {contact.email && (
+                <a
+                  href={`mailto:${contact.email}`}
+                  className="flex items-center gap-2 text-[#1C99D6] hover:text-[#1680b0] transition-colors"
+                >
+                  <Mail className="size-4" strokeWidth={1.5} />
+                  <span className="text-[16px] font-medium">Email Us</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
