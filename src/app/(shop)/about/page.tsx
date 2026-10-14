@@ -52,12 +52,12 @@ const brands = [
 ];
 
 const galleryImages = [
-  { src: "/Installation page picsh/Shop Air Conditioners.png", alt: "Technician installing" },
-  { src: "/Hero Images/Product category pictures/Alliance Aqua front.webp", alt: "Indoor unit" },
-  { src: "/Hero Images/Product category pictures/Alliance Aqua condenser.webp", alt: "Outdoor condenser" },
-  { src: "/Hero Images/Product category pictures/Alliance Cassette Inverter.webp", alt: "Commercial installation" },
-  { src: "/Hero Images/full-width-aircon.webp", alt: "Residential installation" },
-  { src: "/Installation page picsh/why choose us on isntallation.webp", alt: "Finished project" },
+  { src: "/Installation page picsh/Shop Air Conditioners.png", alt: "Technician installing an indoor unit" },
+  { src: "/Hero Images/Product category pictures/Alliance Aqua front.webp", alt: "Indoor wall-mounted unit" },
+  { src: "/Hero Images/Product category pictures/Alliance Aqua condenser.webp", alt: "Outdoor condenser unit" },
+  { src: "/Hero Images/Product category pictures/Alliance Cassette Inverter.webp", alt: "Cassette air conditioner" },
+  { src: "/Hero Images/full-width-aircon.webp", alt: "Mounted air conditioner above a bed" },
+  { src: "/Installation page picsh/why choose us on isntallation.webp", alt: "Technician checking an air conditioner" },
 ];
 
 // NOTE: fabricated testimonials removed — no real review source exists yet.
@@ -250,15 +250,15 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* 6. Installation Gallery */}
+      {/* 6. Gallery */}
       <section className="py-16 md:py-20 lg:py-24 px-6 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-[1280px]">
           <div className="mb-12 md:mb-16">
             <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1C99D6] mb-3">
-              Installation Gallery
+              Gallery
             </p>
             <h2 className="text-[28px] md:text-[36px] lg:text-[44px] font-medium leading-[1.1] tracking-tight text-[#0A2540]">
-              Real installations, real results.
+              Products and installation services.
             </h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
