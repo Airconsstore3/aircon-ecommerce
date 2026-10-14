@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getCssImageUrl } from "@/lib/product-images";
+import { resolveStockStatus } from "@/lib/stock-status";
 import { useState } from "react";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -53,9 +54,11 @@ function formatZAR(amount: number): string {
 }
 
 function getStockStatus(product: AirconProduct) {
-  if (product.stock.is_sold_out) return "sold_out";
-  if (product.stock.stock_count <= product.stock.low_stock_threshold) return "low_stock";
-  return "in_stock";
+  return resolveStockStatus({
+    isSoldOut: product.stock.is_sold_out,
+    stockCount: product.stock.stock_count,
+    lowStockThreshold: product.stock.low_stock_threshold,
+  });
 }
 
 function getRoomCoverage(btuRange: number | null): string | null {
@@ -227,7 +230,7 @@ const AirconProductCard = ({ product }: AirconProductCardProps) => {
                 Low Stock — {product.stock.stock_count} left
               </span>
             )}
-            {stockStatus === "sold_out" && (
+            {(stockStatus === "sold_out" || stockStatus === "on_request") && (
               <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
                 Available on request

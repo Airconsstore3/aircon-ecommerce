@@ -16,9 +16,8 @@ export type Product = {
   features: Array<"wifi" | "self-clean" | "dehumidify">; // max 3, fixed order
   price: number; // 8999
   compareAtPrice?: number; // 15299 — renders struck through when present
-  rating: number; // 4.8
-  reviewCount: number; // 541
   stockCount: number;
+  isSoldOut?: boolean;
   installRequired: boolean; // drives the primary CTA
   badge?: { label: string; tone: "success" | "danger" | "warning" };
   // Variant support

@@ -3,6 +3,48 @@ import { cookies } from "next/headers";
 import { filterProducts } from "@/lib/filterProducts";
 import type { Product, ProductVariant } from "@/types/product";
 
+export type HeroProductVariant = {
+  id: string;
+  slug: string;
+  btuRange: number | null;
+  variantName?: string | null;
+  price: number;
+  compareAtPrice?: number;
+  image?: string;
+  stockCount: number;
+  isSoldOut: boolean;
+};
+
+export type HeroProduct = {
+  id: string;
+  slug: string;
+  name: string;
+  brand: string;
+  image?: string;
+  isEnquiryOnly: boolean;
+  variants: HeroProductVariant[];
+};
+
+type HeroProductRow = Pick<
+  SupabaseProduct,
+  | "id"
+  | "name"
+  | "slug"
+  | "brand"
+  | "btu_range"
+  | "images"
+  | "price_zar"
+  | "sale_price_zar"
+  | "is_published"
+  | "is_enquiry_only"
+  | "is_featured"
+  | "is_parent_product"
+  | "parent_product_id"
+  | "stock_count"
+  | "is_sold_out"
+  | "sort_order"
+>;
+
 export type SupabaseProduct = {
   id: string;
   name: string;
@@ -112,7 +154,7 @@ function mapSupabaseProductToProduct(product: SupabaseProduct): Product {
   } else if (isLowStock) {
     badge = { label: `Only ${product.stock_count} left`, tone: "warning" };
   } else if (product.is_featured) {
-    badge = { label: "Best seller", tone: "success" };
+    badge = { label: "Featured", tone: "success" };
   }
 
   return {
@@ -133,9 +175,8 @@ function mapSupabaseProductToProduct(product: SupabaseProduct): Product {
     features,
     price: hasSale ? product.sale_price_zar! : product.price_zar,
     compareAtPrice: hasSale ? product.price_zar : undefined,
-    rating: 0,
-    reviewCount: 0,
     stockCount: product.stock_count,
+    isSoldOut: product.is_sold_out,
     installRequired: derivedType !== "portable" && derivedType !== "window",
     badge,
     isBaseProduct: product.is_base_product,
@@ -289,6 +330,111 @@ export async function fetchFeaturedProducts(): Promise<Product[]> {
   return [];
   } catch (error) {
     console.error("[fetchFeaturedProducts] error:", error);
+    return [];
+  }
+}
+
+const normalizeHeroBrand = (brand: string | null | undefined) =>
+  (brand ?? "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+/**
+ * Fetches one residential product family per brand for the homepage hero.
+ * Parent products define the card; child variants provide the selectable BTU
+ * sizes and prices shown in the compact carousel.
+ */
+export async function fetchResidentialHeroProducts(): Promise<HeroProduct[]> {
+  try {
+    const cookieStore = await cookies();
+    const supabase = createServerClient(cookieStore);
+    const { data, error } = await supabase
+      .from("products")
+      .select("id,name,slug,brand,btu_range,images,price_zar,sale_price_zar,is_published,is_enquiry_only,is_featured,is_parent_product,parent_product_id,stock_count,is_sold_out,sort_order")
+      .eq("is_published", true)
+      .eq("type", "aircon")
+      .order("sort_order", { ascending: true });
+
+    if (error) {
+      console.error("[fetchResidentialHeroProducts] query error:", error);
+      return [];
+    }
+
+    const parentsByBrand = new Map<string, HeroProductRow>();
+    const variantsByParent = new Map<string, HeroProductRow[]>();
+    for (const product of (data ?? []) as HeroProductRow[]) {
+      const brandKey = normalizeHeroBrand(product.brand);
+      if (product.is_parent_product === false || product.parent_product_id) {
+        if (product.parent_product_id) {
+          const variants = variantsByParent.get(product.parent_product_id) ?? [];
+          variants.push(product);
+          variantsByParent.set(product.parent_product_id, variants);
+        }
+        continue;
+      }
+      if (!brandKey || brandKey === "comfee" || /commercial|portable/i.test(product.name)) continue;
+      const hasResidentialBtu = product.btu_range !== undefined && product.btu_range !== null && product.btu_range <= 32000;
+      const isHisenseRac = brandKey === "hisense" && /\bRAC\b/i.test(product.name) && !/\bLCAC\b/i.test(product.name);
+      if (!hasResidentialBtu && !isHisenseRac) continue;
+
+      const current = parentsByBrand.get(brandKey);
+      const productScore = [
+        product.is_featured ? 0 : 1,
+        product.sale_price_zar && product.sale_price_zar < product.price_zar ? 0 : 1,
+        product.sort_order ?? 9999,
+        product.price_zar ?? Number.MAX_SAFE_INTEGER,
+      ];
+      const currentScore = current
+        ? [
+            current.is_featured ? 0 : 1,
+            current.sale_price_zar && current.sale_price_zar < current.price_zar ? 0 : 1,
+            current.sort_order ?? 9999,
+            current.price_zar ?? Number.MAX_SAFE_INTEGER,
+          ]
+        : [Infinity, Infinity, Infinity, Infinity];
+      const isPreferred = productScore.some((value, index) => value < currentScore[index]) && !productScore.some((value, index) => value > currentScore[index]);
+      if (isPreferred) parentsByBrand.set(brandKey, product);
+    }
+
+    const ar4500Parent = ((data ?? []) as HeroProductRow[]).find(
+      (p) => normalizeHeroBrand(p.brand) === "samsung" && /ar\s?4500/i.test(p.name) && p.is_parent_product !== false && !p.parent_product_id
+    );
+    if (ar4500Parent) parentsByBrand.set("samsung", ar4500Parent);
+
+    return Array.from(parentsByBrand.values()).map((product) => ({
+      id: product.id,
+      slug: product.slug,
+      name: product.name,
+      brand: product.brand || "Aircon",
+      image: product.images?.[0],
+      isEnquiryOnly: product.is_enquiry_only,
+      variants: [
+        {
+          id: product.id,
+          slug: product.slug,
+          btuRange: product.btu_range ?? null,
+          variantName: null,
+          price: product.sale_price_zar && product.sale_price_zar < product.price_zar ? product.sale_price_zar : product.price_zar,
+          compareAtPrice: product.sale_price_zar && product.sale_price_zar < product.price_zar ? product.price_zar : undefined,
+          image: product.images?.[0],
+          stockCount: product.stock_count,
+          isSoldOut: product.is_sold_out,
+        },
+        ...(variantsByParent.get(product.id) ?? [])
+          .sort((a, b) => (a.btu_range ?? 0) - (b.btu_range ?? 0))
+          .map((variant) => ({
+            id: variant.id,
+            slug: variant.slug,
+            btuRange: variant.btu_range ?? null,
+            variantName: null,
+            price: variant.sale_price_zar && variant.sale_price_zar < variant.price_zar ? variant.sale_price_zar : variant.price_zar,
+            compareAtPrice: variant.sale_price_zar && variant.sale_price_zar < variant.price_zar ? variant.price_zar : undefined,
+            image: variant.images?.[0] || product.images?.[0],
+            stockCount: variant.stock_count,
+            isSoldOut: variant.is_sold_out,
+          })),
+      ],
+    }));
+  } catch (error) {
+    console.error("[fetchResidentialHeroProducts] error:", error);
     return [];
   }
 }

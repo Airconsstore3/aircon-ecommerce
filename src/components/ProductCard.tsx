@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useState, type MouseEvent } from "react";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/components/shop/CartProvider";
+import { resolveStockStatus, stockStatusLabel } from "@/lib/stock-status";
 import type { Product } from "@/types/product";
 
 interface ProductCardProps {
@@ -49,11 +50,6 @@ const FEATURE_ORDER: Array<Product["features"][number]> = [
 
 function formatPrice(amount: number): string {
   return `R ${amount.toLocaleString("en-ZA")}`;
-}
-
-function toSentenceCase(value: string): string {
-  if (!value) return value;
-  return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 }
 
 function cleanProductName(name: string): string {
@@ -118,6 +114,10 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
   const hasHoverImage = images.length > 1;
   const productHref = `/products/${slug}`;
   const currentImages = currentVariant.images || images;
+  const stockStatus = resolveStockStatus({
+    isSoldOut: product.isSoldOut,
+    stockCount: currentVariant.stockCount,
+  });
 
   const handleAddToCart = (e: MouseEvent) => {
     e.preventDefault();
@@ -252,7 +252,7 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           <li className="flex items-center gap-1.5 text-xs text-foreground">
             <Thermometer className="size-3.5 shrink-0" aria-hidden="true" />
             <span>
-              Cooling + heating
+              {currentVariant.mode === "cooling-heating" ? "Cooling + heating" : "Cooling only"}
             </span>
           </li>
           <li className="flex items-center gap-1.5 text-xs text-muted-foreground">
@@ -278,9 +278,13 @@ export function ProductCard({ product, priority = false }: ProductCardProps) {
           </div>
         )}
 
-        {/* Availability — no fabricated ratings shown */}
+        {/* Availability — driven by real stock data */}
         <p className="text-[11px] text-muted-foreground mb-3 md:mb-5">
-          {currentVariant.stockCount <= 3 && currentVariant.stockCount > 0 ? `Only ${currentVariant.stockCount} left` : <span className="text-green-600">In stock</span>}
+          {stockStatus === "in_stock" ? (
+            <span className="text-green-600">{stockStatusLabel(stockStatus)}</span>
+          ) : (
+            stockStatusLabel(stockStatus, currentVariant.stockCount)
+          )}
         </p>
 
         {/* Price */}
