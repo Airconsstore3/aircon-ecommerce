@@ -1,23 +1,16 @@
-"use client";
-
-import { useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import {
   ArrowRight,
-  ArrowLeft,
   CheckCircle,
   FileText,
   Mail,
   MessageCircle,
   Phone,
   ShieldCheck,
-  Upload,
   Wrench,
   Boxes,
   Cpu,
   Home,
-  Clock3,
   Store,
   HelpCircle,
   Camera,
@@ -27,9 +20,18 @@ import {
   Package,
 } from "lucide-react";
 
+import {
+  buildWhatsAppHref,
+  getContactChannels,
+} from "@/lib/contact-settings";
+
 const buttonClass = "inline-flex h-[46px] items-center justify-center bg-[#1C99D6] px-7 text-sm font-semibold tracking-[0.06em] text-white transition-colors duration-200 hover:bg-[#1680B0]";
 const outlineButtonClass = "inline-flex h-[46px] items-center justify-center border border-[#1C99D6] px-7 text-sm font-semibold text-[#1C99D6] transition-colors hover:bg-[#F7FBFF]";
 const headingClass = "font-[var(--font-google-sans-flex)] text-3xl font-medium leading-tight text-[#0A2540] md:text-[44px]";
+
+// Contact details come from the settings table — render on demand so admin
+// changes take effect without a rebuild.
+export const dynamic = "force-dynamic";
 
 const brands = [
   ["Samsung", "/Hero Images/aircon coursel logo/samsung aircon.png"],
@@ -47,9 +49,9 @@ const coverageCards = [
 ] as const;
 
 const routingCards = [
-  { icon: Store, title: "Bought from Aircons Store", copy: "Your warranty is ready to register.", cta: "Continue", href: "#warranty-form" },
-  { icon: HelpCircle, title: "Bought Elsewhere", copy: "Check whether your product is eligible.", cta: "Check Eligibility", href: "#contact-support" },
-  { icon: MessageCircle, title: "Need Help?", copy: "Not sure where you stand? Talk to us.", cta: "Contact Support", href: "#contact-support" },
+  { icon: Store, title: "Bought from Aircons Store", copy: "We can help you register your warranty.", cta: "Continue", href: "#warranty-contact" },
+  { icon: HelpCircle, title: "Bought Elsewhere", copy: "Check whether your product is eligible.", cta: "Check Eligibility", href: "#warranty-contact" },
+  { icon: MessageCircle, title: "Need Help?", copy: "Not sure where you stand? Talk to us.", cta: "Contact Support", href: "#warranty-contact" },
 ];
 
 const documents = [
@@ -67,26 +69,23 @@ const faqs = [
   ["What is covered?", "Coverage varies by manufacturer. Indoor units, outdoor units, compressors and parts are typically included, subject to terms."],
   ["Is labour included?", "Labour may be included depending on the warranty conditions. We confirm this during your request."],
   ["What documents do I need?", "You'll need your invoice, serial number, model number and installation address. Photos are required for claims."],
-  ["How long does approval take?", "Most requests are reviewed within 2–3 business days. We contact you by your preferred method once reviewed."],
+  ["How long does approval take?", "Timing depends on the request and the manufacturer. We confirm next steps when we review your details."],
   ["Can I claim without an invoice?", "An invoice or proof of purchase is required. Contact us if you're unable to locate it and we'll advise."],
 ];
 
-const steps = [
-  { number: "01", title: "Choose Request", copy: "Select register, extend or claim." },
-  { number: "02", title: "Customer Details", copy: "Your name and contact information." },
-  { number: "03", title: "Product Details", copy: "Brand, model and serial number." },
-  { number: "04", title: "Upload Documents", copy: "Invoice, photos and certificates." },
-  { number: "05", title: "Submit", copy: "Review and send your request." },
-];
+const processSteps = [
+  ["01", "Get in Touch", "Contact us by WhatsApp, phone or email."],
+  ["02", "Share Your Details", "Invoice, serial number and photos if claiming."],
+  ["03", "We Review", "Our team reviews your request."],
+  ["04", "Next Steps", "We contact you by your preferred method."],
+] as const;
 
-export default function WarrantyPage() {
-  const [openFaq, setOpenFaq] = useState(0);
-  const [formStep, setFormStep] = useState(0);
-  const [requestType, setRequestType] = useState<"register" | "extend" | "claim">("register");
-  const [submitted, setSubmitted] = useState(false);
-
-  const nextStep = () => setFormStep((s) => Math.min(s + 1, steps.length - 1));
-  const prevStep = () => setFormStep((s) => Math.max(s - 1, 0));
+export default async function WarrantyPage() {
+  const contact = await getContactChannels();
+  const whatsappWarrantyHref = contact.whatsappDigits
+    ? buildWhatsAppHref(contact.whatsappDigits, "Hi Aircons Store — I need help with a warranty request.")
+    : null;
+  const hasContactChannel = Boolean(whatsappWarrantyHref || contact.phoneTel || contact.email);
 
   return (
     <div className="min-h-screen bg-white text-[#0A2540]">
@@ -96,15 +95,15 @@ export default function WarrantyPage() {
           <div>
             <p className="mb-5 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Warranty &amp; Support</p>
             <h1 id="warranty-heading" className="font-[var(--font-google-sans-flex)] text-[44px] font-medium leading-[0.98] tracking-tight sm:text-[56px] lg:text-[64px]">Warranty Made Simple.</h1>
-            <p className="mt-6 max-w-[520px] text-lg leading-[1.7] text-[#335B74]">Register your product, extend eligible warranties or submit a claim in just a few steps.</p>
+            <p className="mt-6 max-w-[520px] text-lg leading-[1.7] text-[#335B74]">Register your product, extend eligible warranties or submit a claim — our team will walk you through it.</p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="#warranty-form" className={buttonClass} onClick={() => { setRequestType("register"); setFormStep(0); }}>Register Warranty <ArrowRight className="ml-3 size-4" /></Link>
-              <Link href="#warranty-form" className={outlineButtonClass} onClick={() => { setRequestType("claim"); setFormStep(0); }}>Submit a Claim</Link>
+              <a href="#warranty-contact" className={buttonClass}>Register Warranty <ArrowRight className="ml-3 size-4" /></a>
+              <a href="#warranty-contact" className={outlineButtonClass}>Submit a Claim</a>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm text-[#335B74]">
               <span className="flex items-center gap-2"><CheckCircle className="size-4 text-[#1C99D6]" /> Manufacturer Support</span>
-              <span className="flex items-center gap-2"><ShieldCheck className="size-4 text-[#1C99D6]" /> Secure Registration</span>
-              <span className="flex items-center gap-2"><Clock3 className="size-4 text-[#1C99D6]" /> Response Within 2–3 Days</span>
+              <span className="flex items-center gap-2"><ShieldCheck className="size-4 text-[#1C99D6]" /> Registration &amp; Claims</span>
+              <span className="flex items-center gap-2"><MessageCircle className="size-4 text-[#1C99D6]" /> WhatsApp, Phone or Email</span>
             </div>
           </div>
           <div className="relative min-h-[380px] overflow-hidden border border-[#EDF2F7] lg:min-h-[520px]">
@@ -119,16 +118,16 @@ export default function WarrantyPage() {
           <h2 id="entry-heading" className="sr-only">Choose your request</h2>
           <div className="grid gap-px border border-[#EDF2F7] bg-[#EDF2F7] md:grid-cols-3">
             {[
-              { icon: ShieldCheck, title: "Register Warranty", copy: "Bought a new air conditioner? Register your warranty.", cta: "Register", value: "register" as const },
-              { icon: Clock3, title: "Extend Warranty", copy: "Extend eligible manufacturer coverage.", cta: "Extend Warranty", value: "extend" as const },
-              { icon: Wrench, title: "Submit a Claim", copy: "Having a warranty issue? We'll guide you through the process.", cta: "Start Claim", value: "claim" as const },
-            ].map(({ icon: Icon, title, copy, cta, value }) => (
-              <Link key={title} href="#warranty-form" onClick={() => { setRequestType(value); setFormStep(0); }} className="group flex flex-col bg-white p-8 transition-colors hover:bg-[#F7FBFF] lg:p-10">
+              { icon: ShieldCheck, title: "Register Warranty", copy: "Bought a new air conditioner? We can help you register your warranty.", cta: "Register" },
+              { icon: Wrench, title: "Submit a Claim", copy: "Having a warranty issue? We'll guide you through the process.", cta: "Start Claim" },
+              { icon: HelpCircle, title: "Extend Warranty", copy: "Check whether your product is eligible for extended coverage.", cta: "Check Eligibility" },
+            ].map(({ icon: Icon, title, copy, cta }) => (
+              <a key={title} href="#warranty-contact" className="group flex flex-col bg-white p-8 transition-colors hover:bg-[#F7FBFF] lg:p-10">
                 <Icon className="size-6 text-[#1C99D6]" strokeWidth={1.7} />
                 <h3 className="mt-6 text-xl font-medium">{title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-[1.6] text-[#335B74]">{copy}</p>
                 <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#1C99D6]">{cta} <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" /></span>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -176,12 +175,12 @@ export default function WarrantyPage() {
           </div>
           <div className="mt-12 grid gap-px border border-[#EDF2F7] bg-[#EDF2F7] md:grid-cols-3">
             {routingCards.map(({ icon: Icon, title, copy, cta, href }) => (
-              <Link key={title} href={href} className="group flex flex-col bg-white p-8 transition-colors hover:bg-[#F7FBFF]">
+              <a key={title} href={href} className="group flex flex-col bg-white p-8 transition-colors hover:bg-[#F7FBFF]">
                 <Icon className="size-6 text-[#1C99D6]" strokeWidth={1.7} />
                 <h3 className="mt-6 text-lg font-medium">{title}</h3>
                 <p className="mt-2 flex-1 text-sm leading-[1.6] text-[#335B74]">{copy}</p>
                 <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[#1C99D6]">{cta} <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1" /></span>
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -197,15 +196,15 @@ export default function WarrantyPage() {
 
           {/* Desktop timeline */}
           <div className="mt-16 hidden md:block">
-            <div className="relative grid grid-cols-5">
-              <div className="absolute left-[10%] right-[10%] top-[27px] h-[2px] bg-[#DCE6EB]" />
-              {[["01", "Choose Your Request", "Select register, extend or claim."], ["02", "Complete the Form", "Fill in your product and contact details."], ["03", "Upload Documents", "Add proof of purchase and photos if claiming."], ["04", "We Review", "Our team reviews your request."], ["05", "Confirmation", "You hear back by email or WhatsApp."]].map(([number, title, copy], i) => (
+            <div className="relative grid grid-cols-4">
+              <div className="absolute left-[12.5%] right-[12.5%] top-[27px] h-[2px] bg-[#DCE6EB]" />
+              {processSteps.map(([number, title, copy], i) => (
                 <div key={number} className="group relative flex flex-col items-center px-2 text-center">
                   <span className={`relative z-10 flex size-14 items-center justify-center rounded-full border-2 transition-all duration-200 ${i === 0 ? "border-[#1C99D6] bg-[#1C99D6] text-white" : "border-[#1C99D6] bg-white text-[#1C99D6] group-hover:bg-[#1C99D6] group-hover:text-white"}`}>
                     <span className="text-[18px] font-semibold tracking-[-0.02em]">{number}</span>
                   </span>
                   <h3 className="mt-7 text-base font-medium transition-colors duration-200 group-hover:text-[#1C99D6]">{title}</h3>
-                  <p className="mt-4 max-w-[180px] text-sm leading-[1.6] text-[#335B74]">{copy}</p>
+                  <p className="mt-4 max-w-[200px] text-sm leading-[1.6] text-[#335B74]">{copy}</p>
                 </div>
               ))}
             </div>
@@ -215,9 +214,9 @@ export default function WarrantyPage() {
           <div className="mt-12 md:hidden">
             <div className="relative">
               <div className="absolute bottom-2 left-[27px] top-2 w-[2px] bg-[#DCE6EB]" />
-              {[["01", "Choose Your Request", "Select register, extend or claim."], ["02", "Complete the Form", "Fill in your product and contact details."], ["03", "Upload Documents", "Add proof of purchase and photos if claiming."], ["04", "We Review", "Our team reviews your request."], ["05", "Confirmation", "You hear back by email or WhatsApp."]].map(([number, title, copy], i) => (
+              {processSteps.map(([number, title, copy]) => (
                 <div key={number} className="group relative flex gap-5 pb-8 last:pb-0">
-                  <span className={`relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 ${i === 0 ? "border-[#1C99D6] bg-[#1C99D6] text-white" : "border-[#1C99D6] bg-white text-[#1C99D6]"}`}>
+                  <span className={`relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 border-[#1C99D6] bg-white text-[#1C99D6]`}>
                     <span className="text-[18px] font-semibold tracking-[-0.02em]">{number}</span>
                   </span>
                   <div className="pt-2">
@@ -237,7 +236,7 @@ export default function WarrantyPage() {
           <div className="max-w-[620px]">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Before You Start</p>
             <h2 id="documents-heading" className={headingClass}>Required Documents.</h2>
-            <p className="mt-5 text-base leading-[1.7] text-[#335B74]">Have these ready before filling out the form to speed up your request.</p>
+            <p className="mt-5 text-base leading-[1.7] text-[#335B74]">Have these ready before you contact us to speed up your request.</p>
           </div>
           <div className="mt-12 grid gap-px border border-[#EDF2F7] bg-[#EDF2F7] sm:grid-cols-2 lg:grid-cols-3">
             {documents.map(({ icon: Icon, title, copy }) => (
@@ -253,165 +252,39 @@ export default function WarrantyPage() {
         </div>
       </section>
 
-      {/* Trust Banner */}
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-[1000px] border border-[#EDF2F7] p-10 text-center lg:p-14">
-          <HelpCircle className="mx-auto size-8 text-[#1C99D6]" strokeWidth={1.7} />
-          <h2 className="mt-6 text-2xl font-medium leading-tight md:text-3xl">Not sure whether your product is covered?</h2>
-          <p className="mx-auto mt-4 max-w-[480px] text-base leading-[1.7] text-[#335B74]">Talk to our support team before submitting your request.</p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <a href="https://wa.me/27210000000" className={buttonClass}><MessageCircle className="mr-3 size-5" /> WhatsApp</a>
-            <a href="tel:+27210000000" className={outlineButtonClass}><Phone className="mr-3 size-5" /> Call</a>
-            <a href="mailto:support@airconsstore.co.za" className={outlineButtonClass}><Mail className="mr-3 size-5" /> Email</a>
-          </div>
-        </div>
-      </section>
-
-      {/* Multi-Step Warranty Form */}
-      <section id="warranty-form" className="px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="form-heading">
-        <div className="mx-auto max-w-[860px]">
-          <div className="text-center">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Warranty Form</p>
-            <h2 id="form-heading" className={headingClass}>Submit Your Request.</h2>
-            <p className="mx-auto mt-5 max-w-[520px] text-base leading-[1.7] text-[#335B74]">Complete the steps below and our team will handle the rest.</p>
-          </div>
-
-          {submitted ? (
-            <div className="mt-12 border border-[#EDF2F7] p-10 text-center">
-              <CheckCircle className="mx-auto size-10 text-[#1C99D6]" />
-              <h3 className="mt-6 text-xl font-medium">Request received.</h3>
-              <p className="mx-auto mt-2 max-w-[440px] text-sm leading-[1.7] text-[#335B74]">We&apos;ll review your request and contact you within 2–3 business days by your preferred method.</p>
+      {/* Warranty enquiry — real contact channels from settings, no fake form */}
+      <section id="warranty-contact" className="px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="warranty-contact-heading">
+        <div className="mx-auto grid max-w-[1280px] gap-16 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Start Your Request</p>
+            <h2 id="warranty-contact-heading" className={headingClass}>Contact Us to Register, Extend or Claim.</h2>
+            <p className="mt-5 max-w-[600px] text-base leading-[1.7] text-[#335B74]">Warranty enquiries are handled directly by our team. Message or call us and we&apos;ll guide you through the process.</p>
+            <div className="mt-10 border border-[#EDF2F7] bg-[#F8FBFD] p-8">
+              <h3 className="text-lg font-medium">Include this information when you contact us</h3>
+              <ul className="mt-5 grid gap-3">
+                {["Whether you want to register, extend or claim", "Product brand, model number and serial number", "Invoice or proof of purchase", "Installation address", "Photos of the issue (for claims)"].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-[#335B74]"><CheckCircle className="size-4 shrink-0 text-[#1C99D6]" /> {item}</li>
+                ))}
+              </ul>
             </div>
-          ) : (
-            <div className="mt-12">
-              {/* Step indicator */}
-              <div className="mb-10">
-                <div className="hidden md:block">
-                  <div className="relative grid grid-cols-5">
-                    <div className="absolute left-[10%] right-[10%] top-[27px] h-[2px] bg-[#DCE6EB]" />
-                    <div className="absolute left-[10%] top-[27px] h-[2px] bg-[#1C99D6] transition-all duration-300" style={{ width: `${(formStep / (steps.length - 1)) * 80}%` }} />
-                    {steps.map((step, i) => (
-                      <div key={step.number} className="relative flex flex-col items-center px-1 text-center">
-                        <span className={`relative z-10 flex size-14 items-center justify-center rounded-full border-2 transition-all duration-200 ${i <= formStep ? "border-[#1C99D6] bg-[#1C99D6] text-white" : "border-[#DCE6EB] bg-white text-[#335B74]"}`}>
-                          <span className="text-[18px] font-semibold tracking-[-0.02em]">{step.number}</span>
-                        </span>
-                        <h3 className="mt-5 text-xs font-medium md:text-sm">{step.title}</h3>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                {/* Mobile step indicator */}
-                <div className="flex items-center justify-between md:hidden">
-                  <span className="text-sm font-semibold text-[#1C99D6]">Step {formStep + 1} of {steps.length}</span>
-                  <span className="text-sm text-[#335B74]">{steps[formStep].title}</span>
-                </div>
-                <div className="mt-3 h-1 w-full bg-[#DCE6EB] md:hidden">
-                  <div className="h-1 bg-[#1C99D6] transition-all duration-300" style={{ width: `${((formStep + 1) / steps.length) * 100}%` }} />
-                </div>
+          </div>
+          <div className="border-l border-[#DCE6EB] pl-8 lg:pl-12">
+            <h3 className="text-xl font-medium">Talk to Our Team</h3>
+            <p className="mt-3 text-sm leading-[1.7] text-[#335B74]">Our team can help with registrations, claims and warranty questions.</p>
+            {hasContactChannel ? (
+              <div className="mt-8 grid gap-4">
+                {whatsappWarrantyHref && (
+                  <a href={whatsappWarrantyHref} target="_blank" rel="noopener noreferrer" className="flex h-[46px] items-center gap-3 bg-[#1C99D6] px-5 text-sm font-semibold text-white transition-colors hover:bg-[#1680B0]"><MessageCircle className="size-5" /> WhatsApp Us</a>
+                )}
+                {contact.phoneTel && (
+                  <a href={contact.phoneTel} className="flex items-center gap-3 border-b border-[#EDF2F7] py-4 text-sm font-medium hover:text-[#1C99D6]"><Phone className="size-5 text-[#1C99D6]" /> Call Us</a>
+                )}
+                {contact.email && (
+                  <a href={`mailto:${contact.email}`} className="flex items-center gap-3 border-b border-[#EDF2F7] py-4 text-sm font-medium hover:text-[#1C99D6]"><Mail className="size-5 text-[#1C99D6]" /> Email Us</a>
+                )}
               </div>
-
-              <form onSubmit={(e) => { e.preventDefault(); if (formStep === steps.length - 1) setSubmitted(true); else nextStep(); }} className="space-y-8">
-                {/* Step 0: Request Type */}
-                {formStep === 0 && (
-                  <fieldset>
-                    <legend className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-[#0A2540]">Request Type</legend>
-                    <div className="grid gap-px border border-[#EDF2F7] bg-[#EDF2F7] sm:grid-cols-3">
-                      {([["register", "Register Warranty"], ["extend", "Extend Warranty"], ["claim", "Warranty Claim"]] as const).map(([value, label]) => (
-                        <button key={value} type="button" onClick={() => setRequestType(value)} className={`flex items-center justify-center gap-2 px-4 py-5 text-sm font-medium transition-colors ${requestType === value ? "bg-[#1C99D6] text-white" : "bg-white text-[#335B74] hover:bg-[#F7FBFF]"}`}>
-                          {requestType === value && <CheckCircle className="size-4" />} {label}
-                        </button>
-                      ))}
-                    </div>
-                  </fieldset>
-                )}
-
-                {/* Step 1: Customer Details */}
-                {formStep === 1 && (
-                  <fieldset>
-                    <legend className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-[#0A2540]">Customer Information</legend>
-                    <div className="grid gap-5 sm:grid-cols-2">
-                      <input required placeholder="Name" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input required placeholder="Surname" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input required type="email" placeholder="Email" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input required type="tel" placeholder="Phone" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                    </div>
-                  </fieldset>
-                )}
-
-                {/* Step 2: Product Details */}
-                {formStep === 2 && (
-                  <fieldset>
-                    <legend className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-[#0A2540]">Product Information</legend>
-                    <div className="grid gap-5 sm:grid-cols-2">
-                      <input required placeholder="Brand" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input required placeholder="Model Number" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input required placeholder="Serial Number" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input required type="date" placeholder="Purchase Date" className="h-12 border border-[#DCE6EB] px-4 text-sm text-[#335B74] outline-none focus:border-[#1C99D6]" />
-                      <input placeholder="Purchase Location" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6]" />
-                      <input type="date" placeholder="Installation Date" className="h-12 border border-[#DCE6EB] px-4 text-sm text-[#335B74] outline-none focus:border-[#1C99D6]" />
-                      <input placeholder="Installation Address" className="h-12 border border-[#DCE6EB] px-4 text-sm outline-none focus:border-[#1C99D6] sm:col-span-2" />
-                    </div>
-                  </fieldset>
-                )}
-
-                {/* Step 3: Upload Documents */}
-                {formStep === 3 && (
-                  <fieldset>
-                    <legend className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-[#0A2540]">Upload Documents</legend>
-                    {requestType === "claim" && (
-                      <textarea required placeholder="Issue Description" rows={4} className="mb-5 w-full border border-[#DCE6EB] px-4 py-3 text-sm outline-none focus:border-[#1C99D6]" />
-                    )}
-                    <div className="grid gap-5 sm:grid-cols-3">
-                      {["Upload Invoice", "Upload Photos", "Installation Certificate"].map((label) => (
-                        <label key={label} className="group flex cursor-pointer flex-col items-center justify-center gap-3 border border-dashed border-[#DCE6EB] px-4 py-10 text-center transition-colors hover:border-[#1C99D6] hover:bg-[#F7FBFF]">
-                          <Upload className="size-6 text-[#1C99D6]" strokeWidth={1.7} />
-                          <span className="text-sm font-medium text-[#0A2540]">{label}</span>
-                          <span className="text-xs text-[#335B74]">Drag file here or browse</span>
-                          <input type="file" className="hidden" />
-                        </label>
-                      ))}
-                    </div>
-                    {/* Preferred Contact */}
-                    <legend className="mb-4 mt-8 text-sm font-semibold uppercase tracking-[0.06em] text-[#0A2540]">Preferred Contact Method</legend>
-                    <div className="grid gap-px border border-[#EDF2F7] bg-[#EDF2F7] sm:grid-cols-3">
-                      {(["WhatsApp", "Email", "Phone Call"] as const).map((method, i) => (
-                        <label key={method} className="flex cursor-pointer items-center justify-center gap-2 bg-white px-4 py-4 text-sm font-medium text-[#335B74] transition-colors hover:bg-[#F7FBFF]">
-                          <input type="radio" name="contact" defaultChecked={i === 0} className="size-4 accent-[#1C99D6]" /> {method}
-                        </label>
-                      ))}
-                    </div>
-                  </fieldset>
-                )}
-
-                {/* Step 4: Review & Submit */}
-                {formStep === 4 && (
-                  <fieldset>
-                    <legend className="mb-4 text-sm font-semibold uppercase tracking-[0.06em] text-[#0A2540]">Review &amp; Submit</legend>
-                    <div className="border border-[#EDF2F7] p-8">
-                      <div className="flex items-start gap-4">
-                        <CheckCircle className="mt-0.5 size-5 shrink-0 text-[#1C99D6]" />
-                        <div>
-                          <h3 className="text-base font-medium">Ready to submit?</h3>
-                          <p className="mt-2 text-sm leading-[1.7] text-[#335B74]">Request type: <span className="font-medium text-[#0A2540]">{requestType === "register" ? "Register Warranty" : requestType === "extend" ? "Extend Warranty" : "Warranty Claim"}</span></p>
-                          <p className="mt-1 text-sm leading-[1.7] text-[#335B74]">Our team will review your request and respond within 2–3 business days.</p>
-                        </div>
-                      </div>
-                    </div>
-                  </fieldset>
-                )}
-
-                {/* Navigation buttons */}
-                <div className="flex items-center justify-between gap-4 pt-4">
-                  <button type="button" onClick={prevStep} disabled={formStep === 0} className={`inline-flex h-[46px] items-center px-6 text-sm font-semibold transition-colors ${formStep === 0 ? "cursor-not-allowed text-[#DCE6EB]" : "text-[#1C99D6] hover:bg-[#F7FBFF]"}`}>
-                    <ArrowLeft className="mr-2 size-4" /> Back
-                  </button>
-                  <button type="submit" className={buttonClass}>
-                    {formStep === steps.length - 1 ? "Submit Warranty Request" : "Continue"} <ArrowRight className="ml-3 size-4" />
-                  </button>
-                </div>
-              </form>
-            </div>
-          )}
+            ) : null}
+          </div>
         </div>
       </section>
 
@@ -419,13 +292,13 @@ export default function WarrantyPage() {
       <section className="px-4 py-24 sm:px-6 lg:px-8" aria-labelledby="next-heading">
         <div className="mx-auto max-w-[1100px]">
           <div className="text-center">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">After You Submit</p>
+            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">After You Contact Us</p>
             <h2 id="next-heading" className={headingClass}>What Happens Next.</h2>
           </div>
           <div className="mt-16 hidden md:block">
             <div className="relative grid grid-cols-4">
               <div className="absolute left-[12.5%] right-[12.5%] top-[27px] h-[2px] bg-[#DCE6EB]" />
-              {[["01", "Submitted", "We receive your details instantly."], ["02", "Reviewed", "Our team checks your documents."], ["03", "Contacted", "By your preferred method within 2–3 days."], ["04", "Resolved", "Your request is approved or we request more info."]].map(([number, title, copy], i) => (
+              {[["01", "Logged", "Our team logs your request."], ["02", "Reviewed", "We check your product and documents."], ["03", "Contacted", "By your preferred method."], ["04", "Resolved", "Your request is actioned or we request more info."]].map(([number, title, copy], i) => (
                 <div key={number} className="group relative flex flex-col items-center px-2 text-center">
                   <span className={`relative z-10 flex size-14 items-center justify-center rounded-full border-2 transition-all duration-200 ${i === 0 ? "border-[#1C99D6] bg-[#1C99D6] text-white" : "border-[#1C99D6] bg-white text-[#1C99D6] group-hover:bg-[#1C99D6] group-hover:text-white"}`}>
                     <span className="text-[18px] font-semibold tracking-[-0.02em]">{number}</span>
@@ -439,9 +312,9 @@ export default function WarrantyPage() {
           <div className="mt-12 md:hidden">
             <div className="relative">
               <div className="absolute bottom-2 left-[27px] top-2 w-[2px] bg-[#DCE6EB]" />
-              {[["01", "Submitted", "We receive your details instantly."], ["02", "Reviewed", "Our team checks your documents."], ["03", "Contacted", "By your preferred method within 2–3 days."], ["04", "Resolved", "Your request is approved or we request more info."]].map(([number, title, copy], i) => (
+              {[["01", "Logged", "Our team logs your request."], ["02", "Reviewed", "We check your product and documents."], ["03", "Contacted", "By your preferred method."], ["04", "Resolved", "Your request is actioned or we request more info."]].map(([number, title, copy]) => (
                 <div key={number} className="group relative flex gap-5 pb-8 last:pb-0">
-                  <span className={`relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 ${i === 0 ? "border-[#1C99D6] bg-[#1C99D6] text-white" : "border-[#1C99D6] bg-white text-[#1C99D6]"}`}>
+                  <span className={`relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full border-2 transition-all duration-200 border-[#1C99D6] bg-white text-[#1C99D6]`}>
                     <span className="text-[18px] font-semibold tracking-[-0.02em]">{number}</span>
                   </span>
                   <div className="pt-2">
@@ -479,16 +352,14 @@ export default function WarrantyPage() {
             <p className="mt-5 text-base leading-[1.7] text-[#335B74]">Clear answers about coverage, claims and what to expect.</p>
           </div>
           <div>
-            {faqs.map(([question, answer], index) => (
-              <div key={question} className="border-b border-[#EDF2F7]">
-                <button type="button" onClick={() => setOpenFaq(openFaq === index ? -1 : index)} aria-expanded={openFaq === index} className="flex min-h-[72px] w-full items-center justify-between py-5 text-left text-lg font-medium">
+            {faqs.map(([question, answer]) => (
+              <details key={question} className="group border-b border-[#EDF2F7]">
+                <summary className="flex min-h-[72px] w-full cursor-pointer list-none items-center justify-between py-5 text-left text-lg font-medium [&::-webkit-details-marker]:hidden">
                   {question}
-                  <span className={`text-2xl font-light text-[#1C99D6] transition-transform duration-200 ${openFaq === index ? "rotate-45" : ""}`}>+</span>
-                </button>
-                <div className={`grid transition-[grid-template-rows] duration-250 ${openFaq === index ? "grid-rows-[1fr]" : "grid-rows-[0fr]"}`}>
-                  <p className="overflow-hidden pb-5 text-base leading-[1.7] text-[#335B74]">{answer}</p>
-                </div>
-              </div>
+                  <span className="text-2xl font-light text-[#1C99D6] transition-transform duration-200 group-open:rotate-45">+</span>
+                </summary>
+                <p className="pb-5 text-base leading-[1.7] text-[#335B74]">{answer}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -500,11 +371,13 @@ export default function WarrantyPage() {
           <p className="mb-4 text-sm font-semibold uppercase tracking-[0.08em] text-[#1C99D6]">Need Help?</p>
           <h2 id="contact-heading" className={headingClass}>Contact Support.</h2>
           <p className="mx-auto mt-5 max-w-[480px] text-base leading-[1.7] text-[#335B74]">Our team can help with registrations, claims and warranty questions.</p>
-          <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <a href="https://wa.me/27210000000" className={`${buttonClass} w-full sm:w-auto`}><MessageCircle className="mr-3 size-5" /> WhatsApp</a>
-            <a href="tel:+27210000000" className={`${outlineButtonClass} w-full sm:w-auto`}><Phone className="mr-3 size-5" /> Call Us</a>
-            <a href="mailto:support@airconsstore.co.za" className={`${outlineButtonClass} w-full sm:w-auto`}><Mail className="mr-3 size-5" /> Email Support</a>
-          </div>
+          {hasContactChannel ? (
+            <div className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+              {whatsappWarrantyHref && <a href={whatsappWarrantyHref} target="_blank" rel="noopener noreferrer" className={`${buttonClass} w-full sm:w-auto`}><MessageCircle className="mr-3 size-5" /> WhatsApp</a>}
+              {contact.phoneTel && <a href={contact.phoneTel} className={`${outlineButtonClass} w-full sm:w-auto`}><Phone className="mr-3 size-5" /> Call Us</a>}
+              {contact.email && <a href={`mailto:${contact.email}`} className={`${outlineButtonClass} w-full sm:w-auto`}><Mail className="mr-3 size-5" /> Email Support</a>}
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -513,11 +386,13 @@ export default function WarrantyPage() {
         <div className="mx-auto max-w-[720px] text-center">
           <h2 className={headingClass}>Still Need Help?</h2>
           <p className="mx-auto mt-5 max-w-[440px] text-base leading-[1.7] text-[#335B74]">We&apos;re here to help with registrations, extensions and warranty claims.</p>
-          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-            <a href="https://wa.me/27210000000" className={`${buttonClass} w-full sm:w-auto`}><MessageCircle className="mr-3 size-5" /> WhatsApp</a>
-            <a href="tel:+27210000000" className={`${outlineButtonClass} w-full sm:w-auto`}><Phone className="mr-3 size-5" /> Call</a>
-            <a href="mailto:support@airconsstore.co.za" className={`${outlineButtonClass} w-full sm:w-auto`}><Mail className="mr-3 size-5" /> Email</a>
-          </div>
+          {hasContactChannel ? (
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+              {whatsappWarrantyHref && <a href={whatsappWarrantyHref} target="_blank" rel="noopener noreferrer" className={`${buttonClass} w-full sm:w-auto`}><MessageCircle className="mr-3 size-5" /> WhatsApp</a>}
+              {contact.phoneTel && <a href={contact.phoneTel} className={`${outlineButtonClass} w-full sm:w-auto`}><Phone className="mr-3 size-5" /> Call</a>}
+              {contact.email && <a href={`mailto:${contact.email}`} className={`${outlineButtonClass} w-full sm:w-auto`}><Mail className="mr-3 size-5" /> Email</a>}
+            </div>
+          ) : null}
         </div>
       </section>
     </div>
