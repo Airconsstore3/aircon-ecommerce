@@ -4,7 +4,7 @@ const SAMSUNG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["ar9500"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Samsung AR9500 2.0 WindFree open (1).webp`,
+      `${PRODUCT_IMAGE_BASE}/samsung-ar9500-2-0-windfree-open-1.webp`,
       `${PRODUCT_IMAGE_BASE}/Samsung AR9500 2.0 WindFree Remote.webp`,
     ],
   },
@@ -47,7 +47,7 @@ const SAMSUNG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     keywords: ["ar4500"],
     images: [
       `${PRODUCT_IMAGE_BASE}/Samsung AR4500 Inverter close.webp`,
-      `${PRODUCT_IMAGE_BASE}/Samsung AR4500 Inverter close (2).webp`,
+      `${PRODUCT_IMAGE_BASE}/samsung-ar4500-inverter-close-2.webp`,
       `${PRODUCT_IMAGE_BASE}/Samsung AR4500 Inverter side.webp`,
     ],
   },
@@ -80,7 +80,7 @@ const SAMSUNG_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     images: [
       `${PRODUCT_IMAGE_BASE}/Samsung MSP Duct front.webp`,
       `${PRODUCT_IMAGE_BASE}/Samsung MSP Duct front side.webp`,
-      `${PRODUCT_IMAGE_BASE}/Samsung MSP Duct front side (2).webp`,
+      `${PRODUCT_IMAGE_BASE}/samsung-msp-duct-front-side-2.webp`,
     ],
   },
   {
@@ -353,105 +353,105 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["ftxj50ab", "emura black 50", "emura split ftxj50ab"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-3.webp`,
     ],
   },
   {
     keywords: ["ftxj50as", "emura silver 50", "emura split ftxj50as"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-5.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-condensert.webp`,
     ],
   },
   {
     keywords: ["ftxj50aw", "emura white 50", "emura split ftxj50aw"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-4.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-3.webp`,
     ],
   },
   {
     keywords: ["ftxj50", "emura 50"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-4.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-3.webp`,
     ],
   },
   {
     keywords: ["emura silver", "emura ftxj silver", "emura split silver"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-5.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-condensert.webp`,
     ],
   },
   {
     keywords: ["ftxj25aw", "emura white 25", "emura split ftxj25aw"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-4.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-3.webp`,
     ],
   },
   {
     keywords: ["ftxj35aw", "emura white 35", "emura split ftxj35aw"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-4.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-3.webp`,
     ],
   },
   {
     keywords: ["ftxj25ab", "emura black 25", "emura split ftxj25ab"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-3.webp`,
     ],
   },
   {
     keywords: ["ftxj35ab", "emura black 35", "emura split ftxj35ab"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-3.webp`,
     ],
   },
   {
     keywords: ["ftxj35as", "emura silver 35", "emura split ftxj35as"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 3.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) 5.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AS (Silver) condensert.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-5.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25as-silver-condensert.webp`,
     ],
   },
   {
     keywords: ["emura black", "emura split black", "ftxj ab"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AB (Black) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25ab-black-3.webp`,
     ],
   },
   {
     keywords: ["emura split", "emura"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White).webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White)4.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) remote.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Emura Split FTXJ25AW (White) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-4.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-remote.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-emura-split-ftxj25aw-white-3.webp`,
     ],
   },
   {
@@ -570,7 +570,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-sky-air-ceiling-concealed-inverter-fda-a-rza-d-high-static-pressure-2.webp`,
     ],
   },
   {
@@ -578,7 +578,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-sky-air-ceiling-concealed-inverter-fda-a-rza-d-high-static-pressure-2.webp`,
     ],
   },
   {
@@ -586,7 +586,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-sky-air-ceiling-concealed-inverter-fda-a-rza-d-high-static-pressure-2.webp`,
     ],
   },
   {
@@ -594,7 +594,7 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     images: [
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter 1.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air Ceiling Concealed Inverter (FDA-A_RZA-D, High Static Pressure)  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-sky-air-ceiling-concealed-inverter-fda-a-rza-d-high-static-pressure-2.webp`,
     ],
   },
   {
@@ -616,12 +616,12 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
   {
     keywords: ["sky air ducted split non-inverter", "sky air ducted"],
-    images: [`${PRODUCT_IMAGE_BASE}/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp`],
+    images: [`${PRODUCT_IMAGE_BASE}/daikin-sky-air-r407c-ducted-split-non-inverter-limited-stock.webp`],
   },
   {
     keywords: ["commercial ducted", "ducted system"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Sky Air R407C Ducted Split Non-Inverter (Limited stock).webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-sky-air-r407c-ducted-split-non-inverter-limited-stock.webp`,
       `${PRODUCT_IMAGE_BASE}/Daikin Multi Split Outdoor Unit.webp`,
     ],
   },
@@ -632,24 +632,24 @@ const DAIKIN_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["r32 rooftop", "rooftop"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - 2 Dampers & Integrated Fresh Air Solution 4.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-r32-rooftop-2-dampers-integrated-fresh-air-solution.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-r32-rooftop-2-dampers-integrated-fresh-air-solution-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-r32-rooftop-2-dampers-integrated-fresh-air-solution-4.webp`,
     ],
   },
   {
     keywords: ["r32 rooftop base", "rooftop base"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 1.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin R32 Rooftop - Base Version (No Fresh Air Integration) 3.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-r32-rooftop-base-version-no-fresh-air-integration-1.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-r32-rooftop-base-version-no-fresh-air-integration-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-r32-rooftop-base-version-no-fresh-air-integration-3.webp`,
     ],
   },
   {
     keywords: ["packaged rooftop", "packaged"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/Daikin Packaged Rooftop Unit - Basic Air-Cooled R410A (Scroll Non-Inverter).webp`,
-      `${PRODUCT_IMAGE_BASE}/Daikin Packaged Rooftop Unit - Basic Air-Cooled R410A (Scroll Non-Inverter)  2.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-packaged-rooftop-unit-basic-air-cooled-r410a-scroll-non-inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/daikin-packaged-rooftop-unit-basic-air-cooled-r410a-scroll-non-inverter-2.webp`,
     ],
   },
   {
@@ -677,7 +677,7 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
     keywords: ["q plus wine"],
     images: [
       `${PRODUCT_IMAGE_BASE}/JASA Q Plus Wine Mid Wall Split front.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus Wine Mid Wall Split right (2).webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-wine-mid-wall-split-right-2.webp`,
       `${PRODUCT_IMAGE_BASE}/JASA Q Plus Wine Mid Wall Split right.webp`,
     ],
   },
@@ -692,25 +692,25 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["q plus 2.0 mid wall split (inverter)", "q plus inverter"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus 2.0 Mid Wall Split (Inverter) front.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus 2.0 Mid Wall Split (Inverter) right.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus 2.0 Mid Wall Split (Inverter) side.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-2-0-mid-wall-split-inverter-front.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-2-0-mid-wall-split-inverter-right.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-2-0-mid-wall-split-inverter-side.webp`,
     ],
   },
   {
     keywords: ["q plus 2.0 mid wall split (fixed speed)", "q plus fixed speed"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus 2.0 Mid Wall Split (Fixed Speed)front.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus 2.0 Mid Wall Split (Fixed Speed) 2.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus 2.0 Mid Wall Split (Fixed Speed) side 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-2-0-mid-wall-split-fixed-speed-front.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-2-0-mid-wall-split-fixed-speed-2.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-2-0-mid-wall-split-fixed-speed-side-2.webp`,
     ],
   },
   {
     keywords: ["q plus portable", "portable"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus Portable (Wi-Fi, Fixed Speed front.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus Portable (Wi-Fi, Fixed Speed side.webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Q Plus Portable (Wi-Fi, Fixed Speed back.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-portable-wi-fi-fixed-speed-front.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-portable-wi-fi-fixed-speed-side.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-q-plus-portable-wi-fi-fixed-speed-back.webp`,
     ],
   },
   {
@@ -733,11 +733,11 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   },
   {
     keywords: ["asi cassette", "cassette (inverter)"],
-    images: [`${PRODUCT_IMAGE_BASE}/JASA ASI Cassette (Inverter).webp`],
+    images: [`${PRODUCT_IMAGE_BASE}/jasa-asi-cassette-inverter.webp`],
   },
   {
     keywords: ["r2 cassette"],
-    images: [`${PRODUCT_IMAGE_BASE}/JASA R2 Cassette (Fixed Speed).webp`],
+    images: [`${PRODUCT_IMAGE_BASE}/jasa-r2-cassette-fixed-speed.webp`],
   },
   {
     keywords: ["large ducted"],
@@ -746,21 +746,21 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["asi ducted", "ducted (inverter)"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/JASA ASI Ducted (Inverter).webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA ASI Ducted (Inverter) 2.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-asi-ducted-inverter.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-asi-ducted-inverter-2.webp`,
     ],
   },
   {
     keywords: ["r2 ducted"],
-    images: [`${PRODUCT_IMAGE_BASE}/JASA R2 Ducted (Fixed Speed).webp`],
+    images: [`${PRODUCT_IMAGE_BASE}/jasa-r2-ducted-fixed-speed.webp`],
   },
   {
     keywords: ["asi floor/ceiling", "asi floor ceiling", "floor/ceiling (inverter)", "floor ceiling (inverter)"],
-    images: [`${PRODUCT_IMAGE_BASE}/JASA ASI Floor_Ceiling (Inverter).webp`],
+    images: [`${PRODUCT_IMAGE_BASE}/jasa-asi-floor-ceiling-inverter.webp`],
   },
   {
     keywords: ["r2 floor/ceiling", "r2 floor ceiling"],
-    images: [`${PRODUCT_IMAGE_BASE}/JASA R2 Floor_Ceiling (Fixed Speed).webp`],
+    images: [`${PRODUCT_IMAGE_BASE}/jasa-r2-floor-ceiling-fixed-speed.webp`],
   },
   {
     keywords: ["large rooftop package"],
@@ -784,8 +784,8 @@ const JET_AIR_MODEL_IMAGES: Array<{ keywords: string[]; images: string[] }> = [
   {
     keywords: ["window wall"],
     images: [
-      `${PRODUCT_IMAGE_BASE}/JASA Window Wall (Fixed Speed, Cooling Only).webp`,
-      `${PRODUCT_IMAGE_BASE}/JASA Window Wall (Fixed Speed, Heat Pump).webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-window-wall-fixed-speed-cooling-only.webp`,
+      `${PRODUCT_IMAGE_BASE}/jasa-window-wall-fixed-speed-heat-pump.webp`,
     ],
   },
 ];
