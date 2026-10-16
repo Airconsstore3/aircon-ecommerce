@@ -191,7 +191,7 @@ export default async function AboutPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
             {howWeHelp.map((step, index) => (
-              <div key={step.step} className="flex flex-col items-center text-center">
+              <div key={step.step} className="relative flex flex-col items-center text-center">
                 <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[12px] mb-6 bg-gray-50">
                   <Image
                     src={step.image}
