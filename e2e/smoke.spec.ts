@@ -10,6 +10,12 @@ test.describe("route × viewport smoke", () => {
         const context = await browser.newContext({ viewport: vp });
         const page = await context.newPage();
         const issues = collectIssues(page);
+        const fonts: { name: string; bytes: number }[] = [];
+        page.on("response", (r) => {
+          if (r.request().resourceType() === "font") {
+            r.body().then((b) => fonts.push({ name: r.url().split("/").pop() ?? "", bytes: b.length })).catch(() => {});
+          }
+        });
         const resp = await gotoSettled(page, route);
         expect(resp?.status(), `HTTP status for ${route}`).toBe(200);
         expect(await expectNoHorizontalOverflow(page), "horizontal overflow").toBe(true);
@@ -21,6 +27,9 @@ test.describe("route × viewport smoke", () => {
           "console errors",
         ).toEqual([]);
         expect(issues.failedRequests, "failed requests").toEqual([]);
+        // Font budget: only Inter + GoogleSansFlex woff2 must ever load.
+        expect(fonts.length, "font request count").toBeLessThanOrEqual(2);
+        expect(fonts.every((f) => f.name.endsWith(".woff2")), "no TTF/OTF served").toBe(true);
         await context.close();
       });
     }
