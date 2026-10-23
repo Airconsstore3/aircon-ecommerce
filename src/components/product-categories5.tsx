@@ -39,7 +39,7 @@ const PRODUCT_CATEGORIES: ProductCategory[] = [
   {
     title: "Buy aircon today",
     text: "And get free installation kit",
-    link: "/categories/kits",
+    link: "/installation?kind=installation-kits",
     media: {
       type: "image",
       src: "/Hero Images/Featured In section/Instaqllation packages promo/installation  package small.png",

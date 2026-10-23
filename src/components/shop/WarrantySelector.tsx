@@ -125,7 +125,7 @@ export function WarrantySelector({ config, product, value, onChange }: WarrantyS
             hasWarranty
               ? "bg-[#1C99D6] text-white"
               : "border border-[#E1E5EA] bg-white text-[#0A2540] hover:border-[#1C99D6]",
-            !canEnableWarranty && "cursor-not-allowed border-gray-100 text-[#9CA3AF] hover:border-[#E1E5EA]"
+            !canEnableWarranty && "cursor-not-allowed border-gray-100 text-[#6B7280] hover:border-[#E1E5EA]"
           )}
         >
           Yes

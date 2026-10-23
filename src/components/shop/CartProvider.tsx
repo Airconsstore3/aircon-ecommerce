@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { getCartBreakdown } from '@/lib/cart-pricing';
 
 export interface CartItem {
   id: string;
@@ -12,6 +13,7 @@ export interface CartItem {
   quantity: number;
   type: string;
   is_enquiry_only: boolean;
+  has_quoted_extras?: boolean;
   variant?: string;
   // Configuration breakdown (display only — server re-resolves pricing)
   has_installation?: boolean;
@@ -27,7 +29,7 @@ export interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addItem: (item: Omit<CartItem, 'quantity'>) => void;
+  addItem: (item: Omit<CartItem, 'quantity'>, quantity?: number) => void;
   removeItem: (id: string) => void;
   updateQty: (id: string, quantity: number) => void;
   clearCart: () => void;
@@ -62,15 +64,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, hydrated]);
 
-  const addItem = (item: Omit<CartItem, 'quantity'>) => {
+  const addItem = (item: Omit<CartItem, 'quantity'>, quantity = 1) => {
+    if (!Number.isSafeInteger(quantity) || quantity < 1) return;
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
       if (existing) {
         return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
         );
       }
-      return [...prev, { ...item, quantity: 1 }];
+      return [...prev, { ...item, quantity }];
     });
     setIsOpen(true);
   };
@@ -94,10 +97,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const total = items.reduce((sum, item) => {
-    const price = item.sale_price_zar || item.price_zar;
-    return sum + price * item.quantity;
-  }, 0);
+  const total = getCartBreakdown(items).total;
 
   return (
     <CartContext.Provider

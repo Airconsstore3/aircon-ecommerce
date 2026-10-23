@@ -314,10 +314,6 @@ export async function resolveOrderPricing(
       throw new Error("One or more cart items are no longer available.");
     }
 
-    if (product.is_sold_out) {
-      throw new Error(`"${product.name}" is currently sold out. Please remove it from your cart.`);
-    }
-
     const baseUnitPrice = product.sale_price_zar || product.price_zar;
     const isEnquiryOnly = product.is_enquiry_only ?? false;
 

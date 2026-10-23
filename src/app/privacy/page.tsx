@@ -69,7 +69,7 @@ export default function PrivacyPage() {
           <section className="mb-12">
             <h2 className="text-2xl font-normal text-[#1E3A5F] mb-4">8. Contact Us</h2>
             <div className="mt-4 space-y-2 text-muted-foreground">
-              <p><strong>Email:</strong> privacy@airconsstore.co.za</p>
+              <p><strong>Email:</strong> privacy@aircons-store.co.za</p>
               <p><strong>Phone:</strong> 082 123 4567</p>
               <p><strong>Address:</strong> Cape Town, South Africa</p>
             </div>

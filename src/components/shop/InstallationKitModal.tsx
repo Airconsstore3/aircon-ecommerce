@@ -642,7 +642,7 @@ export function InstallationKitModal({
             <Button
               disabled={!canConfirm}
               onClick={handleConfirm}
-              className="h-[44px] flex-1 rounded-none bg-[#1C99D6] px-6 text-white hover:bg-[#1597c6] disabled:bg-gray-100 disabled:text-[#9CA3AF] sm:flex-none"
+              className="h-[44px] flex-1 rounded-none bg-[#1C99D6] px-6 text-white hover:bg-[#1597c6] disabled:bg-gray-100 disabled:text-[#6B7280] sm:flex-none"
             >
               Proceed
             </Button>

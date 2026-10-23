@@ -45,7 +45,7 @@ const checkoutSchema = z.object({
   installationNotes: z.string().trim().max(2000).optional(),
   notes: z.string().trim().max(2000).optional(),
   channel: z.enum(["whatsapp", "email", "both"]),
-  paymentMethod: z.enum(["payfast", "manual_eft"]),
+  paymentMethod: z.enum(["manual_eft"]),
   consent: z.boolean().refine((value) => value === true, "Consent is required."),
   turnstileToken: z.string().optional(),
   website: z.string().max(0),
@@ -64,7 +64,7 @@ type CheckoutResult =
       confirmationUrl: string;
       whatsappUrl: string | null;
       paymentMethod: string;
-      paymentRedirectUrl: string | null;
+      deliveryTier: DeliveryTier;
     }
   | { success: false; error: string };
 
@@ -124,7 +124,7 @@ function buildWhatsAppMessage(order: {
     ),
     "",
     `Total: ${formatMoney(order.total_zar)}`,
-    `Payment: ${order.paymentMethod === "payfast" ? "Payfast" : "Manual EFT"}`,
+    `Payment: Manual EFT (arranged after availability confirmation)`,
   ].filter(Boolean);
 
   return lines.join("\n");
@@ -153,8 +153,13 @@ async function rateLimit() {
   if (!url || !token) return;
 
   const headersList = await headers();
-  const forwardedFor = headersList.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const ip = forwardedFor || headersList.get("x-real-ip") || "unknown";
+  // x-real-ip is set by the edge network and is trustworthy; otherwise the
+  // LAST x-forwarded-for hop is the client connection — earlier hops are
+  // client-supplied and spoofable.
+  const realIp = headersList.get("x-real-ip")?.trim();
+  const forwardedFor = headersList.get("x-forwarded-for");
+  const lastHop = forwardedFor?.split(",").map((h) => h.trim()).filter(Boolean).at(-1);
+  const ip = realIp || lastHop || "unknown";
   const key = `checkout:${ip}`;
 
   const increment = await fetch(`${url}/incr/${encodeURIComponent(key)}`, {
@@ -179,8 +184,22 @@ async function rateLimit() {
 async function getBaseUrl() {
   const headersList = await headers();
   const protocol = headersList.get("x-forwarded-proto") || "https";
-  const host = headersList.get("host") || "airconsstore.co.za";
+  const host = headersList.get("host") || "aircons-store.co.za";
   return `${protocol}://${host}`;
+}
+
+// ─── Delivery tiers ──────────────────────────────────────────────────────────
+// Enquiry-style delivery model (no hardcoded rates):
+//   cape_town_free — delivery address in Cape Town → free delivery
+//   quote_on_type  — order contains enquiry-only items whose delivery fee
+//                    depends on the item type/size → quoted manually
+//   quoted         — anywhere else → quoted per order after confirmation
+type DeliveryTier = "cape_town_free" | "quoted" | "quote_on_type";
+
+function resolveDeliveryTier(city: string, hasQuoteOnTypeItem: boolean): DeliveryTier {
+  if (hasQuoteOnTypeItem) return "quote_on_type";
+  if (/\bcape\s*town\b/i.test(city.trim())) return "cape_town_free";
+  return "quoted";
 }
 
 async function getWhatsAppNumber() {
@@ -234,7 +253,7 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
           confirmationUrl: `${baseUrl}/order-confirmed/${existing.id}?token=${existing.secure_token}`,
           whatsappUrl: null,
           paymentMethod: parsed.paymentMethod,
-          paymentRedirectUrl: null,
+          deliveryTier: "quoted",
         };
       }
     }
@@ -266,6 +285,12 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
     if (pricing.items.length === 0) {
       throw new Error("Your cart appears to be empty.");
     }
+
+    // ─── Delivery tier (enquiry model — fees are quoted, never hardcoded) ────
+    const deliveryTier = resolveDeliveryTier(
+      parsed.deliveryCity,
+      pricing.items.some((item) => item.is_enquiry_only)
+    );
 
     // ─── Generate order number ──────────────────────────────────────────────
     const orderNumber = await generateOrderNumber();
@@ -309,6 +334,7 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
       payment_method: parsed.paymentMethod,
       payment_status: "pending",
       payment_provider: parsed.paymentMethod,
+      delivery_tier: deliveryTier,
       idempotency_key: parsed.idempotencyKey || null,
     } as const;
 
@@ -318,11 +344,23 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
       paymentMethod: parsed.paymentMethod,
     });
 
-    const { data: order, error: orderError } = await serviceRoleClient
+    // delivery_tier was added by migration 20261009_enquiry_delivery_model.sql —
+    // retry without it so checkout keeps working if the migration hasn't run yet.
+    let { data: order, error: orderError } = await serviceRoleClient
       .from("orders")
       .insert(orderPayload)
       .select("id, order_number, secure_token, total_zar, name, phone, email, delivery_address")
       .single();
+
+    if (orderError?.message?.includes("delivery_tier")) {
+      console.warn("[checkout] delivery_tier column missing — run 20261009_enquiry_delivery_model.sql");
+      const { delivery_tier: _dropped, ...payloadWithoutTier } = orderPayload;
+      ({ data: order, error: orderError } = await serviceRoleClient
+        .from("orders")
+        .insert(payloadWithoutTier)
+        .select("id, order_number, secure_token, total_zar, name, phone, email, delivery_address")
+        .single());
+    }
 
     if (orderError || !order) {
       console.error("[checkout] Order creation error:", orderError);
@@ -408,12 +446,9 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
         .eq("id", order.id);
     }
 
-    // ─── Generate Payfast redirect URL if needed ────────────────────────────
-    let paymentRedirectUrl: string | null = null;
-
-    if (parsed.paymentMethod === "payfast") {
-      paymentRedirectUrl = `${baseUrl}/api/payfast/redirect?order=${order.id}&token=${order.secure_token}`;
-    }
+    // No online payment gateway — the store runs an enquiry model. Orders are
+    // submitted as requests; availability and payment are arranged manually
+    // over email (the contractual channel) after submission.
 
     console.log(`[checkout] Order ${orderNumber} created successfully`, {
       orderId: order.id,
@@ -429,7 +464,7 @@ export async function submitCheckout(input: CheckoutInput): Promise<CheckoutResu
       confirmationUrl: `${baseUrl}/order-confirmed/${order.id}?token=${order.secure_token}`,
       whatsappUrl,
       paymentMethod: parsed.paymentMethod,
-      paymentRedirectUrl,
+      deliveryTier,
     };
   } catch (error) {
     console.error("[checkout] submitCheckout error:", error);

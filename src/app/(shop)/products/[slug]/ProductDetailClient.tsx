@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ChevronDown,
   Minus,
   Package,
   Plus,
@@ -49,6 +50,7 @@ import {
 import { WarrantySelector } from "@/components/shop/WarrantySelector";
 import { resolveWarrantyPrice } from "@/lib/warranty-price";
 import { resolveInstallationPrice } from "@/lib/installation-kit-price";
+import { getAccessoryCardImage } from "@/lib/accessories";
 import {
   InstallationKitConfig,
   KitConfiguration,
@@ -106,8 +108,6 @@ interface AirconProduct {
   installation_terms?: string | null;
   shipping_info?: string | null;
   returns_info?: string | null;
-  rating?: number;
-  review_count?: number;
   installation_pricing?: Record<string, number>;
   protection_plan_price?: number;
   care_instructions?: string[] | string | null;
@@ -128,8 +128,6 @@ interface RelatedProduct {
   images: string[];
   description?: string;
   is_enquiry_only: boolean;
-  rating?: number;
-  review_count?: number;
 }
 
 interface ProductVariant {
@@ -272,13 +270,13 @@ const Gallery = ({ images }: { images: ProductImage[] }) => {
   }, [images]);
 
   if (images.length === 0) {
-    return <div className="min-h-[440px] w-full bg-gray-50" />;
+    return <div className="product-gallery aspect-square max-h-[360px] w-full rounded-xl border border-gray-200 bg-gray-50" aria-label="No product image available" />;
   }
 
   const activeImage = images[activeIndex] ?? images[0];
 
   return (
-    <div className="flex flex-col">
+    <div className="product-gallery min-w-0 self-start rounded-xl border border-gray-200 p-3">
       {/* Main image frame.
           - aspect-square keeps a stable height so the right-hand product info
             doesn't jump while the image loads.
@@ -289,7 +287,7 @@ const Gallery = ({ images }: { images: ProductImage[] }) => {
             ducted, floor-standing) that are not square. We intentionally do NOT
             use object-cover, which was cropping products and upscaling smaller
             source images (the cause of the soft/blurry appearance). */}
-      <div className="aspect-square w-full rounded-xl bg-gray-50 p-6">
+      <div className="mx-auto aspect-square max-h-[360px] w-full rounded-lg bg-white p-6">
         <img
           src={activeImage.src}
           alt={activeImage.alt}
@@ -309,7 +307,7 @@ const Gallery = ({ images }: { images: ProductImage[] }) => {
             small internal pad so the source image's native dimensions never
             change the gallery layout. */}
       {images.length > 1 && (
-        <div className="mt-3.5 flex gap-3 px-1">
+        <div className="mt-3.5 flex gap-3 overflow-x-auto px-1 pb-1">
           {images.map((slide, index) => (
             <button
               key={index}
@@ -403,7 +401,7 @@ function ProductInfoTabs({ product }: { product: AirconProduct }) {
             type="button"
             onClick={() => handleTabChange(tab.id)}
             className={cn(
-              "relative min-w-[115px] pb-3 text-left text-[14px] font-semibold transition-colors",
+              "relative min-h-11 pb-3 text-left text-[13px] font-semibold transition-colors",
               currentTab.id === tab.id
                 ? "text-[#0A2540]"
                 : "text-[#5F6B7A] hover:text-[#0A2540]"
@@ -648,8 +646,13 @@ function ConfigurationOption({
   children,
 }: ConfigurationOptionProps) {
   return (
-    <div className="border-b border-gray-100 py-5">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+    <details className="product-extra pb-1">
+      <summary>
+        <span>{title}</span>
+        <span>{selectedValue === "yes" ? "Added" : "Optional"}</span>
+        <ChevronDown aria-hidden="true" className="size-4 shrink-0" />
+      </summary>
+      <div className="flex flex-col gap-3">
         <div className="flex flex-col">
           <h3
             id={titleId}
@@ -698,7 +701,7 @@ function ConfigurationOption({
       )}
 
       {children}
-    </div>
+    </details>
   );
 }
 
@@ -757,7 +760,7 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
     const match = findVariantByAttributes(allVariants, newAttrs);
     if (match && match.id !== selectedVariantId) {
       setSelectedVariantId(match.id);
-      setAddedToCart(false);
+      setAddedConfiguration(null);
       router.push(`/products/${match.slug}`, { scroll: false });
     }
   };
@@ -828,7 +831,7 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
   const [showMaintenanceTerms, setShowMaintenanceTerms] = useState(false);
   const [warrantySelection, setWarrantySelection] = useState<WarrantySelection | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [addedToCart, setAddedToCart] = useState(false);
+  const [addedConfiguration, setAddedConfiguration] = useState<string | null>(null);
 
   // Auto-select the installation tier when the BTU/variant changes
   useEffect(() => {
@@ -836,7 +839,16 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
     setSelectedInstallationTierId(tier.id);
   }, [currentBtuRange]);
 
-  const productImageUrls = useMemo(() => currentImages ?? [], [currentImages]);
+  // Prefer real photos; fall back to the shared accessory illustration so
+  // placeholder SVGs never render in the gallery.
+  const productImageUrls = useMemo(() => {
+    const photos = (currentImages ?? []).filter(
+      (src) => src && !src.includes("accessory-placeholder")
+    );
+    if (photos.length > 0) return photos;
+    const fallback = getAccessoryCardImage(product);
+    return fallback ? [fallback.src] : currentImages ?? [];
+  }, [currentImages, product]);
 
   const productImages = useMemo<ProductImage[]>(
     () => productImageUrls.map((url) => ({ src: url, alt: product.name })),
@@ -914,6 +926,12 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
     ? baseUnitPrice
     : baseUnitPrice + installationPrice + installationKitPrice + maintenancePrice + (hasProtectionPlan ? protectionPlanPrice : 0);
   const orderTotal = unitPrice * quantity;
+  const configurationKey = JSON.stringify([selectedVariant.id, quantity, hasInstallation, selectedInstallationTierId, hasInstallationKits && kitConfigState, hasMaintenance && selectedMaintenanceId, warrantySelection, unitPrice]);
+  const addedToCart = addedConfiguration === configurationKey;
+  const hasQuotedExtras = (hasInstallation && isInstallationEnquiry) ||
+    (hasInstallationKits && resolvedKitPrice.priceOnRequest) ||
+    (hasMaintenance && (resolvedMaintenancePrice?.priceOnRequest ?? true)) ||
+    (hasProtectionPlan && (resolvedWarrantyPrice.priceOnRequest || resolvedWarrantyPrice.requiresConfirmation));
 
   const priceBreakdown: PriceLine[] = isEnquiryOnly
     ? []
@@ -930,13 +948,12 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
       ];
 
   const handleQuantityChange = (val: number) => {
-    if (val < 1) return;
+    if (!Number.isSafeInteger(val) || val < 1) return;
     setQuantity(val);
-    setAddedToCart(false);
+    setAddedConfiguration(null);
   };
 
   const handleAddToCart = () => {
-    if (stockStatus === "sold_out") return;
     // Build kit configuration label for cart
     let kitLabel = "";
     if (hasInstallationKits) {
@@ -992,18 +1009,19 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
       sale_price_zar: undefined,
       images: productImageUrls,
       type: product.type,
-      is_enquiry_only: selectedVariant.is_enquiry_only,
+      is_enquiry_only: isEnquiryOnly,
+      has_quoted_extras: hasQuotedExtras,
       has_installation: hasInstallation,
       installation_tier_id: selectedInstallationTierId,
       installation_price_zar: installationPrice,
-      kit_configuration: kitConfigState ? kitConfigState as unknown as Record<string, unknown> : null,
+      kit_configuration: hasInstallationKits && kitConfigState ? kitConfigState as unknown as Record<string, unknown> : null,
       kit_price_zar: installationKitPrice,
       maintenance_plan_id: hasMaintenance ? selectedMaintenanceId : null,
       maintenance_price_zar: maintenancePrice,
       warranty_option_id: warrantySelection ? warrantySelection.optionId : null,
       warranty_price_zar: protectionPlanPrice,
-    });
-    setAddedToCart(true);
+    }, quantity);
+    setAddedConfiguration(configurationKey);
   };
 
   const displayName = product.display_name || product.name;
@@ -1011,30 +1029,57 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
   const currentDescription = selectedVariant.description ?? product.description;
   const descriptionPoints = getDescriptionPoints(currentDescription);
   const currentDocuments = selectedVariant.documents ?? product.documents;
+  const purchaseAction = addedToCart ? (
+    <Button asChild className="h-11 w-full rounded-lg bg-[#1E3A5F] text-sm font-semibold text-white hover:bg-[#152d4a]">
+      <Link href="/checkout">Go to basket</Link>
+    </Button>
+  ) : (
+    <button type="submit" form="product-purchase-form" className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#1478A8] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#0A2540] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1478A8]">
+      <ShoppingCart className="size-4 shrink-0" aria-hidden="true" />
+      {isEnquiryOnly ? "Request quote" : "Add to basket"}
+    </button>
+  );
 
   return (
-    <div className="min-h-screen bg-white font-sans text-[#404040]">
+    <div className="product-detail-page min-h-screen bg-white pb-24 font-sans text-[#404040] lg:pb-0">
       {/* Product detail page typography overrides — scoped to this page only */}
       <style dangerouslySetInnerHTML={{ __html: `
-        main h1[data-product-title] { font-size: 30px !important; }
-        main h2[data-section-title] { font-size: 24px !important; }
-        @media (min-width: 640px) {
-          main h1[data-product-title] { font-size: 34px !important; }
-          main h2[data-section-title] { font-size: 26px !important; }
+        .product-detail-page h1[data-product-title] { font-size: clamp(1.375rem, 2vw, 1.75rem) !important; }
+        .product-detail-page h2[data-section-title] { font-size: 1.25rem !important; }
+        .product-detail-page h3:not(:has([data-slot="accordion-trigger"])) { font-size: 1rem !important; }
+        .product-detail-page p { font-size: 0.875rem; line-height: 1.55; }
+        .product-detail-page .product-grid { display: grid; gap: 1.25rem; grid-template-columns: minmax(0, 1fr); }
+        .product-detail-page .product-breadcrumb { grid-row: 1; }
+        .product-detail-page .product-extra > summary { display: flex; min-height: 3.25rem; align-items: center; justify-content: space-between; gap: 0.5rem; cursor: pointer; list-style: none; color: #0A2540; font-size: 0.875rem; font-weight: 600; }
+        .product-detail-page .product-extra > summary::-webkit-details-marker { display: none; }
+        .product-detail-page .product-extra[open] > summary { margin-bottom: 0.75rem; }
+        .product-detail-page .product-extra[open] > summary > svg { transform: rotate(180deg); }
+        .product-detail-page .product-extra > summary:focus-visible { outline: 2px solid #1478A8; outline-offset: 3px; border-radius: 4px; }
+        .product-detail-page .product-extra { border-bottom: 1px solid #E7EDF3; }
+        .product-detail-page .product-extra > summary > span:nth-child(2) { margin-left: auto; font-size: 0.75rem; font-weight: 400; color: #5F6B7A; text-align: right; }
+        .product-detail-page .product-details, .product-detail-page .product-related { grid-column: 1 / -1; }
+        @media (min-width: 768px) {
+          .product-detail-page .product-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+          .product-detail-page .product-breadcrumb { grid-column: 1 / -1; }
+          .product-detail-page .product-purchase-panel { grid-column: 1 / -1; }
         }
         @media (min-width: 1024px) {
-          main h1[data-product-title] { font-size: 40px !important; }
-          main h2[data-section-title] { font-size: 28px !important; }
+          .product-detail-page .product-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) minmax(300px, 0.95fr); align-items: start; }
+          .product-detail-page .product-gallery { grid-column: 1; grid-row: 2; }
+          .product-detail-page .product-overview { grid-column: 2; grid-row: 2; }
+          .product-detail-page .product-purchase-panel { grid-column: 3; grid-row: 2 / span 3; position: sticky; top: calc(var(--secondary-nav-height, 120px) + 16px); max-height: max(360px, calc(100dvh - var(--secondary-nav-height, 120px) - 32px)); overflow-y: auto; scrollbar-width: thin; }
+          .product-detail-page .product-details { grid-column: 1 / span 2; grid-row: 3; }
+          .product-detail-page .product-related { grid-column: 1 / span 2; grid-row: 4; }
         }
       ` }} />
-      <header id="relume" className="px-[5%] py-6 md:py-8 lg:py-10">
-        <div className="container">
-          <div className="grid grid-cols-1 gap-y-8 md:gap-y-10 lg:grid-cols-[1.35fr_1fr] lg:gap-x-12">
+      <section id="relume" className="px-4 py-5 sm:px-6 lg:px-10 lg:py-6">
+        <div className="mx-auto max-w-[1600px]">
+          <div className="product-grid">
             <Gallery images={productImages} />
-            <div>
-              <div className="lg:sticky lg:top-6">
+            <div className="contents">
+              <div className="contents">
                 {/* Breadcrumb — dynamic from database category hierarchy */}
-                <Breadcrumb className="mb-4 flex flex-wrap items-center text-[12px] font-medium">
+                <Breadcrumb className="product-breadcrumb min-w-0 text-xs font-medium">
                   <BreadcrumbList>
                     {breadcrumbs.map((item, index) => {
                       const isLast = index === breadcrumbs.length - 1;
@@ -1056,7 +1101,8 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                   </BreadcrumbList>
                 </Breadcrumb>
 
-                <div>
+                <div className="contents">
+                <section className="product-overview min-w-0 rounded-xl border border-gray-200 p-5" aria-label="Product information">
                   {/* Brand */}
                   {product.brand && (
                     <p className="mb-2 text-[14px] font-semibold uppercase tracking-[0.12em] text-[#58585A]">
@@ -1105,20 +1151,12 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                         }
                       >
                         {stockStatus === "sold_out"
-                          ? "Out of stock"
+                          ? "Available on request"
                           : stockStatus === "low_stock"
                           ? `Only ${currentStockCount} left`
                           : "In stock"}
                       </span>
                     </p>
-                    <span className="h-4 w-px bg-gray-300" />
-                    {(product.rating ?? 0) > 0 && (product.review_count ?? 0) > 0 && (
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-[#FFA500]">{"★".repeat(Math.round(product.rating ?? 0))}{"☆".repeat(5 - Math.round(product.rating ?? 0))}</span>
-                        <span className="text-[14px] font-bold text-[#0A2540]">{(product.rating ?? 0).toFixed(1)}</span>
-                        <span className="text-[14px] text-[#5F6B7A]">· {(product.review_count ?? 0).toLocaleString("en-ZA")} Reviews</span>
-                      </div>
-                    )}
                     {(() => {
                       const techLabel = deriveTechnologyLabel(product.name, product.specs);
                       if (!techLabel) return null;
@@ -1132,14 +1170,9 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                   </div>
 
                   {/* Price — prominent, brand blue */}
-                  <p className="mb-6 text-[24px] font-bold text-[#1C99D6] sm:text-[26px]">
-                    {isEnquiryOnly
-                      ? "Commercial"
-                      : `${allVariants.length > 1 ? "From " : ""}${formatPrice(currentPrice)}`}
-                  </p>
 
                   {/* Product Information Tabs — fully database-driven */}
-                  <ProductInfoTabs product={product} />
+                  <ProductInfoTabs product={{ ...product, description: currentDescription }} />
 
                   {/* Product facts — small highlights to fill empty space */}
                   {(() => {
@@ -1173,15 +1206,41 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                     );
                   })()}
 
+                  {currentDocuments && currentDocuments.length > 0 && (
+                    <div className="flex flex-col gap-2 border-t border-gray-100 pt-4">
+                      {currentDocuments.map((document) => (
+                        <a key={document.url} href={document.url} className="text-sm font-medium text-[#1478A8] underline-offset-4 hover:underline">{document.name}</a>
+                      ))}
+                    </div>
+                  )}
+                  {/* Trust signals — compact horizontal row */}
+                  <div className="mt-4 flex flex-col gap-3 border-t border-gray-100 pt-4 text-xs text-[#5F6B7A]">
+                    <span className="flex items-center gap-2"><Truck className="size-4 shrink-0 text-[#0F834D]" aria-hidden="true" />Delivery confirmed with your order</span>
+                    <span className="flex items-center gap-2"><Shield className="size-4 shrink-0 text-[#0F834D]" aria-hidden="true" />Manual EFT after confirmation</span>
+                    <span className="flex items-center gap-2"><Package className="size-4 shrink-0 text-[#0F834D]" aria-hidden="true" />Manufacturer warranty</span>
+                  </div>
+                </section>
+
                   {/* Form section */}
                   <form
+                    id="product-purchase-form"
+                    aria-label="Configure and purchase"
                     onSubmit={(e) => {
                       e.preventDefault();
                       handleAddToCart();
                     }}
-                    className="mb-4 mt-6"
+                    className="product-purchase-panel flex min-w-0 flex-col rounded-xl border border-[#D9E2EB] bg-white p-4 shadow-sm"
                   >
-                    <div className="grid grid-cols-1 gap-5">
+                    <div className="mb-4 border-b border-gray-100 pb-4">
+                      <span className="text-xs font-medium text-[#5F6B7A]">{isEnquiryOnly ? "Commercial enquiry" : "Unit price"}</span>
+                      <div className="mt-1 text-2xl font-bold tracking-tight text-[#0A2540]" data-unit-price>
+                        {isEnquiryOnly ? "Price on request" : formatPrice(currentPrice)}
+                      </div>
+                      {!isEnquiryOnly && selectedVariant.sale_price_zar != null && selectedVariant.sale_price_zar < selectedVariant.price_zar && (
+                        <span className="text-sm text-[#5F6B7A] line-through">{formatPrice(selectedVariant.price_zar)}</span>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
                       {/* Available Sizes — canonical BTU selector, rendered FIRST as primary size selection.
                           Fully database-driven from variant group (btu_range). */}
                       {(() => {
@@ -1213,36 +1272,37 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                               {allBtus.map((btu) => {
                                 const variantForBtu = allVariants.find(v => v.btu_range === btu);
                                 const isSelected = currentBtuRange === btu;
-                                const isDisabled = variantForBtu?.is_sold_out ?? false;
+                                const lowAvailability = variantForBtu?.is_sold_out ?? false;
                                 return (
                                   <button
                                     key={btu}
                                     type="button"
-                                    disabled={isDisabled}
                                     onClick={() => {
                                       if (isSelected || !variantForBtu) return;
                                       setSelectedVariantId(variantForBtu.id);
-                                      setAddedToCart(false);
+                                      setAddedConfiguration(null);
                                       router.push(`/products/${variantForBtu.slug}`, { scroll: false });
                                     }}
-                                    title={isSelected ? "Selected size" : isDisabled ? "Out of stock" : `Select ${btu.toLocaleString("en-ZA")} BTU`}
+                                    title={isSelected ? "Selected size" : lowAvailability ? "Availability confirmed after order" : `Select ${btu.toLocaleString("en-ZA")} BTU`}
+                                    aria-pressed={isSelected}
                                     className={cn(
-                                      "rounded-[4px] border-2 px-4 py-2 text-[14px] font-semibold transition-all",
+                                      "min-h-11 rounded-lg border px-2.5 py-2 text-xs font-semibold transition-colors",
                                       isSelected
                                         ? "border-[#1C99D6] bg-[#1C99D6] text-white"
-                                        : isDisabled
-                                        ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed line-through"
                                         : "border-gray-300 bg-white text-[#0A2540] hover:border-[#1C99D6] hover:text-[#1C99D6]"
                                     )}
                                   >
                                     {btu.toLocaleString("en-ZA")} BTU
-                                    {isDisabled && !isSelected && " · Out of stock"}
+                                    <span className="mt-0.5 block text-[10px] font-normal">
+                                      {(variantForBtu?.room_coverage ?? getRoomCoverage(btu))?.replace(/^Covers (rooms|spaces) /i, "")}
+                                    </span>
+                                    {lowAvailability && !isSelected && " · On request"}
                                   </button>
                                 );
                               })}
                             </div>
                             <p className="mt-2 text-[14px] text-[#5F6B7A]">
-                              Available in {allBtus.length} sizes.
+                              Room coverage is a guide; site conditions affect sizing.
                             </p>
                           </div>
                         );
@@ -1252,6 +1312,10 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                           BTU is excluded here because it is rendered by the canonical
                           "Available Sizes" selector above to avoid duplication.
                           Render order: Model → Phase → Outdoor Unit → other attributes. */}
+                      {varyingKeys.some((key) => key !== "btu") && (
+                        <details className="product-extra">
+                          <summary><span>Model &amp; options</span><ChevronDown aria-hidden="true" className="size-4 shrink-0" /></summary>
+                          <div className="space-y-3 pb-3">
                       {varyingKeys
                         .filter((attrKey) => attrKey !== "btu")
                         .map((attrKey) => {
@@ -1265,25 +1329,23 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                               <div className="flex flex-wrap gap-2">
                                 {values.map((opt) => {
                                   const isSelected = currentValue === opt.value || JSON.stringify(currentValue) === JSON.stringify(opt.value);
-                                  const isDisabled = !opt.available;
+                                  const onRequest = !opt.available;
                                   return (
                                     <button
                                       key={opt.label}
                                       type="button"
-                                      disabled={isDisabled}
                                       onClick={() => handleAttributeChange(attrKey, opt.value)}
-                                      title={isSelected ? `Selected ${getAttributeLabel(attrKey)}` : isDisabled ? "Out of stock" : `Select ${opt.label}`}
+                                      title={isSelected ? `Selected ${getAttributeLabel(attrKey)}` : onRequest ? "Availability confirmed after order" : `Select ${opt.label}`}
+                                      aria-pressed={isSelected}
                                       className={cn(
-                                        "rounded-[4px] border-2 px-4 py-2 text-[14px] font-semibold transition-all",
+                                        "min-h-9 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors",
                                         isSelected
                                           ? "border-[#1C99D6] bg-[#1C99D6] text-white"
-                                          : isDisabled
-                                          ? "border-gray-200 bg-gray-50 text-gray-400 cursor-not-allowed line-through"
                                           : "border-gray-300 bg-white text-[#0A2540] hover:border-[#1C99D6] hover:text-[#1C99D6]"
                                       )}
                                     >
                                       {opt.label}
-                                      {isDisabled && !isSelected && " · Out of stock"}
+                                      {onRequest && !isSelected && " · On request"}
                                     </button>
                                   );
                                 })}
@@ -1291,23 +1353,57 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                             </div>
                           );
                         })}
+                          </div>
+                        </details>
+                      )}
+                    </div>
+
+                    {/* Quantity selector */}
+                    <div className="mt-4 grid grid-cols-2 items-end gap-3">
+                      <div className="rounded-lg bg-[#F3F7FA] px-3 py-2.5" aria-live="polite">
+                        <span className="block text-xs font-medium text-[#5F6B7A]">{hasQuotedExtras ? "Estimated total" : "Total"}</span>
+                        <strong data-order-total className="text-lg text-[#0A2540]">{isEnquiryOnly ? "On request" : formatPrice(orderTotal)}</strong>
+                      </div>
+                      <div className="flex flex-col items-end gap-1">
+                        <label htmlFor="quantity" className="text-xs font-medium">Quantity</label>
+                        <div className="flex h-11 items-center rounded-lg border border-gray-300" aria-label="Quantity selector">
+                          <button type="button" onClick={() => handleQuantityChange(quantity - 1)} aria-label="Decrease quantity" disabled={quantity <= 1} className="h-full px-3 text-gray-500 hover:bg-gray-50 disabled:opacity-40">
+                            <Minus className="size-4" aria-hidden="true" />
+                          </button>
+                          <input type="number" id="quantity" min={1} step={1} aria-label="Quantity" value={quantity} onChange={(event) => handleQuantityChange(Number(event.target.value))} className="w-10 text-center focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" />
+                          <button type="button" onClick={() => handleQuantityChange(quantity + 1)} aria-label="Increase quantity" className="h-full px-3 text-gray-500 hover:bg-gray-50">
+                            <Plus className="size-4" aria-hidden="true" />
+                          </button>
+                        </div>
+                      </div>
+                      {hasQuotedExtras && <p className="col-span-2 text-xs text-[#5F6B7A]">Quoted extras are confirmed separately and are not included in this total.</p>}
+                      {/* Action buttons */}
+                      <div className="col-span-2 flex flex-col gap-2">
+                        {purchaseAction}
+                        <p className="text-xs text-[#5F6B7A]">Availability is confirmed before payment. Manual EFT details follow confirmation.</p>
+                      </div>
                     </div>
 
                     {/* Add-ons (only for non-enquiry products) */}
                     {!isEnquiryOnly && (
-                      <div className="mt-6">
+                      <div className="order-2 mt-4 border-t border-gray-200 pt-4">
                         <div className="border-b border-gray-200 pb-3">
                           <h2 data-section-title className="font-semibold tracking-tight text-[#0A2540]">
-                            Customize your order
+                            Optional extras
                           </h2>
                           <p className="mt-1.5 text-[14px] text-[#5F6B7A]">
-                            Optional extras for your unit
+                            Add only what you need.
                           </p>
                         </div>
 
                         <div className="flex flex-col">
                           {/* Installation — interactive with clickable pricing tiers */}
-                          <div className="border-b border-gray-100 py-5">
+                          <details className="product-extra pb-1">
+                            <summary>
+                              <span>Installation</span>
+                              <span>{hasInstallation ? "Added" : isInstallationEnquiry ? "Quote on request" : formatPrice(baseInstallationPrice)}</span>
+                              <ChevronDown aria-hidden="true" className="size-4 shrink-0" />
+                            </summary>
                             {/* Header row: title + No/Yes control */}
                             <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                               <div className="flex flex-col">
@@ -1366,7 +1462,7 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                               onClick={() => setShowInstallationDetails((v) => !v)}
                               className="mt-3 text-[14px] font-semibold text-[#1C99D6] transition-colors hover:text-[#1597c6]"
                             >
-                              From R1 950 incl. VAT {showInstallationDetails ? "−" : "+"}
+                              From R1 950 {showInstallationDetails ? "−" : "+"}
                             </button>
 
                             {/* Expandable pricing details */}
@@ -1461,7 +1557,7 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                                         Installation Pricing
                                       </h4>
                                       <p className="mt-1.5 text-[14px] text-[#5F6B7A] sm:text-[15px]">
-                                        From R1 950 incl. VAT
+                                        From R1 950
                                       </p>
                                       <div className="mt-3 flex flex-col gap-1">
                                         {INSTALLATION_TIERS.map((tier) => {
@@ -1607,7 +1703,7 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                                 </div>
                               </DialogContent>
                             </Dialog>
-                          </div>
+                          </details>
 
                           {/* Installation Kits */}
                           <ConfigurationOption
@@ -1698,7 +1794,12 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                           </ConfigurationOption>
 
                           {/* Extended Warranty */}
-                          <div className="border-b border-gray-100 py-5">
+                          <details className="product-extra pb-1">
+                            <summary>
+                              <span>Extended Warranty</span>
+                              <span>{hasProtectionPlan ? "Added" : "Optional"}</span>
+                              <ChevronDown aria-hidden="true" className="size-4 shrink-0" />
+                            </summary>
                             <div className="flex flex-col gap-1">
                               <h3
                                 id="protection-plan-title"
@@ -1724,11 +1825,13 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                                 onChange={setWarrantySelection}
                               />
                             </div>
-                          </div>
+                          </details>
                         </div>
 
                         {/* Price breakdown */}
-                        <section aria-labelledby="price-breakdown-title" className="mt-6 space-y-3 border-t border-gray-200 py-5">
+                        <details className="product-extra">
+                          <summary><span>Your configuration</span><ChevronDown aria-hidden="true" className="size-4 shrink-0" /></summary>
+                        <section aria-labelledby="price-breakdown-title" className="space-y-3 pb-4">
                           <h3
                             id="price-breakdown-title"
                             className="text-[16px] font-semibold text-[#0A2540]"
@@ -1770,112 +1873,19 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                             </dl>
                           </div>
                         </section>
+                        </details>
                       </div>
                     )}
 
-                    {/* Quantity selector */}
-                    <div className="mt-5 flex flex-col gap-3">
-                      <div className="flex items-center gap-4">
-                        <label htmlFor="quantity" className="text-sm font-medium">
-                          Quantity
-                        </label>
-                        <div className="flex h-[40px] items-center border border-gray-300" aria-label="Quantity selector">
-                          <button
-                            type="button"
-                            onClick={() => handleQuantityChange(quantity - 1)}
-                            aria-label="Decrease quantity"
-                            className="px-3 text-gray-500 hover:bg-gray-50"
-                          >
-                            <Minus className="h-4 w-4" aria-hidden="true" />
-                          </button>
-                          <input
-                            type="number"
-                            id="quantity"
-                            aria-label="Quantity"
-                            value={quantity}
-                            onChange={(event) => handleQuantityChange(parseInt(event.target.value, 10) || 1)}
-                            className="w-12 text-center focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                          />
-                          <button
-                            type="button"
-                            onClick={() => handleQuantityChange(quantity + 1)}
-                            aria-label="Increase quantity"
-                            className="px-3 text-gray-500 hover:bg-gray-50"
-                          >
-                            <Plus className="h-4 w-4" aria-hidden="true" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Action buttons */}
-                      <div className="flex flex-col gap-y-3">
-                        {isEnquiryOnly ? (
-                          <Button
-                            asChild
-                            className="h-[48px] w-full bg-[#1E3A5F] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[#152d4a]"
-                          >
-                            <Link href="/checkout">Request Quote</Link>
-                          </Button>
-                        ) : stockStatus === "sold_out" ? (
-                          <Button
-                            disabled
-                            className="h-[48px] w-full bg-gray-200 px-6 text-[15px] font-semibold text-gray-400"
-                          >
-                            Sold Out
-                          </Button>
-                        ) : addedToCart ? (
-                          <Button
-                            asChild
-                            className="h-[48px] w-full bg-[#1E3A5F] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[#152d4a]"
-                          >
-                            <Link href="/checkout">Go to basket</Link>
-                          </Button>
-                        ) : (
-                          <button
-                            type="submit"
-                            className="flex h-[48px] w-full items-center justify-center gap-2 bg-[#1C99D6] px-6 text-[15px] font-semibold text-white transition-colors hover:bg-[#1597c6]"
-                          >
-                            <ShoppingCart className="h-5 w-5" aria-hidden="true" />
-                            <span>Add to basket</span>
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Trust signals — compact horizontal row */}
-                      <div className="mt-6 flex items-center justify-center gap-6 sm:gap-12">
-                        <div className="flex items-center gap-2">
-                          <Truck className="h-4 w-4 shrink-0 text-[#0F834D]" />
-                          <span className="text-[13px] sm:text-[14px] font-medium text-[#5F6B7A]">
-                            Selected items free installation
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Shield className="h-4 w-4 shrink-0 text-[#0F834D]" />
-                          <span className="text-[13px] sm:text-[14px] font-medium text-[#5F6B7A]">
-                            Secure checkout
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Package className="h-4 w-4 shrink-0 text-[#0F834D]" />
-                          <span className="text-[13px] sm:text-[14px] font-medium text-[#5F6B7A]">
-                            Manufacturer warranty
-                          </span>
-                        </div>
-                      </div>
-
-                    </div>
                   </form>
 
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </header>
 
       {/* Product details accordion */}
-      <section className="px-[5%] py-10 md:py-12">
-        <div className="container">
+      <section className="product-details min-w-0">
+        <div className="rounded-xl border border-gray-200 px-4">
           <Accordion type="single" collapsible defaultValue="overview">
             <AccordionItem value="overview" className="border-b border-gray-200">
               <AccordionTrigger className="py-4 text-[16px] font-semibold text-[#0A2540]">
@@ -2029,24 +2039,25 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
 
       {/* Related products */}
       {relatedProducts.length > 0 && (
-        <section className="px-[5%] pb-12" aria-labelledby="related-products-title">
-          <div className="container">
+        <section className="product-related min-w-0 pb-6" aria-labelledby="related-products-title">
+          <div>
             <h2
               id="related-products-title"
+              data-section-title
               className="mb-5 text-[24px] font-semibold leading-[1.1] tracking-tight text-[#0A2540] md:text-[28px]"
             >
-              Shop other products
+              You may also like
             </h2>
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               {relatedProducts.slice(0, 4).map((related) => {
                 const relatedPrice = related.sale_price_zar ?? related.price_zar;
                 return (
                   <div key={related.id} className="flex flex-col rounded-xl border border-gray-200 p-3">
-                    <Link href={`/products/${related.slug}`} className="mb-3 flex flex-1 items-center justify-center">
+                    <Link href={`/products/${related.slug}`} className="mb-3 flex h-32 items-center justify-center">
                       <img
                         src={related.images?.[0] || "/placeholder.svg"}
                         alt={related.name}
-                        className="max-h-[160px] w-auto object-contain"
+                        className="max-h-full max-w-full object-contain"
                       />
                     </Link>
                     <Link href={`/products/${related.slug}`}>
@@ -2057,11 +2068,6 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
                     <p className="mb-2 text-[13px] text-[#5F6B7A]">
                       {related.brand ?? "Air Conditioner"}
                     </p>
-                    <div className="mb-3 flex items-center gap-1">
-                      <span className="text-[#FFA500] text-sm">{"★".repeat(Math.round(related.rating ?? 0))}{"☆".repeat(5 - Math.round(related.rating ?? 0))}</span>
-                      <span className="text-[12px] text-[#5F6B7A]">{(related.rating ?? 0).toFixed(1)}</span>
-                      <span className="text-[12px] text-[#5F6B7A]">({related.review_count ?? 0})</span>
-                    </div>
                     <div className="mt-auto">
                       <div className="mb-3 text-[18px] font-bold text-[#1C99D6]">
                         {related.is_enquiry_only ? "Commercial" : formatPrice(relatedPrice)}
@@ -2101,6 +2107,19 @@ export function ProductDetailClient({ product, relatedProducts, variants, breadc
           </div>
         </section>
       )}
+          </div>
+        </div>
+      </section>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white px-4 pt-3 pb-[max(12px,env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(10,37,64,0.08)] lg:hidden" aria-label="Quick purchase">
+        <div className="mx-auto flex max-w-2xl items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <span className="block text-[11px] text-[#5F6B7A]">{isEnquiryOnly ? "Commercial enquiry" : `${quantity} ${quantity === 1 ? "unit" : "units"}${hasQuotedExtras ? " · excl. quoted extras" : " · total"}`}</span>
+            <strong className="block text-lg text-[#0A2540]">{isEnquiryOnly ? "Price on request" : formatPrice(orderTotal)}</strong>
+          </div>
+          <div className="w-[52%] max-w-60">{purchaseAction}</div>
+        </div>
+      </div>
     </div>
   );
 }

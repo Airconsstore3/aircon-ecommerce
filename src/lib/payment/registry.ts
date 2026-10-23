@@ -1,7 +1,7 @@
 // ─── Payment Provider Registry ───────────────────────────────────────────────
 // This file is intentionally separate from provider.ts to avoid a circular
 // import temporal-dead-zone (TDZ) error. provider.ts imports the provider
-// modules (payfast.ts, manual-eft.ts) which call registerProvider() at load
+// modules (manual-eft.ts) which call registerProvider() at load
 // time. If the registry lived in the same file as those imports, the `providers`
 // const would not yet be initialized when registerProvider() is called.
 //

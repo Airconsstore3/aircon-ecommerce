@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
+import { ACCESSORY_KINDS, getInstallationKind, isStorefrontAccessory } from './accessories';
 
-export type FilterType = 'deals' | 'residential' | 'commercial' | 'all-aircon' | 'accessories' | 'sale' | 'category';
+export type FilterType = 'residential' | 'commercial' | 'all-aircon' | 'accessories' | 'installation' | 'sale' | 'category';
 
 export async function filterProducts(
   supabase: SupabaseClient,
@@ -14,11 +15,6 @@ export async function filterProducts(
     .eq('is_parent_product', true);
 
   switch (filterType) {
-    case 'deals':
-      // Show only products flagged as deals
-      query = query.eq('is_deal', true);
-      break;
-
     case 'residential':
       // Show aircons with BTU <= 32000
       query = query
@@ -38,12 +34,23 @@ export async function filterProducts(
       break;
 
     case 'all-aircon':
-      // Show all products (no additional filter)
+      query = query.eq('type', 'aircon');
       break;
 
     case 'accessories':
       // Show only accessories
-      query = query.eq('type', 'accessory');
+      query = query
+        .in('type', ['accessory', 'kit'])
+        .in('specs->>accessory_kind', ACCESSORY_KINDS.map((kind) => kind.value));
+      break;
+
+    case 'installation':
+      query = supabase
+        .from('products')
+        .select('*, categories!products_category_id_fkey(slug)')
+        .eq('is_published', true)
+        .eq('is_parent_product', true)
+        .in('type', ['accessory', 'kit']);
       break;
 
     case 'sale':
@@ -84,6 +91,14 @@ export async function filterProducts(
       categorySlug,
     });
     return [];
+  }
+
+  if (filterType === 'accessories') return (data || []).filter(isStorefrontAccessory);
+  if (filterType === 'installation') {
+    return (data || []).flatMap((product) => {
+      const kind = getInstallationKind(product);
+      return kind ? [{ ...product, specs: { ...product.specs, accessory_kind: kind } }] : [];
+    });
   }
 
   // For category filter, we need to flatten the joined data

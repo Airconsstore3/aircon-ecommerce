@@ -1,14 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Filter, SlidersHorizontal, LayoutGrid, Grid3x3, Grid2x2, ChevronRight } from "lucide-react";
 import { Suspense } from "react";
-import { AirconProductList, AirconProduct } from "@/components/shop/ProductCard";
-import { FilterSidebar } from "@/components/shop/FilterSidebar";
+import { AirconProduct } from "@/components/shop/ProductCard";
 import { createClient } from "@/utils/supabase/server";
 import { filterProducts } from "@/lib/filterProducts";
-import ProductsClient from "./ProductsClient";
+import ResidentialCategoryClient from "../categories/[slug]/ResidentialCategoryClient";
 import type { SupabaseProduct } from "@/lib/fetch-featured-products";
 import { cookies } from "next/headers";
+import { deriveAcType, deriveIsInverter } from "@/lib/product-classification";
 
 export const dynamic = 'force-dynamic';
 
@@ -47,6 +44,10 @@ function convertToAirconProduct(product: CatalogProduct): AirconProduct {
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
     description: product.description,
+    ac_type: product.type === "aircon" ? deriveAcType(product.display_name || product.name) : null,
+    is_inverter: product.type === "aircon" ? deriveIsInverter(product.display_name || product.name, product.specs) : undefined,
+    specs: product.specs,
+    sort_order: product.sort_order,
     has_variants: product.has_variants ?? false,
     min_variant_price: product.min_variant_price ?? null,
     stock: {
@@ -55,49 +56,6 @@ function convertToAirconProduct(product: CatalogProduct): AirconProduct {
       low_stock_threshold: product.low_stock_threshold,
     },
   };
-}
-
-// Build filter options from Supabase data
-const CATEGORY_LABELS: Record<string, string> = {
-  residential: "Residential",
-  commercial: "Commercial",
-  aircon: "Air Conditioners",
-  kit: "Kits & Bundles",
-  accessory: "Accessories & Services",
-};
-
-function buildCategoryFilters(products: SupabaseProduct[]) {
-  const counts = new Map<string, number>();
-  products.forEach((p) => {
-    // Base type count
-    counts.set(p.type, (counts.get(p.type) || 0) + 1);
-
-    // Derived residential/commercial counts
-    if (p.type === "aircon" && p.btu_range != null) {
-      if (p.btu_range <= 32000) {
-        counts.set("residential", (counts.get("residential") || 0) + 1);
-      }
-      if (p.btu_range >= 32000) {
-        counts.set("commercial", (counts.get("commercial") || 0) + 1);
-      }
-    }
-  });
-
-  const entries = Array.from(counts.entries());
-
-  return entries
-    .map(([type, count]) => ({
-      value: type,
-      label: CATEGORY_LABELS[type] || type.charAt(0).toUpperCase() + type.slice(1),
-      count,
-    }))
-    .sort((a, b) => {
-      const priority: Record<string, number> = { residential: 0, commercial: 1 };
-      const pa = priority[a.value] ?? 2;
-      const pb = priority[b.value] ?? 2;
-      if (pa !== pb) return pa - pb;
-      return b.count - a.count;
-    });
 }
 
 function buildBtuFilters(products: SupabaseProduct[]) {
@@ -133,6 +91,41 @@ function buildBrandFilters(products: SupabaseProduct[]) {
     }));
 }
 
+function buildTypeFilters(products: SupabaseProduct[]): { value: string; label: string; count: number }[] {
+  const counts = new Map<string, number>();
+  products.forEach((p) => {
+    const acType = deriveAcType(p.name);
+    if (acType) {
+      const key = acType.toLowerCase();
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+  });
+  const typeOrder = ["split system", "cassette", "ceiling concealed", "floor standing", "ducted", "vrf", "package unit"];
+  return Array.from(counts.entries())
+    .sort((a, b) => {
+      const ia = typeOrder.indexOf(a[0]);
+      const ib = typeOrder.indexOf(b[0]);
+      if (ia !== -1 && ib !== -1) return ia - ib;
+      if (ia !== -1) return -1;
+      if (ib !== -1) return 1;
+      return b[1] - a[1];
+    })
+    .map(([type, count]) => ({
+      value: type,
+      label: type.charAt(0).toUpperCase() + type.slice(1),
+      count,
+    }));
+}
+
+function buildPriceBounds(products: SupabaseProduct[]): { min: number; max: number } {
+  if (products.length === 0) return { min: 0, max: 100000 };
+  const prices = products.map((p) => p.price_zar).filter((p) => p > 0);
+  if (prices.length === 0) return { min: 0, max: 100000 };
+  const min = Math.floor(Math.min(...prices) / 1000) * 1000;
+  const max = Math.ceil(Math.max(...prices) / 1000) * 1000;
+  return { min, max };
+}
+
 // ─── Server Component ───────────────────────────────────────────────────────────
 
 async function getActivePromotion() {
@@ -141,7 +134,7 @@ async function getActivePromotion() {
     .from('promotions')
     .select('*')
     .eq('is_active', true);
-  
+
   const now = new Date();
   return data?.find(
     (promo: Promotion) =>
@@ -150,31 +143,19 @@ async function getActivePromotion() {
   );
 }
 
-async function getProducts() {
-  const supabase = createClient(await cookies());
-  const { data } = await supabase
-    .from('products')
-    .select('*')
-    .eq('is_published', true)
-    .eq('is_parent_product', true);
-  
-  return data || [];
-}
-
 export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{ sale?: string }>;
 }) {
   const supabase = createClient(await cookies());
-  const [products, activePromotion, params] = await Promise.all([
-    getProducts(),
+  const [activePromotion, params] = await Promise.all([
     getActivePromotion(),
     searchParams,
   ]);
 
-  const saleParam = params.sale === 'true' ? 'sale' : 'all-aircon';
-  const filtered = await filterProducts(supabase, saleParam);
+  const isSale = params.sale === 'true';
+  const filtered = await filterProducts(supabase, isSale ? 'sale' : 'all-aircon');
 
   // Fetch variant data for all parent products to compute "From R..." pricing
   const parentIds = filtered.map((p: SupabaseProduct) => p.id);
@@ -215,21 +196,39 @@ export default async function ProductsPage({
     return converted;
   });
 
-  // Build filter options from Supabase data
-  const categoryOptions = buildCategoryFilters(products);
-  const btuOptions = buildBtuFilters(products);
-  const brandOptions = buildBrandFilters(products);
+  // Build filter options from the products actually on this listing
+  const btuOptions = buildBtuFilters(filtered);
+  const brandOptions = buildBrandFilters(filtered);
+  const typeOptions = buildTypeFilters(filtered);
+  const priceBounds = buildPriceBounds(filtered);
 
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
-      <ProductsClient 
-        products={airconProducts}
-        activePromotion={activePromotion}
-        initialSaleParam={saleParam}
-        categoryOptions={categoryOptions}
-        btuOptions={btuOptions}
-        brandOptions={brandOptions}
-      />
-    </Suspense>
+    <>
+      {activePromotion && (
+        <div className="bg-[#1C99D6] text-white py-3 px-4 text-center">
+          <p className="text-sm font-medium">
+            {activePromotion.name}
+            {activePromotion.code && (
+              <span className="ml-2 font-bold">Code: {activePromotion.code}</span>
+            )}
+          </p>
+        </div>
+      )}
+      <Suspense fallback={<div className="min-h-screen bg-white" />}>
+        <ResidentialCategoryClient
+          products={airconProducts}
+          btuOptions={btuOptions}
+          brandOptions={brandOptions}
+          typeOptions={typeOptions}
+          priceBounds={priceBounds}
+          categoryTitle={isSale ? "Latest Deals" : "All Aircons"}
+          categoryDescription={isSale
+            ? "Air conditioners currently on promotion. Shop deals by brand, capacity and system type."
+            : "The full range — home and business air conditioners. Shop by brand, cooling capacity and system type."}
+          productCountLabel={isSale ? "Products on promotion" : "All products"}
+          categoryKind="all"
+        />
+      </Suspense>
+    </>
   );
 }

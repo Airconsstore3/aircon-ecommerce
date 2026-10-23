@@ -51,8 +51,6 @@ interface AirconProduct {
   installation_terms?: string | null;
   shipping_info?: string | null;
   returns_info?: string | null;
-  rating?: number;
-  review_count?: number;
   installation_pricing?: Record<string, number>;
   protection_plan_price?: number;
   care_instructions?: string[] | string | null;
@@ -115,42 +113,13 @@ interface CollectionRow {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-
-// Deterministic placeholder ratings — same product always gets same values
-// Uses a simple string hash of the product ID as seed
-function getPlaceholderRating(productId: string): { rating: number; review_count: number } {
-  // Simple deterministic hash from product ID
-  let hash = 0;
-  const str = productId;
-  for (let i = 0; i < str.length; i++) {
-    const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-  // Use absolute value and derive rating + review_count
-  const absHash = Math.abs(hash);
-
-  // Rating: 4.6 to 5.0 (one decimal place)
-  // Distribution: most products 4.7-4.9, some 4.6, fewer 5.0
-  const ratingBucket = absHash % 100;
-  let rating: number;
-  if (ratingBucket < 15) rating = 5.0;       // 15% get 5.0
-  else if (ratingBucket < 35) rating = 4.6;    // 20% get 4.6
-  else if (ratingBucket < 55) rating = 4.7;    // 20% get 4.7
-  else if (ratingBucket < 80) rating = 4.8;    // 25% get 4.8
-  else rating = 4.9;                           // 20% get 4.9
-
-  // Review count: 99 to 780, spread using a different slice of the hash
-  const reviewHash = Math.abs((hash >> 8) ^ str.length);
-  const review_count = 99 + (reviewHash % 682); // 99 to 780
-
-  return { rating, review_count };
-}
+// NOTE: fabricated placeholder ratings/review counts were removed — no real
+// review source exists yet. Do not render rating stars or review counts.
 
 async function getBaseUrl() {
   const headersList = await headers();
   const protocol = headersList.get("x-forwarded-proto") || "https";
-  const host = headersList.get("host") || "airconsstore.co.za";
+  const host = headersList.get("host") || "aircons-store.co.za";
   return `${protocol}://${host}`;
 }
 
@@ -369,8 +338,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     installation_terms: product.installation_terms,
     shipping_info: product.shipping_info,
     returns_info: product.returns_info,
-    rating: product.rating ? Number(product.rating) : getPlaceholderRating(product.id).rating,
-    review_count: product.review_count ?? getPlaceholderRating(product.id).review_count,
     installation_pricing: product.installation_pricing,
     protection_plan_price: product.protection_plan_price ?? 0,
     care_instructions: product.care_instructions,
@@ -469,23 +436,18 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
     return aSameBrand - bSameBrand;
   });
 
-  const relatedProducts: RelatedProduct[] = relatedSorted.slice(0, 4).map((item) => {
-    const placeholder = getPlaceholderRating(item.id);
-    return {
-      id: item.id,
-      name: item.display_name || item.name,
-      slug: item.slug,
-      brand: item.brand,
-      type: item.type,
-      price_zar: item.price_zar,
-      sale_price_zar: item.sale_price_zar || null,
-      images: item.images,
-      description: item.description,
-      is_enquiry_only: item.is_enquiry_only,
-      rating: placeholder.rating,
-      review_count: placeholder.review_count,
-    };
-  });
+  const relatedProducts: RelatedProduct[] = relatedSorted.slice(0, 4).map((item) => ({
+    id: item.id,
+    name: item.display_name || item.name,
+    slug: item.slug,
+    brand: item.brand,
+    type: item.type,
+    price_zar: item.price_zar,
+    sale_price_zar: item.sale_price_zar || null,
+    images: item.images,
+    description: item.description,
+    is_enquiry_only: item.is_enquiry_only,
+  }));
 
   const jsonLd = {
     "@context": "https://schema.org",

@@ -1,37 +1,30 @@
-# 05 — Gap Analysis vs Production-Grade Ecommerce MVP
+# 05 — Gap Analysis (regenerated 2026-10-09)
 
-Comparison baseline: a South African D2C store that can take payment online,
-fulfil orders, issue compliant invoices, and be operated by non-developers.
+Re-scored against a **manual-fulfilment enquiry commerce MVP** (the owner's chosen model), not a card-checkout store. Closed items since first pass: fake ratings removed, /deals removed, Payfast removed, VAT removed (not registered), delivery tiers + enquiry checkout implemented, domain canonicalized.
 
-| ID | Area | Gap | Evidence | Severity | Business impact | User impact | Recommended fix | Effort | Priority | Dependencies |
-|---|---|---|---|---|---|---|---|---|---|---|
-| G-01 | Ops/Admin | No admin order panel | F-03 | High | Owner edits DB rows by hand; wrong status → lost revenue, no EFT confirmation SLA | Orders stall; no status comms | Minimal `/admin` (login via existing `admins` table + RLS): order list, mark-paid, cancel, notes | L | P0 | Auth roles decision |
-| G-02 | Payments | Payfast untested end-to-end; disabled | F-17, ITN flow | High | EFT-only = friction, slower payment, manual reconciliation | Can't pay by card/instant EFT | Sandbox ITN test, set envs, enable in `payment_providers`, monitor first live orders | S | P0 | G-01 (needs somewhere to see status), Payfast env creds |
-| G-03 | Checkout | No delivery/shipping pricing or zone logic | F-05 | High | Under-recovered delivery cost on every order; postcode disputes | Surprise offline quotes, abandoned orders | Add `delivery_zones`/flat-fee table + server-resolved delivery fee at checkout; or explicit "delivery quoted separately" copy | M | P0 | Pricing policy decision |
-| G-04 | Tax/Compliance | No VAT line or tax invoice | F-06 | High | Non-compliant invoicing if VAT-registered; accounting rework | No valid invoice for business buyers | Add `vat_rate` + inclusive/exclusive calc, store tax amounts, generate PDF invoice/quote | M | P0 | Confirm VAT registration (Q-04) |
-| G-05 | Inventory | No decrement/oversell control | F-07 | High | Sells units not in stock → refunds/apologies | Delayed/cancelled orders | Decrement `stock_count` in order RPC; auto `is_sold_out` at 0; or formally adopt "enquiry-only" model and reword UI | M | P1 | G-01 |
-| G-06 | Orders | No fulfilment states | F-08 | High | No tracking of paid→scheduled→installed | Customers blind after paying | Extend status enum: `confirmed → scheduled → dispatched → delivered/installed`; timestamps + admin transitions | M | P1 | G-01 |
-| G-07 | Orders | No refund/cancel flow | F-09 | Medium | Manual refunds untracked; audit trail missing | No self-service cancellation | `refunds` table + admin action + status transitions + email | M | P1 | G-01, G-06 |
-| G-08 | Compliance | Fake ratings rendered | F-04 | High | CPA/ASA complaint risk; trust damage if discovered | Deceived customers | Remove `getPlaceholderRating` until real reviews exist; or integrate review platform | S | P1 | None |
-| G-09 | Account | Mock subscription/warranty data | F-10 | Medium | Customers see warranties they never bought — potential disputes/legal exposure | Confusion, false expectations | Remove pages or wire to `order_items` warranty/maintenance rows | S | P1 | None |
-| G-10 | Marketing | Newsletter dead end | F-11 | Medium | Lost leads | Silently ignored signups | Persist to `newsletter_subscribers` or Resend audience; double-opt-in for POPIA | S | P2 | None |
-| G-11 | Checkout UX | Email optional → silent orders | F-12 | Medium | Customer loses only link → orphaned order, support burden | No record of banking details | Require email for EFT channel, or add "order lookup by phone+order number" page | S | P1 | None |
-| G-12 | Pricing | Deal price ≠ checkout price | F-13 | Medium | Advertised discount not honoured — CPA risk + complaints | Pays more than advertised | Write deal price into product `sale_price_zar` windows, or resolve deals server-side at checkout | M | P1 | Deal policy decision |
-| G-13 | Catalog | No site search | Inventory 1 | Medium | 438 products, filter-only discovery | Can't find "Samsung 12000 BTU" | Postgres `ilike`/tsvector search endpoint + navbar search box | M | P2 | None |
-| G-14 | Analytics | Funnel invisible; lead ≠ paid | F-18 | Medium | Can't measure CVR/AOV/abandonment | — | Emit view_item/add_to_cart/begin_checkout/purchase; fire `purchase` only on `payment_status=paid` (ITN-triggered or confirmation poll) | M | P2 | G-02 |
-| G-15 | Email | No post-payment email; branding minimal | Inventory 7 | Medium | Paid customers get no receipt | Uncertainty after EFT clears | Edge fn on payment UPDATE → "payment received" + invoice attach | S | P1 | G-01, G-04 |
-| G-16 | Data | Dual order-item stores can diverge | F-14 | Medium | Silent inconsistencies between confirmation page and account history | Wrong order details | Single source: drop `orders.items` or write via one RPC | S | P2 | Migration |
-| G-17 | Reliability | Defenses silently off without envs | F-17 | Medium | Open to checkout spam if Upstash/Turnstile unset in prod | — | Verify prod envs; log loudly at boot when protections disabled | S | P0 | Env access |
-| G-18 | Money | Integer ZAR, no cents | F-15 | Low | Can't price cents; EFT rounding disputes | — | Migrate money columns to cents or numeric(12,2) when convenient | M | P3 | — |
-| G-19 | SEO | Variant duplicate pages; missing category/collection URLs | F-19 | Low | Diluted ranking signals | — | Canonical variants→parent; add categories/collections to sitemap | S | P2 | — |
-| G-20 | Security | Committed webhook secret unrotated | F-02 | Critical | Forged email webhooks → phishing relay | Owner/customer phishing | Rotate secret in edge fn + DB trigger; purge from history | S | P0 | Dashboard access |
-| G-21 | Security | Anon orders-INSERT pending revoke | F-01 | Critical | Fabricated orders + email relay spam | Owner inbox spam, fake orders | Apply `20260925_audit_hardening.sql`; verify `SELECT`/`INSERT` denied as anon | S | P0 | Dashboard access |
-| G-22 | Accounts | No self-service data export/delete (POPIA) | Inventory 5 | Medium | Manual process per request | — | "Download my data" + "delete account" in /account | M | P2 | — |
-| G-23 | Ops | No monitoring/alerting | F-27 | Medium | Silent checkout failures = silent revenue loss | — | Sentry (or equivalent) + Vercel uptime + daily order-count sanity alert | S | P1 | Vendor choice |
-| G-24 | UX | No order-status self-service | F-08 | Medium | "Where is my order?" calls | Blind customers | Token page already shows status — extend with fulfilment states + email on change | S | P2 | G-06 |
-| G-25 | Cart | No server cart / cross-device | Inventory 2 | Low | Cart lost on device switch | Rebuild cart | Optional: persist cart for logged-in users | M | P3 | — |
-| G-26 | Growth | No coupons/promo redemption | Inventory 2 | Medium | Can't run campaigns | Can't use promo code | `promotions.code` → validate + discount in `resolveOrderPricing` | M | P2 | G-12 policy |
-| G-27 | QA | No e2e/regression tests on real code | F-23 | Medium | Fixes regress silently | — | Playwright smoke: home→PDP→cart→checkout(EFT)→confirm; refactor tests to import real fns | M | P1 | Staging env |
-| G-28 | Admin | No product/content CRUD UI | F-03 | Medium | Owner needs dev help to change prices/images | — | Extend G-01 admin to product edit (or document dashboard workflow) | L | P2 | G-01 |
-| G-29 | Compliance | No cookie/POPIA data map beyond banner | Inventory 8 | Low | Audit gaps | — | Document data flows + retention; the 90-day cron only covers `submitted` orders — extend to all terminal states | S | P2 | — |
-| G-30 | UX | Mobile checkout not audited end-to-end | — | Low | Possibly fine; unverified | — | Device QA pass on checkout + modals | S | P2 | — |
+| ID | Gap | Severity | Impact | Effort | Priority | Status |
+|---|---|---|---|---|---|---|
+| G-01 | DB hardening migration `20260925` **not applied in prod** — anon order injection still open | **Critical** | Forged orders + email spam | S | P0 | OPEN — SQL ready in `security-p0-fix.md` |
+| G-02 | `ORDER_WEBHOOK_SECRET` exposed in git history, not rotated | **Critical** | Forged order-email triggers | S | P0 | OPEN — rotation runbook written |
+| G-03 | No staging environment — every change tests against prod | High | Prod-only verification risk | M | P1 | OPEN (Q-15) |
+| G-04 | Dashboard-only ops workflow, no audit trail, ~50 orders/wk cap | High | Ops errors at scale; no change log | L | P1 | Mitigated — runbook written |
+| G-05 | No post-payment receipt email | Medium | Paid customer gets no proof | S | P1 | OPEN |
+| G-06 | Guest order lookup — link loss orphans orders (email optional) | Medium | Customer can't recover order | S | P1 | OPEN |
+| G-07 | `orders.items` JSONB vs `order_items` duplication | Medium | Divergent order data | S | P2 | OPEN |
+| G-08 | Analytics fires `generate_lead` on unpaid orders; no funnel events | Medium | Inflated metrics, invisible funnel | M | P2 | OPEN |
+| G-09 | No error monitoring/uptime alerts (console.* only) | Medium | Silent checkout failures | S | P1 | OPEN |
+| G-10 | Mock subscriptions/warranties account pages | Medium | Fake data shown to users | S | P1 | OPEN (deferred build-out — remove pages instead) |
+| G-11 | Newsletter forms dead-end (alert only) | Low | Lost leads | S | P2 | OPEN |
+| G-12 | Tests re-implement instead of importing source | Medium | Silent regressions | M | P1 | OPEN |
+| G-13 | No security headers (CSP/HSTS/frame-ancestors) | Low | Defense-in-depth | S | P2 | OPEN |
+| G-14 | No A11y audit; `<img>` misuse in rendered components | Low | WCAG unknown | M | P2 | OPEN |
+| G-15 | Two variant systems + unknown prod FK (CASCADE vs SET NULL) | Medium | Parent-delete hazard | S | P1 | BLOCKED — query in 12a |
+| G-16 | PII retention cron only covers `submitted` orders | Low | Terminal orders retain PII | S | P2 | OPEN |
+| G-17 | Payment provider decision deferred — no online payment path | High (business) | No card/instant payments until chosen | — | P2 | OWNER DECISION PENDING |
+| G-18 | Legal pages AI-generated, unreviewed (CPA/ECT Act) | Medium | Compliance risk | M | P1 | BLOCKED — Q-20 |
+| G-19 | `useCart` silent NOOP outside provider | Low | Silent add-to-cart failure | S | P3 | OPEN |
+| G-20 | Sitemap incomplete (categories/collections missing); variant canonicalization | Low | SEO dilution | S | P2 | OPEN |
+
+## Closed since last pass
+
+VAT/tax invoicing (not required — not registered) · fabricated ratings/reviews (removed site-wide) · /deals (removed + 301s) · Payfast (removed) · shipping fee hardcoding (replaced by quote model) · sold-out checkout blocking (enquiry semantics) · airconsstore.co.za domain drift (all → aircons-store.co.za) · checkout XFF spoofable rate-limit key (fixed while touching the file).

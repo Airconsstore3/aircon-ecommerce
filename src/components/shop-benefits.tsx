@@ -20,7 +20,7 @@ const ShopBenefits = () => {
     <section aria-labelledby="shop-benefits-heading" className="mx-auto max-w-[1440px] px-4 pb-10 pt-20 sm:px-6 sm:pt-24 lg:px-8">
       <div className="text-center">
         <h2 id="shop-benefits-heading" className="text-[#0A2540]">Everything your aircon needs, in one place</h2>
-        <p className="mx-auto mt-3 max-w-[520px] text-sm text-[#335B74] sm:text-[15px]">
+        <p className="mx-auto mt-3 max-w-[520px] text-sm text-[#0A2540] sm:text-[15px]">
           Free Cape Town delivery, professional installation support and aftercare on every unit, from trusted brands.
         </p>
       </div>

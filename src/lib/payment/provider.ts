@@ -15,7 +15,6 @@ export { registerProvider, getProvider } from "./registry";
 // Import providers to register them in the registry (side-effect imports).
 // These MUST come after the registry re-exports above so that registry.ts
 // is fully initialized before the provider modules call registerProvider().
-import "./payfast";
 import "./manual-eft";
 
 // ─── Enabled providers lookup ────────────────────────────────────────────────

@@ -183,18 +183,11 @@ export default async function OrderConfirmedPage({
               {order.payment_status === "paid" && (
                 <p>Your payment has been confirmed. We will contact you shortly to arrange delivery and installation.</p>
               )}
-              {order.payment_status === "pending" && order.payment_method === "manual_eft" && (
-                <p>Your order has been received. Please complete the bank transfer below to confirm your order.</p>
+              {order.payment_status === "pending" && order.status !== "confirmed" && (
+                <p>Your order request has been received. We&apos;re confirming stock availability and delivery — once confirmed, your banking details will appear here and we&apos;ll email you at your contact address.</p>
               )}
-              {order.payment_status === "pending" && order.payment_method === "payfast" && (
-                <div className="space-y-3">
-                  <p>Your order has been received. Complete your payment securely via Payfast.</p>
-                  <form action={`/api/payfast/redirect?order=${order.id}&token=${order.secure_token}`} method="GET">
-                    <Button type="submit" className="bg-[#1C99D6] hover:bg-[#1597c6] text-white rounded-none">
-                      Pay securely via Payfast
-                    </Button>
-                  </form>
-                </div>
+              {order.payment_status === "pending" && order.status === "confirmed" && order.payment_method === "manual_eft" && (
+                <p>Availability confirmed. Please complete the bank transfer below — use your order number as the reference.</p>
               )}
               {order.payment_status === "processing" && (
                 <p>Your payment is being processed. Please wait while we confirm.</p>
@@ -207,8 +200,13 @@ export default async function OrderConfirmedPage({
               )}
             </div>
 
-            {/* Manual EFT banking details */}
-            {order.payment_method === "manual_eft" && order.payment_status !== "paid" && bankingDetails && (
+            {/* Manual EFT banking details — revealed only after the team has
+                confirmed availability (enquiry model: payment is arranged
+                after confirmation, not at checkout). */}
+            {order.payment_method === "manual_eft" &&
+              order.payment_status !== "paid" &&
+              order.status === "confirmed" &&
+              bankingDetails && (
               <div className="rounded-lg border border-[#E5E7EB] p-5 space-y-3">
                 <h3 className="text-lg font-medium text-[#1E3A5F]">Banking Details</h3>
                 <p className="text-sm text-muted-foreground">Please use your order number as the payment reference.</p>
@@ -278,6 +276,11 @@ export default async function OrderConfirmedPage({
                     {order.delivery_address}
                     {order.delivery_city ? `, ${order.delivery_city}` : ""}
                     {order.delivery_province ? `, ${order.delivery_province}` : ""}
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {order.delivery_city && /\bcape\s*town\b/i.test(order.delivery_city)
+                      ? "Delivery: free within Cape Town"
+                      : "Delivery: fee quoted once your order is confirmed"}
                   </p>
                 </div>
               )}

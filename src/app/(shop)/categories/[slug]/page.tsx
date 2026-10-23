@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { redirect } from "next/navigation";
 import { AirconProduct } from "@/components/shop/ProductCard";
 import { createClient } from "@/utils/supabase/server";
 import { filterProducts } from "@/lib/filterProducts";
@@ -7,6 +8,7 @@ import type { SupabaseProduct } from "@/lib/fetch-featured-products";
 import CategoryClient from "./CategoryClient";
 import ResidentialCategoryClient from "./ResidentialCategoryClient";
 import AccessoriesCategoryClient from "./AccessoriesCategoryClient";
+import { deriveAcType, deriveIsInverter } from "@/lib/product-classification";
 
 // Extended Supabase product with optional catalog display fields
 type CatalogProduct = SupabaseProduct & {
@@ -43,30 +45,6 @@ const categoryInfo: Record<string, { name: string; description: string }> = {
   },
 };
 
-// Derive AC type from product name (e.g., "Cassette", "Ducted", "VRF", etc.)
-function deriveAcType(name: string): string | null {
-  const lower = name.toLowerCase();
-  if (lower.includes("vrf")) return "VRF";
-  if (lower.includes("cassette")) return "Cassette";
-  if (lower.includes("ceiling concealed") || (lower.includes("ceiling") && lower.includes("concealed"))) return "Ceiling Concealed";
-  if (lower.includes("floor standing") || lower.includes("floor/ceiling") || (lower.includes("floor") && lower.includes("standing"))) return "Floor Standing";
-  if (lower.includes("floor ceiling")) return "Floor Standing";
-  if (lower.includes("ducted") || lower.includes("duct type") || lower.includes("hide away")) return "Ducted";
-  if (lower.includes("package") || lower.includes("rooftop")) return "Package Unit";
-  if (lower.includes("split")) return "Split System";
-  return null;
-}
-
-// Derive inverter status from product name or specs
-function deriveIsInverter(name: string, specs?: Record<string, unknown>): boolean {
-  if (specs?.inverter === true || specs?.inverter === "Yes") return true;
-  if (specs?.inverter === false || specs?.inverter === "No") return false;
-  const lower = name.toLowerCase();
-  if (lower.includes("non-inverter") || lower.includes("non inverter")) return false;
-  if (lower.includes("inverter")) return true;
-  return false;
-}
-
 // Adapt Supabase product to AirconProduct with stock info
 function convertToAirconProduct(product: CatalogProduct): AirconProduct {
   return {
@@ -83,6 +61,9 @@ function convertToAirconProduct(product: CatalogProduct): AirconProduct {
     is_enquiry_only: product.is_enquiry_only,
     is_featured: product.is_featured,
     description: product.description,
+    specs: product.specs,
+    sort_order: product.sort_order,
+    created_at: product.created_at,
     stock: {
       stock_count: product.stock_count,
       is_sold_out: product.is_sold_out,
@@ -266,6 +247,10 @@ function buildPriceBounds(products: SupabaseProduct[]): { min: number; max: numb
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug: categorySlug } = await params;
+  if (categorySlug === 'kits') redirect('/installation?kind=installation-kits');
+  // Maintenance has its own catalogue page; the category join doesn't filter
+  // correctly for it (non-inner join returns all products).
+  if (categorySlug === 'maintenance') redirect('/maintenance');
   
   const [products, allProducts, activePromotion] = await Promise.all([
     getProductsByCategory(categorySlug),
@@ -287,8 +272,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
       ? "Residential Air Conditioning"
       : "Commercial Air Conditioning";
     const categoryDescription = isResidential
-      ? "Split units, cassette systems, and floor-standing air conditioners for homes."
-      : "Cooling solutions for offices, retail and warehouses.";
+      ? "Find your everyday comfort. Shop air conditioners by brand, cooling capacity and system type."
+      : "Find the right cooling for your business. Shop commercial systems by brand, capacity and system type.";
     const productCountLabel = isResidential
       ? "Residential Air Conditioners"
       : "Commercial Air Conditioners";
@@ -304,6 +289,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           categoryTitle={categoryTitle}
           categoryDescription={categoryDescription}
           productCountLabel={productCountLabel}
+          categoryKind={isResidential ? "residential" : "commercial"}
         />
       </Suspense>
     );
@@ -320,7 +306,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           products={accessoryProducts}
           brandOptions={categoryBrandOptions}
           categoryTitle="Aircon Accessories"
-          categoryDescription="Pipes, brackets, remotes, and installation accessories for your air conditioning system."
+          categoryDescription="Brackets, installation kits and smart controls. The finishing touches for your aircon setup."
           productCountLabel="Accessories"
         />
       </Suspense>

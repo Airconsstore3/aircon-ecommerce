@@ -1,70 +1,8 @@
-import { createHash } from "crypto";
+// Checkout hardening tests.
+// Note: the Payfast integration (and its signature tests) was removed — the
+// store runs an enquiry model where payment is arranged manually.
 
-// ─── Payfast Signature Tests ─────────────────────────────────────────────────
-// These tests verify the Payfast signature generation logic without
-// requiring a running database or server.
-
-function generateSignature(params: Record<string, string>, passphrase: string): string {
-  const sortedKeys = Object.keys(params)
-    .filter((k) => k !== "signature")
-    .sort();
-
-  let query = sortedKeys
-    .map((key) => `${key}=${encodeURIComponent(params[key].trim()).replace(/%20/g, "+")}`)
-    .join("&");
-
-  if (passphrase) {
-    query += `&passphrase=${encodeURIComponent(passphrase.trim()).replace(/%20/g, "+")}`;
-  }
-
-  return createHash("md5").update(query).digest("hex");
-}
-
-describe("Payfast signature generation", () => {
-  const testParams: Record<string, string> = {
-    merchant_id: "10000100",
-    merchant_key: "46f0cd694581a",
-    return_url: "https://example.com/return",
-    cancel_url: "https://example.com/cancel",
-    notify_url: "https://example.com/notify",
-    name_first: "John",
-    name_last: "Doe",
-    email_address: "john@example.com",
-    m_payment_id: "AIR-2026-000001",
-    amount: "1999.00",
-    item_name: "Order AIR-2026-000001",
-  };
-
-  it("should produce a consistent 32-char hex signature", () => {
-    const sig = generateSignature(testParams, "");
-    expect(sig).toHaveLength(32);
-    expect(sig).toMatch(/^[a-f0-9]{32}$/);
-  });
-
-  it("should produce different signatures with different passphrases", () => {
-    const sig1 = generateSignature(testParams, "");
-    const sig2 = generateSignature(testParams, "mysecret");
-    expect(sig1).not.toBe(sig2);
-  });
-
-  it("should produce the same signature for the same params", () => {
-    const sig1 = generateSignature(testParams, "passphrase");
-    const sig2 = generateSignature(testParams, "passphrase");
-    expect(sig1).toBe(sig2);
-  });
-
-  it("should exclude the signature field from the signature calculation", () => {
-    const paramsWithSig = { ...testParams, signature: "fake" };
-    const sig1 = generateSignature(testParams, "");
-    const sig2 = generateSignature(paramsWithSig, "");
-    expect(sig1).toBe(sig2);
-  });
-
-  it("should handle empty params", () => {
-    const sig = generateSignature({}, "");
-    expect(sig).toHaveLength(32);
-  });
-});
+import { describe, it, expect } from "vitest";
 
 // ─── Phone Normalization Tests ───────────────────────────────────────────────
 

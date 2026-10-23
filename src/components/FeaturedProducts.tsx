@@ -119,13 +119,13 @@ export function FeaturedProducts({
         className
       )}
     >
-      <div className="mx-auto px-6 md:max-w-[95%] md:px-6">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
         {/* Section Header — left-aligned, consistent vertical rhythm on mobile.
             Eyebrow → Heading: 16px, Heading → Description: 20px,
             Description → CTA: 28px, CTA → Products: 40px. */}
         <div className="mb-10 md:mb-10">
           {eyebrow && (
-            <span className="mb-4 block font-[var(--font-google-sans-flex)] text-[14px] font-semibold uppercase tracking-[0.18em] text-[#1C99D6]">
+            <span className="mb-4 block font-[var(--font-google-sans-flex)] text-[14px] font-semibold uppercase tracking-[0.18em] text-[#1478A8]">
               {eyebrow}
             </span>
           )}
@@ -144,7 +144,7 @@ export function FeaturedProducts({
           </div>
           <div className="flex items-center justify-between">
             {description && (
-              <p className="max-w-[300px] md:max-w-[620px] font-[var(--font-google-sans-flex)] text-[18px] md:text-base font-normal leading-[1.6] text-[#5E6B7A]">
+              <p className="max-w-[300px] md:max-w-[620px] font-[var(--font-google-sans-flex)] text-[18px] md:text-base font-normal leading-[1.6] text-[#111111]">
                 {description}
               </p>
             )}

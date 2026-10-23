@@ -75,7 +75,7 @@ export function ServiceInfoSection({ className }: ServiceInfoSectionProps) {
 
               {/* Content */}
               <div className="flex flex-col p-5 md:p-6">
-                <p className="font-[var(--font-google-sans-flex)] text-[15px] md:text-base font-normal leading-[1.6] text-[#475569] mb-6 md:mb-8 max-w-[400px] line-clamp-2">
+                <p className="font-[var(--font-google-sans-flex)] text-[15px] md:text-base font-normal leading-[1.6] text-[#111111] mb-6 md:mb-8 max-w-[400px] line-clamp-2">
                   {card.description}
                 </p>
                 <Link

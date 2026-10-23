@@ -139,7 +139,7 @@ export default function TermsPage() {
               If you have any questions about these terms and conditions, please contact us:
             </p>
             <div className="mt-4 space-y-2 text-muted-foreground">
-              <p><strong>Email:</strong> info@airconsstore.co.za</p>
+              <p><strong>Email:</strong> info@aircons-store.co.za</p>
               <p><strong>Phone:</strong> 082 123 4567</p>
               <p><strong>Address:</strong> Cape Town, South Africa</p>
             </div>

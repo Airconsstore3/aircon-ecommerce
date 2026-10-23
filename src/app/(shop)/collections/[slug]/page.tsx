@@ -162,8 +162,8 @@ export default async function CollectionPage({
                       />
                     ) : null}
                     {product.is_sold_out && (
-                      <Badge className="absolute left-2 top-2 bg-red-100 text-red-700">
-                        Sold out
+                      <Badge className="absolute left-2 top-2 bg-amber-100 text-amber-800">
+                        On request
                       </Badge>
                     )}
                   </div>

@@ -1,10 +1,7 @@
 import { HeroSection } from "@/components/hero-section";
 import { ShopBenefits } from "@/components/shop-benefits";
-import { CategoryCarousel } from "@/components/category-carousel";
-import { AccreditedBrands } from "@/components/accredited-brands";
 import { AirconsShowcase } from "@/components/AirconsShowcase";
 import { ProductList9 } from "@/components/product-list9";
-import EditorialSection from "@/components/EditorialSection";
 import { ServiceInfoSection } from "@/components/ServiceInfoSection";
 import { Help2 } from "@/components/help2";
 import { fetchFeaturedProducts, fetchResidentialHeroProducts } from "@/lib/fetch-featured-products";
@@ -28,10 +25,7 @@ export default async function HomePage() {
       <ShopBenefits />
       <ProductList9 products={products} />
       <ServiceInfoSection />
-      <CategoryCarousel />
-      <AccreditedBrands />
       <AirconsShowcase />
-      <EditorialSection contactHref={contactHref} />
       <Help2 contactHref={contactHref} whatsappHref={whatsappHref} />
     </div>
   );

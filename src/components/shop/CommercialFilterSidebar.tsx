@@ -81,7 +81,7 @@ const FilterGroup = ({
                 </Label>
               </div>
               <span
-                className={`text-xs text-gray-400 ${fontClass}`}
+                className={`text-xs text-[#5F6B7A] ${fontClass}`}
               >
                 ({option.count})
               </span>

@@ -33,6 +33,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/components/shop/CartProvider";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 type HomeLink = {
   href: string;
@@ -329,7 +330,7 @@ const MobileMenu = ({ menu, navMenu }: MobileMenuProps) => {
                     </a>
                     {item.sections?.map((section) => (
                       <div key={section.id} className="space-y-1 pt-2">
-                        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/45">{section.label}</p>
+                        <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">{section.label}</p>
                         {section.items.map((subItem) =>
                           subItem.children ? (
                             <details key={subItem.label} className="group/nested rounded-lg">
@@ -445,6 +446,10 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null);
   const [escapeClosed, setEscapeClosed] = useState<string | null>(null);
   const [lastPathname, setLastPathname] = useState(pathname);
+  const isMobile = useMediaQuery("(max-width: 1023px)");
+  const openSubmenuItem = categoryMenu.find(
+    (item) => item.label === openSubmenu && item.sections?.length
+  );
 
   // Route changes close any open menu — adjusting state during render
   // (not in an effect) so no extra render pass is scheduled.
@@ -498,7 +503,8 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
         </div>
       </div>
       <div className="border-b border-[#B8E3F7]/70 bg-white">
-        <nav aria-label="Shop categories and services" className="mx-auto max-w-[1440px] overflow-x-auto px-4 sm:px-6 lg:overflow-visible lg:px-8">
+        <nav aria-label="Shop categories and services" className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-8">
+          <div className="scrollbar-hide overflow-x-auto lg:overflow-visible">
           <ul className="flex min-w-max items-stretch gap-1 lg:min-w-0 lg:gap-2">
             {categoryMenu.map(({ href, label, image, imageClassName, icon: Icon = Snowflake, sections }, index) => {
               const active = pathname === href;
@@ -537,11 +543,20 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
                     }
                   }}
                 >
-                  <a href={href} aria-current={active ? "page" : undefined} aria-haspopup={hasMenu ? "menu" : undefined} aria-expanded={hasMenu ? submenuOpen : undefined} aria-controls={hasMenu ? submenuId : undefined} className={cn(
+                  <a href={href} aria-current={active ? "page" : undefined} aria-haspopup={hasMenu ? "menu" : undefined} aria-expanded={hasMenu ? submenuOpen : undefined} aria-controls={hasMenu ? submenuId : undefined}
+                    onClick={(event) => {
+                      // Mobile: tapping a parent toggles the dropdown panel
+                      // below the nav strip instead of navigating away.
+                      if (!hasMenu || !isMobile) return;
+                      event.preventDefault();
+                      setEscapeClosed(null);
+                      setOpenSubmenu(openSubmenu === label ? null : label);
+                    }}
+                    className={cn(
                     "group/link flex min-w-[104px] flex-col items-center justify-center gap-2 border-b-2 px-2 pb-2.5 pt-3 text-xs font-medium whitespace-nowrap transition-colors focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#1C99D6] lg:min-w-0 lg:pb-3 xl:text-[13px]",
                     active ? "border-[#1C99D6] text-[#0A2540]" : "border-transparent text-[#0A2540]",
                   )}>
-                    <span className="relative block h-[68px] w-[112px] overflow-hidden rounded-md transition-transform motion-safe:group-hover/link:-translate-y-0.5 lg:h-[78px] lg:w-[128px]">
+                    <span className="relative hidden h-[68px] w-[112px] overflow-hidden rounded-md transition-transform motion-safe:group-hover/link:-translate-y-0.5 lg:block lg:h-[78px] lg:w-[128px]">
                       {image ? (
                         <Image
                           src={image}
@@ -558,11 +573,11 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
                     </span>
                     <span className={cn(index === 0 && "font-semibold text-[#1478A8]", "inline-flex items-center gap-1 uppercase tracking-wide group-hover/link:text-[#1478A8]")}>
                       {label}
-                      {hasMenu && <ChevronDown aria-hidden="true" className="size-3 transition-transform duration-200 group-hover:rotate-180" />}
+                      {hasMenu && <ChevronDown aria-hidden="true" className={cn("size-3 transition-transform duration-200 group-hover:rotate-180", submenuOpen && "rotate-180")} />}
                     </span>
                   </a>
 
-                  {hasMenu && (
+                  {hasMenu && !isMobile && (
                     <div id={submenuId} role="menu" aria-label={label} className={cn(
                       "invisible pointer-events-none absolute left-0 top-full z-50 w-max max-w-[calc(100vw-2rem)] translate-y-2 opacity-0 transition-all duration-200 group-hover:pointer-events-auto group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100",
                       escapeClosed === label && "hidden"
@@ -577,7 +592,7 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
                             <ul className="divide-y divide-[#E5EEF5]">
                               {section.items.map((item) => (
                                 <li key={item.label} className="group/item relative">
-                                  <a href={item.href} className="flex min-h-12 items-center gap-3 px-2 py-1.5 text-[15px] font-medium text-[#5F6B7A] transition-colors hover:bg-white hover:text-[#0A2540] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#1C99D6]">
+                                  <a href={item.href} className="flex min-h-12 items-center gap-3 px-2 py-1.5 text-[15px] font-medium text-[#0A2540] transition-colors hover:bg-white hover:text-[#0A2540] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#1C99D6]">
                                     {item.image && (
                                       <span className="relative size-9 shrink-0 overflow-hidden rounded-md bg-white">
                                         <Image src={item.image} alt="" fill sizes="36px" className="object-contain" />
@@ -591,7 +606,7 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
                                       <div className="rounded-xl border border-[#DCEFF8] bg-[#F7FAFC] p-1.5 shadow-[0_14px_35px_rgba(10,37,64,0.16)]">
                                         <p className="px-3 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#335B74]">Technology</p>
                                         {item.children.map((child) => (
-                                          <a key={child.label} href={child.href} className="block rounded-md px-3 py-2.5 text-[15px] font-medium text-[#5F6B7A] transition-colors hover:bg-white hover:text-[#0A2540] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#1C99D6]">{child.label}</a>
+                                          <a key={child.label} href={child.href} className="block rounded-md px-3 py-2.5 text-[15px] font-medium text-[#0A2540] transition-colors hover:bg-white hover:text-[#0A2540] focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#1C99D6]">{child.label}</a>
                                         ))}
                                       </div>
                                     </div>
@@ -608,6 +623,62 @@ const SecondaryMenu = ({ menu, home, sideMenu }: SecondaryMenuProps) => {
               );
             })}
           </ul>
+          </div>
+          {/* Mobile dropdown panel — parents toggle this on tap. Desktop
+              keeps the hover mega-menu inside each <li>. */}
+          {isMobile && openSubmenuItem && (
+            <div className="border-t border-[#B8E3F7]/70 px-4 py-4 sm:px-6 lg:hidden">
+              <a
+                href={openSubmenuItem.href}
+                className="mb-3 inline-flex text-sm font-semibold text-[#1478A8] hover:underline"
+              >
+                View all {openSubmenuItem.label}
+              </a>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {openSubmenuItem.sections?.map((section) => (
+                  <div key={section.id}>
+                    <a
+                      href={section.href}
+                      className="text-[11px] font-semibold uppercase tracking-[0.12em] text-[#335B74] hover:text-[#1C99D6]"
+                    >
+                      {section.label}
+                    </a>
+                    <ul className="mt-2">
+                      {section.items.map((item) => (
+                        <li key={item.label}>
+                          <a
+                            href={item.href}
+                            className="flex items-center gap-3 py-1.5 text-[15px] font-medium text-[#0A2540] transition-colors hover:text-[#0A2540]"
+                          >
+                            {item.image && (
+                              <span className="relative size-9 shrink-0 overflow-hidden rounded-md border border-[#E5EEF5] bg-white">
+                                <Image src={item.image} alt="" fill sizes="36px" className="object-contain" />
+                              </span>
+                            )}
+                            <span className="flex-1">{item.label}</span>
+                          </a>
+                          {item.children && (
+                            <ul className="ml-12 space-y-0.5 border-l border-[#E5EEF5] pl-3 pb-1">
+                              {item.children.map((child) => (
+                                <li key={child.label}>
+                                  <a
+                                    href={child.href}
+                                    className="block py-1 text-sm text-[#0A2540] transition-colors hover:text-[#0A2540]"
+                                  >
+                                    {child.label}
+                                  </a>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </nav>
       </div>
     </>

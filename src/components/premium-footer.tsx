@@ -46,7 +46,7 @@ export const COMPANY_LINKS: FooterLink[] = [
 function FooterLinkItem({ link }: { link: FooterLink }) {
   const isExternal = /^(https?:|tel:|mailto:)/.test(link.href);
   const className = cn(
-    `${FONT_CLASS} group relative text-[16px] font-normal text-[#6B7280] transition-colors duration-200 ease-out hover:text-[#1C99D6]`,
+    `${FONT_CLASS} group relative text-[16px] font-normal text-[#111111] transition-colors duration-200 ease-out hover:text-[#1C99D6]`,
   );
   const underline = (
     <span className="absolute -bottom-0.5 left-0 h-px w-0 bg-[#1C99D6] transition-all duration-200 ease-out group-hover:w-full" />
@@ -115,10 +115,10 @@ const PremiumFooter = async ({ className }: { className?: string }) => {
                 className="h-12 w-auto"
               />
             </Link>
-            <p className={`${FONT_CLASS} text-[16px] font-normal leading-[1.6] text-[#6B7280] max-w-[320px]`}>
+            <p className={`${FONT_CLASS} text-[16px] font-normal leading-[1.6] text-[#111111] max-w-[320px]`}>
               Helping homeowners and businesses find the right air conditioning solutions across South Africa.
             </p>
-            <p className={`${FONT_CLASS} mt-4 text-[14px] font-medium text-[#9CA3AF]`}>
+            <p className={`${FONT_CLASS} mt-4 text-[14px] font-medium text-[#5F6B7A]`}>
               Cape Town · Nationwide Delivery
             </p>
           </div>
@@ -140,9 +140,9 @@ const PremiumFooter = async ({ className }: { className?: string }) => {
                 <li>
                   <a
                     href={whatsappHref}
-                    className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#6B7280] transition-colors duration-200 hover:text-[#1C99D6]`}
+                    className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#111111] transition-colors duration-200 hover:text-[#1C99D6]`}
                   >
-                    <MessageCircle className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+                    <MessageCircle className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                     WhatsApp
                   </a>
                 </li>
@@ -151,9 +151,9 @@ const PremiumFooter = async ({ className }: { className?: string }) => {
                 <li>
                   <a
                     href={contact.phoneTel}
-                    className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#6B7280] transition-colors duration-200 hover:text-[#1C99D6]`}
+                    className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#111111] transition-colors duration-200 hover:text-[#1C99D6]`}
                   >
-                    <Phone className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+                    <Phone className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                     Call Us
                   </a>
                 </li>
@@ -162,15 +162,15 @@ const PremiumFooter = async ({ className }: { className?: string }) => {
                 <li>
                   <a
                     href={`mailto:${contact.email}`}
-                    className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#6B7280] transition-colors duration-200 hover:text-[#1C99D6]`}
+                    className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#111111] transition-colors duration-200 hover:text-[#1C99D6]`}
                   >
-                    <Mail className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+                    <Mail className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                     Email
                   </a>
                 </li>
               )}
-              <li className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#6B7280]`}>
-                <MapPin className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+              <li className={`${FONT_CLASS} flex items-center gap-2 text-[16px] font-normal text-[#111111]`}>
+                <MapPin className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                 Cape Town, South Africa
               </li>
             </ul>
@@ -184,32 +184,32 @@ const PremiumFooter = async ({ className }: { className?: string }) => {
               {contact.phoneTel && contact.phoneDisplay && (
                 <a
                   href={contact.phoneTel}
-                  className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#6B7280] transition-colors duration-200 hover:text-[#1C99D6]`}
+                  className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#111111] transition-colors duration-200 hover:text-[#1C99D6]`}
                 >
-                  <Phone className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+                  <Phone className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                   {contact.phoneDisplay}
                 </a>
               )}
               {contact.email && (
                 <a
                   href={`mailto:${contact.email}`}
-                  className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#6B7280] transition-colors duration-200 hover:text-[#1C99D6]`}
+                  className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#111111] transition-colors duration-200 hover:text-[#1C99D6]`}
                 >
-                  <Mail className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+                  <Mail className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                   {contact.email}
                 </a>
               )}
               {contact.whatsappDisplay && !contact.phoneDisplay && (
                 <a
                   href={whatsappHref ?? "#"}
-                  className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#6B7280] transition-colors duration-200 hover:text-[#1C99D6]`}
+                  className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#111111] transition-colors duration-200 hover:text-[#1C99D6]`}
                 >
-                  <MessageCircle className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+                  <MessageCircle className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                   WhatsApp: {contact.whatsappDisplay}
                 </a>
               )}
-              <span className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#6B7280]`}>
-                <MapPin className="size-4 text-[#9CA3AF]" strokeWidth={1.5} />
+              <span className={`${FONT_CLASS} flex items-center gap-2 text-[15px] font-normal text-[#111111]`}>
+                <MapPin className="size-4 text-[#5F6B7A]" strokeWidth={1.5} />
                 Cape Town, South Africa
               </span>
             </div>
@@ -219,19 +219,19 @@ const PremiumFooter = async ({ className }: { className?: string }) => {
         {/* Bottom bar */}
         <div className="mt-8 border-t border-[#EAEAEA] pt-8">
           <div className="flex flex-col items-center gap-5 sm:flex-row sm:justify-between sm:gap-4">
-            <p className={`${FONT_CLASS} text-[14px] font-normal text-[#9CA3AF]`}>
+            <p className={`${FONT_CLASS} text-[14px] font-normal text-[#5F6B7A]`}>
               © 2026 Aircons Store. All rights reserved.
             </p>
             <div className="flex items-center gap-5 sm:gap-6">
               <Link
                 href="/privacy"
-                className={`${FONT_CLASS} text-[14px] font-normal text-[#9CA3AF] transition-colors duration-200 hover:text-[#1C99D6]`}
+                className={`${FONT_CLASS} text-[14px] font-normal text-[#5F6B7A] transition-colors duration-200 hover:text-[#1C99D6]`}
               >
                 Privacy
               </Link>
               <Link
                 href="/terms"
-                className={`${FONT_CLASS} text-[14px] font-normal text-[#9CA3AF] transition-colors duration-200 hover:text-[#1C99D6]`}
+                className={`${FONT_CLASS} text-[14px] font-normal text-[#5F6B7A] transition-colors duration-200 hover:text-[#1C99D6]`}
               >
                 Terms
               </Link>

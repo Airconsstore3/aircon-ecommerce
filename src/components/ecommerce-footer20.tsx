@@ -184,7 +184,7 @@ const EcommerceFooter20 = ({
   newsletter = { title: "Sign up to receive updates about our products and special offers." },
   footerLinks = FOOTER_LINKS,
   submenuLinks = SUBMENU,
-  contactEmail = "info@airconsstore.com",
+  contactEmail = "info@aircons-store.co.za",
   regionLabel = "South Africa (USD $)",
   copyright = "© 2025 Aircons Store Inc. All Rights Reserved.",
   className,

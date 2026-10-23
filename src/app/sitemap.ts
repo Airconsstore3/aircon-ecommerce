@@ -3,8 +3,8 @@ import type { MetadataRoute } from "next";
 import { serviceRoleClient } from "@/lib/supabase-service";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://airconsstore.co.za";
-  const staticRoutes = ["", "/products", "/deals", "/installation", "/maintenance", "/repairs", "/about", "/privacy", "/terms"];
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://aircons-store.co.za";
+  const staticRoutes = ["", "/products", "/installation", "/maintenance", "/repairs", "/about", "/privacy", "/terms"];
 
   const { data: products } = await serviceRoleClient
     .from("products")

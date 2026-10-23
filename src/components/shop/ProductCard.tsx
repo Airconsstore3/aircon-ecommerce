@@ -1,6 +1,6 @@
 "use client";
 
-import { Package, Ruler, Wifi, Radio, Cable, ShoppingCart, ArrowUpRight } from "lucide-react";
+import { Package, Ruler, Wifi, Radio, Cable, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useCart } from "@/components/shop/CartProvider";
 import { ACCESSORY_KINDS, INSTALLATION_KINDS, getAccessoryPrice, getAccessoryCardImage } from "@/lib/accessories";
@@ -333,45 +333,44 @@ const AccessoryProductCard = ({ product }: AirconProductCardProps) => {
   const needsOptions = product.has_variants || (product.is_enquiry_only && !isService);
   const specs = [product.specs?.size, product.specs?.length, product.specs?.material, isService ? product.specs?.pipe_run : null].filter((value): value is string => typeof value === "string");
 
+  const fontClass = "font-[var(--font-google-sans-flex)]";
+
   return (
-    <article className="accessory-card group flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white transition-shadow hover:shadow-md">
-      <Link href={href} className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-white focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-sky-600" aria-label={`View ${product.name}`}>
+    <article className="accessory-card group flex h-full min-w-0 flex-col overflow-hidden rounded-[6px] border border-[#EAEAEA] bg-white transition-all duration-300 hover:shadow-lg hover:border-[#1C99D6]">
+      <Link href={href} className={`relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-white ${fontClass} focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-[#1C99D6]`} aria-label={`View ${product.name}`}>
         {hasPhoto ? (
           <>
             <Image src={image.src} alt={image.illustrative ? `${kind?.label || "Accessory"} illustration; actual product may vary` : product.name} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, (max-width: 1279px) 25vw, 20vw" className={cn("transition-transform", isService ? "object-cover group-hover:scale-105" : image.illustrative && (kind?.value === "brackets" || kind?.value === "installation-kits") ? "object-contain p-4 group-hover:scale-105" : image.illustrative ? "object-cover p-3 group-hover:scale-105" : "object-contain p-5 group-hover:scale-105")} onError={() => setImageFailed(true)} />
           </>
         ) : (
-          <div className="flex flex-col items-center gap-3 text-slate-500">
-            <div className="flex size-20 items-center justify-center rounded-2xl border border-sky-100 bg-white text-sky-700 shadow-sm"><Icon className="size-10" strokeWidth={1.25} aria-hidden="true" /></div>
+          <div className="flex flex-col items-center gap-3 text-[#5F6B7A]">
+            <div className="flex size-20 items-center justify-center rounded-[6px] border border-[#EAEAEA] bg-white text-[#1C99D6] shadow-sm"><Icon className="size-10" strokeWidth={1.25} aria-hidden="true" /></div>
             <span className="text-xs">Photo coming soon</span>
           </div>
         )}
         {hasSale && <span className="absolute left-3 top-3 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">Save {Math.round((1 - price / product.price_zar) * 100)}%</span>}
       </Link>
-      <div className="flex flex-1 flex-col p-3.5">
-        <span className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-sky-700">{kind?.label || "Accessory"}</span>
-        <h2 className="accessory-title min-h-10 font-semibold text-[#1E3A5F]"><Link href={href} className="line-clamp-2 hover:underline focus-visible:outline-sky-600">{product.name}</Link></h2>
-        <div className="my-2 flex min-h-6 flex-wrap gap-1.5">
-          {specs.map((spec) => <span key={spec} className="rounded-md bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-600">{spec}</span>)}
-        </div>
-        <p className="accessory-description mb-3 line-clamp-2 min-h-9 text-slate-500">{product.description || "Check compatibility with your air conditioner before ordering."}</p>
+      <div className={`flex flex-1 flex-col p-5 ${fontClass}`}>
+        <span className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-[#1C99D6]">{kind?.label || "Accessory"}</span>
+        <h2 className="accessory-title min-h-10 font-semibold text-[#0A2540]"><Link href={href} className="line-clamp-2 hover:underline focus-visible:outline-[#1C99D6]">{product.name}</Link></h2>
+        {specs.length > 0 && (
+          <p className="mt-1.5 text-xs text-[#5F6B7A]">{specs.join("  ·  ")}</p>
+        )}
+        <p className="accessory-description mb-3 mt-2 line-clamp-2 min-h-9 text-sm text-[#335B74]">{product.description || "Check compatibility with your air conditioner before ordering."}</p>
         <div className="mt-auto">
-          <div className="mb-2 flex min-h-7 flex-wrap items-baseline gap-x-2">
-            <span className="text-lg font-semibold tracking-tight text-[#1E3A5F]">{product.is_enquiry_only ? "Price on request" : `${product.has_variants ? "From " : ""}${formatZAR(product.min_variant_price ?? price)}`}</span>
-            {hasSale && <span className="text-xs text-slate-400 line-through">{formatZAR(product.price_zar)}</span>}
+          <div className="mb-1.5 flex min-h-7 flex-wrap items-baseline gap-x-2">
+            <span className="text-lg font-semibold tracking-tight text-[#0A2540]">{product.is_enquiry_only ? "Price on request" : `${product.has_variants ? "From " : ""}${formatZAR(product.min_variant_price ?? price)}`}</span>
+            {hasSale && <span className="text-xs text-slate-500 line-through">{formatZAR(product.price_zar)}</span>}
           </div>
-          <span className={cn("mb-3 flex items-center gap-1.5 text-[11px]", available ? "text-emerald-700" : "text-slate-500")}>
+          <span className={cn("mb-4 flex items-center gap-1.5 text-[11px]", available ? "text-emerald-700" : "text-[#5F6B7A]")}>
             <span className={cn("size-1.5 rounded-full", available ? "bg-emerald-500" : "bg-slate-400")} />
             {isService ? "Booking date confirmed on enquiry" : available ? "In stock" : "Availability confirmed on enquiry"}
           </span>
-          <div className="flex gap-2 border-t border-slate-100 pt-3">
-            <Link href={href} aria-label={`Details for ${product.name}`} className="inline-flex min-h-10 items-center justify-center gap-1 rounded-lg border border-slate-200 px-2.5 text-xs font-medium text-[#1E3A5F] hover:bg-slate-50 focus-visible:outline-sky-600">Details<ArrowUpRight className="size-3.5" aria-hidden="true" /></Link>
-            {needsOptions ? (
-              <Link href={href} className="inline-flex min-h-10 flex-1 items-center justify-center rounded-lg bg-[#007FBA] px-2 text-xs font-semibold text-white hover:bg-[#006b9e] focus-visible:outline-sky-600">{product.is_enquiry_only ? "Enquire" : "Choose options"}</Link>
-            ) : (
-              <button type="button" aria-label={`Add ${product.name} to ${product.is_enquiry_only ? "enquiry" : "cart"}`} onClick={() => addItem({ id: product.id, name: product.name, slug: product.slug, price_zar: product.price_zar, sale_price_zar: hasSale ? price : undefined, images: product.images, type: product.type, is_enquiry_only: product.is_enquiry_only })} className="accessory-add inline-flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-lg bg-[#007FBA] px-2 font-semibold text-white hover:bg-[#006b9e] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-600"><ShoppingCart className="size-3.5 shrink-0" aria-hidden="true" />{product.is_enquiry_only ? "Add to enquiry" : "Add to cart"}</button>
-            )}
-          </div>
+          {needsOptions ? (
+            <Link href={href} className="accessory-add inline-flex h-11 w-full items-center justify-center bg-[#1C99D6] px-4 text-sm font-semibold text-white transition-colors duration-250 hover:bg-[#1680b0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C99D6]">{product.is_enquiry_only ? "Enquire" : "Choose options"}</Link>
+          ) : (
+            <button type="button" aria-label={`Add ${product.name} to ${product.is_enquiry_only ? "enquiry" : "cart"}`} onClick={() => addItem({ id: product.id, name: product.name, slug: product.slug, price_zar: product.price_zar, sale_price_zar: hasSale ? price : undefined, images: product.images, type: product.type, is_enquiry_only: product.is_enquiry_only })} className="accessory-add inline-flex h-11 w-full items-center justify-center gap-2 bg-[#1C99D6] px-4 text-sm font-semibold text-white transition-colors duration-250 hover:bg-[#1680b0] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1C99D6]"><ShoppingCart className="size-4 shrink-0" aria-hidden="true" />{product.is_enquiry_only ? "Add to enquiry" : "Add to cart"}</button>
+          )}
         </div>
       </div>
     </article>

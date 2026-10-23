@@ -79,7 +79,6 @@ export const Layout239 = (props: Layout239Props) => {
             </div>
           </div>
           <div className="mt-10 flex w-full flex-wrap justify-center gap-x-8 gap-y-4 border-y border-[#F2F4F6] py-5 text-sm text-muted-foreground">
-            <span className="flex items-center gap-2"><span className="tracking-[0.12em] text-[#1C99D6]">★★★★★</span> 4.9 Rating</span>
             <span className="flex items-center gap-2"><span className="font-medium text-foreground">1,500+</span> Installations</span>
             <span className="flex items-center gap-2"><span className="size-2 bg-[#1C99D6]" /> Accredited Installers</span>
             <span className="flex items-center gap-2"><span className="size-2 bg-[#1C99D6]" /> Warranty Protected</span>

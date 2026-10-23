@@ -108,7 +108,7 @@ Deno.serve(async (request) => {
     return Response.json({ skipped: true });
   }
 
-  const ownerInbox = Deno.env.get("OWNER_EMAIL") || "info@airconsstore.co.za";
+  const ownerInbox = Deno.env.get("OWNER_EMAIL") || "info@aircons-store.co.za";
   const html = orderHtml(order);
 
   await sendEmail({

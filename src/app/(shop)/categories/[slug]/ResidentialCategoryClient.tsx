@@ -30,6 +30,8 @@ interface FilterOption {
   value: string;
   label: string;
   count: number;
+  /** Small secondary line rendered under the label on chips (e.g. "≈57 m²"). */
+  sub?: string;
 }
 
 interface ResidentialCategoryClientProps {
@@ -137,6 +139,20 @@ const CATEGORY_HIGHLIGHTS = {
 };
 
 const PAGE_SIZE = 12;
+const CHIP_VISIBLE_LIMIT = 5;
+
+// Brand names come from the DB in inconsistent casing — normalize for display.
+const prettyBrandLabel = (label: string) =>
+  label
+    .split(/(\s|-)/)
+    .map((part) =>
+      !part.trim() || part === "-"
+        ? part
+        : part.toLowerCase() === "lg"
+          ? "LG"
+          : part[0].toUpperCase() + part.slice(1)
+    )
+    .join("");
 
 // Framer Motion variants for the collapsible filter panel
 const containerVariants = {
@@ -193,7 +209,7 @@ const CheckboxGroup = ({
             </Label>
           </div>
           {"count" in option && option.count !== undefined && (
-            <span className={`text-xs text-gray-400 ${fontClass}`}>
+            <span className={`text-xs text-[#5F6B7A] ${fontClass}`}>
               ({option.count})
             </span>
           )}
@@ -219,6 +235,7 @@ export default function ResidentialCategoryClient({
   const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [keyword, setKeyword] = useState("");
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
   const highlights = CATEGORY_HIGHLIGHTS[categoryKind];
   const productsAnchor = `${categoryKind}-products`;
   const capacityOptions = btuOptions.map((option) => {
@@ -231,7 +248,7 @@ export default function ResidentialCategoryClient({
         (Number.isFinite(btu) && btu > 0
           ? btu <= 60000 ? `≈${Math.round(btu / 600)} m²` : "Site sizing"
           : undefined);
-    return { ...option, label: roomSize ? `${option.label} (${roomSize})` : option.label };
+    return { ...option, sub: roomSize };
   });
 
   // ─── Tabs: "View all" + system types ────────────────────────────────
@@ -521,7 +538,7 @@ export default function ResidentialCategoryClient({
           <h1 className="font-semibold leading-[1.05] tracking-tight text-[#1E3A5F]">
             {categoryTitle}
           </h1>
-          <p className="mt-2 text-[#5F6B7A]">
+          <p className="mt-2 text-[#0A2540]">
             {categoryDescription}
           </p>
         </div>
@@ -536,7 +553,7 @@ export default function ResidentialCategoryClient({
             </section>
             <div id={productsAnchor} className="mb-4 space-y-2 scroll-mt-[calc(var(--secondary-nav-height,120px)+16px)]">
               {[
-                { id: "brand", label: "Brand", allLabel: "All brands", options: brandOptions },
+                { id: "brand", label: "Brand", allLabel: "All brands", options: brandOptions.map((o) => ({ ...o, label: prettyBrandLabel(o.label) })) },
                 {
                   id: "btu",
                   label: "Cooling capacity",
@@ -545,21 +562,46 @@ export default function ResidentialCategoryClient({
                 },
               ].filter((group) => group.options.length > 0).map((group) => {
                 const selected = searchParams.getAll(group.id);
-                const chipClass = "inline-flex min-h-11 shrink-0 items-center rounded-full border px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1478A8] sm:min-h-9";
+                const chipClass = "inline-flex h-11 shrink-0 items-center rounded-full border px-3 py-2 text-xs font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1478A8]";
                 const activeClass = "border-[#1478A8] bg-[#1478A8] text-white";
                 const inactiveClass = "border-[#D9E2EB] bg-white text-[#1E3A5F] hover:border-[#1478A8] hover:bg-[#F0F9FF]";
+                // Collapse long chip rows — selected options always stay visible.
+                const isExpanded = expandedGroups[group.id] ?? false;
+                const visibleOptions = isExpanded
+                  ? group.options
+                  : group.options.filter((_, index) => index < CHIP_VISIBLE_LIMIT || selected.includes(group.options[index].value));
+                const hiddenCount = group.options.length - visibleOptions.length;
                 return (
                   <div key={group.id} role="group" aria-label={`Filter by ${group.label.toLowerCase()}`} className="flex flex-col gap-1.5 sm:flex-row sm:items-start sm:gap-3">
-                    <span className="shrink-0 text-xs font-semibold text-[#5F6B7A] sm:w-28 sm:pt-2.5">{group.label}</span>
+                    <span className="shrink-0 text-xs font-semibold text-[#1E3A5F] sm:w-28 sm:pt-2.5">{group.label}</span>
                     <div className="flex min-w-0 flex-wrap gap-1.5">
                       <button type="button" aria-pressed={selected.length === 0} onClick={() => clearFilter(group.id)} className={cn(chipClass, selected.length === 0 ? activeClass : inactiveClass)}>
                         {group.allLabel}
                       </button>
-                      {group.options.map((option) => (
+                      {visibleOptions.map((option) => (
                         <button key={option.value} type="button" aria-pressed={selected.includes(option.value)} onClick={() => toggleFilter(group.id, option.value, !selected.includes(option.value))} className={cn(chipClass, selected.includes(option.value) ? activeClass : inactiveClass)}>
-                          {option.label}
+                          {option.sub ? (
+                            <span className="flex flex-col items-center leading-[1.15]">
+                              <span>{option.label}</span>
+                              <span className={cn("text-[10px] font-normal", selected.includes(option.value) ? "text-white/80" : "text-[#5F6B7A]")}>
+                                {option.sub}
+                              </span>
+                            </span>
+                          ) : (
+                            option.label
+                          )}
                         </button>
                       ))}
+                      {hiddenCount > 0 && (
+                        <button
+                          type="button"
+                          aria-expanded={isExpanded}
+                          onClick={() => setExpandedGroups((prev) => ({ ...prev, [group.id]: !isExpanded }))}
+                          className={cn(chipClass, inactiveClass)}
+                        >
+                          {isExpanded ? "Show less" : `+${hiddenCount} more`}
+                        </button>
+                      )}
                     </div>
                   </div>
                 );
@@ -683,7 +725,7 @@ export default function ResidentialCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => setKeyword("")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -709,7 +751,7 @@ export default function ResidentialCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => clearFilter("brand")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -732,7 +774,7 @@ export default function ResidentialCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => clearFilter("btu")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -755,7 +797,7 @@ export default function ResidentialCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => clearFilter("priceRange")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -808,7 +850,7 @@ export default function ResidentialCategoryClient({
                 variant="link"
                 size="sm"
                 onClick={clearAllFilters}
-                className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0 ml-2"
+                className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0 ml-2"
               >
                 Clear all
               </Button>
@@ -879,7 +921,7 @@ export default function ResidentialCategoryClient({
             <h6 className="mb-2 text-lg font-bold leading-[1.4] text-[#1E3A5F]">
               No results found.
             </h6>
-            <p className="text-gray-500 mb-6">
+            <p className="text-[#5F6B7A] mb-6">
               There are no results with these criteria. Try changing your search.
             </p>
             <Button

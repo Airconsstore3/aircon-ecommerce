@@ -134,13 +134,13 @@ const CheckboxGroup = ({
             />
             <Label
               htmlFor={`${filterId}-${option.value}`}
-              className={`cursor-pointer text-sm font-normal text-gray-700 ${fontClass}`}
+              className={`cursor-pointer text-sm font-normal text-[#0A2540] ${fontClass}`}
             >
               {option.label}
             </Label>
           </div>
           {"count" in option && option.count !== undefined && (
-            <span className={`text-xs text-gray-400 ${fontClass}`}>
+            <span className={`text-xs text-[#5F6B7A] ${fontClass}`}>
               ({option.count})
             </span>
           )}
@@ -394,7 +394,7 @@ export default function AccessoriesCategoryClient({
   const categoryFilters = (
     <div className={cn("flex flex-wrap gap-2", isInstallation ? "w-full lg:w-auto" : "mb-4")} role="group" aria-label={isInstallation ? "Installation categories" : isMaintenance ? "Maintenance categories" : "Accessory categories"}>
       {[{ value: "", label: isInstallation ? "All products" : isMaintenance ? "All services" : "All accessories" }, ...kindOptions.filter((kind) => products.some((product) => kindOf(product) === kind.value))].map((kind) => (
-        <button type="button" key={kind.value} aria-pressed={selectedKind === kind.value} onClick={() => selectKind(kind.value)} className={cn("min-h-10 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-sky-600", selectedKind === kind.value ? "border-[#1E3A5F] bg-[#1E3A5F] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-sky-300 hover:bg-sky-50")}>{kind.label}</button>
+        <button type="button" key={kind.value} aria-pressed={selectedKind === kind.value} onClick={() => selectKind(kind.value)} className={cn("min-h-10 rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1478A8]", selectedKind === kind.value ? "border-[#1478A8] bg-[#1478A8] text-white" : "border-[#D9E2EB] bg-white text-[#1E3A5F] hover:border-[#1478A8] hover:bg-[#F0F9FF]")}>{kind.label}</button>
       ))}
     </div>
   );
@@ -405,13 +405,13 @@ export default function AccessoriesCategoryClient({
         {/* ─── Header ────────────────────────────────────────────────── */}
         <div className={cn("accessories-heading", isInstallation ? "mb-4" : "mb-6")}>
           <div className="min-w-0 flex-1">
-            {!isInstallation && <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1C99D6]">
+            {!isInstallation && <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#1478A8]">
               SHOP
             </p>}
             <h1 className={cn("font-semibold leading-[1.05] tracking-tight text-[#1E3A5F]", !isInstallation && "mt-3")}>
               {categoryTitle}
             </h1>
-            <p className={cn("mt-2 leading-relaxed text-[#5F6B7A]", !isInstallation && "max-w-[650px]")}>
+            <p className={cn("mt-2 leading-relaxed text-[#0A2540]", !isInstallation && "max-w-[650px]")}>
               {categoryDescription}
             </p>
           </div>
@@ -430,7 +430,7 @@ export default function AccessoriesCategoryClient({
             onClick={() => setIsFilterOpen(!isFilterOpen)}
             aria-expanded={isFilterOpen}
             aria-controls="accessory-filters"
-            className="w-fit gap-2 h-10 rounded-lg border-sky-100 bg-sky-50 px-4 text-[#1E3A5F] hover:bg-sky-100 font-medium"
+            className="w-fit gap-2 h-10 rounded-lg border-gray-200 bg-white px-4 text-[#1E3A5F] hover:bg-gray-50 font-medium"
           >
             <Filter className="h-5 w-5" />
             <span>Filters</span>
@@ -486,7 +486,7 @@ export default function AccessoriesCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => setKeyword("")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -513,7 +513,7 @@ export default function AccessoriesCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => clearFilter("brand")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -527,7 +527,7 @@ export default function AccessoriesCategoryClient({
                       onToggle={toggleFilter}
                     />
                   ) : (
-                    <p className="text-sm text-gray-400">No brands available yet.</p>
+                    <p className="text-sm text-[#5F6B7A]">No brands available yet.</p>
                   )}
                 </div>
 
@@ -540,7 +540,7 @@ export default function AccessoriesCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => clearFilter("priceRange")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -563,7 +563,7 @@ export default function AccessoriesCategoryClient({
                         variant="link"
                         size="sm"
                         onClick={() => clearFilter("availability")}
-                        className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0"
+                        className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0"
                       >
                         Clear
                       </Button>
@@ -616,7 +616,7 @@ export default function AccessoriesCategoryClient({
                 variant="link"
                 size="sm"
                 onClick={clearAllFilters}
-                className="text-xs text-gray-400 hover:text-[#1C99D6] h-auto p-0 ml-2"
+                className="text-xs text-[#5F6B7A] hover:text-[#1C99D6] h-auto p-0 ml-2"
               >
                 Clear all
               </Button>
@@ -691,7 +691,7 @@ export default function AccessoriesCategoryClient({
             <h6 className="mb-2 text-lg font-bold leading-[1.4] text-[#1E3A5F]">
               {products.length === 0 ? (isInstallation ? "Installation products coming soon." : isMaintenance ? "Maintenance plans coming soon." : "Accessories coming soon.") : "No results found."}
             </h6>
-            <p className="text-gray-500 mb-6">
+            <p className="text-[#5F6B7A] mb-6">
               {products.length === 0
                 ? (isInstallation ? "We're updating our installation catalogue. Please check back soon." : isMaintenance ? "We're updating our maintenance and service plans. Please check back soon." : "We're adding accessories to our catalog. Check back soon for pipes, brackets, remotes, and more.")
                 : "There are no results with these criteria. Try changing your search."}

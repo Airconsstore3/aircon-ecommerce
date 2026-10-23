@@ -1,14 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, X, Plus, Minus, Trash2 } from "lucide-react";
+import { ShoppingCart, X, Trash2 } from "lucide-react";
 import { useCart } from "./CartProvider";
+import { getCartBreakdown } from "@/lib/cart-pricing";
 import { CartRecommendations } from "./CartRecommendations";
 import Link from "next/link";
 import { useEffect } from "react";
 
 export function CartDrawer() {
-  const { items, removeItem, updateQty, itemCount, total, isOpen, setIsOpen } = useCart();
+  const { items, removeItem, updateQty, clearCart, itemCount, total, isOpen, setIsOpen } = useCart();
+  const breakdown = getCartBreakdown(items);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-ZA", {
@@ -21,15 +23,14 @@ export function CartDrawer() {
       .replace("ZAR", "R");
   };
 
-  // Prevent body scroll when drawer is open
+  // Prevent page scroll when drawer is open (the page scrolls inside #scroll-root)
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    const root = document.getElementById('scroll-root');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (root) root.style.overflow = isOpen ? 'hidden' : '';
     return () => {
       document.body.style.overflow = '';
+      if (root) root.style.overflow = '';
     };
   }, [isOpen]);
 
@@ -56,21 +57,32 @@ export function CartDrawer() {
               {itemCount} {itemCount === 1 ? "item" : "items"}
             </p>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsOpen(false)}
-            className="p-1 text-[#9CA3AF] hover:text-[#0A2540] transition-colors"
-            aria-label="Close cart"
-          >
-            <X className="h-4 w-4" />
-          </button>
+          <div className="flex items-center gap-2">
+            {items.length > 0 && (
+              <button
+                type="button"
+                onClick={clearCart}
+                className="text-[11px] font-medium text-[#5F6B7A] hover:text-red-500 transition-colors"
+              >
+                Empty cart
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="p-1 text-[#6B7280] hover:text-[#0A2540] transition-colors"
+              aria-label="Close cart"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         {/* Items - scrollable area */}
         <div className="flex-1 overflow-y-auto px-4 py-4">
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-center">
-              <ShoppingCart className="h-10 w-10 text-[#9CA3AF] mb-2" />
+              <ShoppingCart className="h-10 w-10 text-[#6B7280] mb-2" />
               <p className="text-[13px] text-[#5F6B7A]">Your cart is empty</p>
               <button
                 type="button"
@@ -107,7 +119,7 @@ export function CartDrawer() {
                         <button
                           type="button"
                           onClick={() => removeItem(item.id)}
-                          className="shrink-0 text-[#9CA3AF] hover:text-red-500 transition-colors"
+                          className="shrink-0 text-[#6B7280] hover:text-red-500 transition-colors"
                           aria-label="Remove item"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -116,6 +128,11 @@ export function CartDrawer() {
                       {item.variant && (
                         <p className="mt-0.5 text-[11px] text-[#5F6B7A]">
                           {item.variant}
+                        </p>
+                      )}
+                      {item.has_quoted_extras && (
+                        <p className="mt-0.5 text-[11px] text-[#B45309]">
+                          Options quoted separately
                         </p>
                       )}
                       <div className="mt-2 flex items-center justify-between">
@@ -162,14 +179,30 @@ export function CartDrawer() {
           <div className="border-t border-[#E1E5EA] px-4 py-4 shrink-0 bg-white">
             <div className="mb-3 flex items-center justify-between text-[13px] text-[#5F6B7A]">
               <span>Subtotal</span>
-              <span className="font-semibold text-[#0A2540]">{formatPrice(total)}</span>
+              <span className="font-semibold text-[#0A2540]">
+                {breakdown.hasPricedItems ? formatPrice(total) : "On request"}
+              </span>
             </div>
+            {breakdown.hasEnquiryItems && (
+              <p className="mb-3 text-[11px] text-[#5F6B7A]">
+                Excludes items priced on request.
+              </p>
+            )}
             <Button
               className="h-[44px] w-full rounded-none bg-[#1C99D6] text-[14px] font-semibold text-white hover:bg-[#1597c6]"
               asChild
             >
               <Link href="/checkout" onClick={() => setIsOpen(false)}>
-                Checkout
+                {breakdown.hasPricedItems ? `Checkout — ${formatPrice(total)}` : "Checkout"}
+              </Link>
+            </Button>
+            <Button
+              variant="outline"
+              className="mt-2 h-[40px] w-full rounded-none border-[#0A2540] text-[13px] font-semibold text-[#0A2540] hover:bg-[#F0F9FF]"
+              asChild
+            >
+              <Link href="/cart" onClick={() => setIsOpen(false)}>
+                View cart
               </Link>
             </Button>
             <button

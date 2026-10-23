@@ -18,7 +18,7 @@ const initialState: AuthFormState = { error: null, success: false };
 async function getOrigin() {
   const headersList = await headers();
   const protocol = headersList.get("x-forwarded-proto") || "https";
-  const host = headersList.get("host") || "airconsstore.co.za";
+  const host = headersList.get("host") || "aircons-store.co.za";
   return headersList.get("origin") || `${protocol}://${host}`;
 }
 

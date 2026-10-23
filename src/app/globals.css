@@ -64,6 +64,37 @@
   --color-link-alternative: #ffffff;
 }
 
+html {
+  height: 100%;
+}
+
+html,
+body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Root scroller is locked; the page scrolls inside this wrapper so iOS/Safari
+   cannot rubber-band the document. The background matches the top bar so
+   any residual inner-scroller overscroll never shows a white gap. */
+#scroll-root {
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: none;
+  background-color: #1C99D6;
+}
+
+.top-bar {
+  background: #1C99D6 !important;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -192,6 +223,115 @@ a[role="button"],
   font-weight: 600 !important;
   line-height: 1 !important;
   letter-spacing: 0.04em;
+}
+
+/* Help2 FAQ block ships its own typography. It renders a <div> (not
+   <section>) so the .homepage-typography section overrides skip it; these
+   rules restore its own heading scale over the global `main h2/h3` sizes. */
+main #faqs h2,
+main #faqs h3 {
+  font-size: 34px !important;
+}
+@media (min-width: 768px) {
+  main #faqs h2,
+  main #faqs h3 {
+    font-size: 46px !important;
+  }
+}
+@media (min-width: 1024px) {
+  main #faqs h2,
+  main #faqs h3 {
+    font-size: 56px !important;
+  }
+}
+
+/* AirconsShowcase (.nivis-*) ships its own typography inside a <style> tag.
+   It renders a <div> so the .homepage-typography section overrides skip it;
+   restore its own h2 size over the global `main h2` clamp. */
+main .nivis-details h2 {
+  font-size: clamp(30px, 2.5vw, 36px) !important;
+}
+
+.shop-layout .storefront-hero h1 {
+  font-size: clamp(2rem, 3vw, 2.875rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.08 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.shop-layout .storefront-hero h2 {
+  font-size: clamp(1.25rem, 1.7vw, 1.5rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.025em !important;
+}
+
+.shop-layout .storefront-hero p {
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+}
+
+.shop-layout .aircon-catalogue .catalogue-heading h1 {
+  font-size: clamp(1.625rem, 2.6vw, 2.25rem) !important;
+  line-height: 1.15;
+}
+
+.shop-layout .aircon-catalogue .catalogue-banners h2 {
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem) !important;
+}
+
+.shop-layout .aircon-catalogue .catalogue-heading p,
+.shop-layout .aircon-catalogue .catalogue-banners p {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.shop-layout .accessories-catalogue .accessories-heading h1 {
+  font-size: clamp(1.75rem, 3vw, 2.5rem) !important;
+  line-height: 1.15 !important;
+}
+
+.shop-layout .accessories-catalogue .accessories-heading p {
+  font-size: 0.875rem !important;
+}
+
+.shop-layout .accessories-catalogue .accessory-title {
+  font-size: 0.875rem !important;
+  line-height: 1.4 !important;
+}
+
+.shop-layout .accessories-catalogue .accessory-description,
+.shop-layout .accessories-catalogue .accessory-add {
+  font-size: 0.75rem !important;
+  line-height: 1.5;
+}
+
+.shop-layout .installation-catalogue .accessories-heading h1 {
+  font-size: clamp(1.5rem, 2vw, 1.875rem) !important;
+}
+
+.shop-layout .installation-catalogue .accessory-card > a {
+  aspect-ratio: 3 / 2;
+  max-height: 200px;
+}
+
+/* Cart & checkout — compact commerce headings (overrides global main h1/h2 scale) */
+.shop-layout .commerce-flow h1 {
+  font-size: clamp(1.5rem, 2.5vw, 2rem) !important;
+  line-height: 1.15 !important;
+}
+.shop-layout .commerce-flow h2 {
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem) !important;
+  line-height: 1.3 !important;
+}
+.shop-layout .commerce-flow h3 {
+  font-size: 0.9375rem !important;
+  line-height: 1.4 !important;
+}
+
+.shop-layout .installation-catalogue .installation-shop-info p {
+  font-size: 0.75rem !important;
+  line-height: 1.5;
 }
 
 .homepage-typography > footer {
